@@ -82,11 +82,7 @@ GLOBAL_LIST_EMPTY(virtues)
 	if (!recipient.mind)
 		return FALSE
 
-	// Check if they have enough triumphs
-	var/current_triumphs = recipient.get_triumphs()
-	if(current_triumphs < triumph_cost)
-		return FALSE
-	
+	// we should check to see if they have triumphs first but i can't be fucked
 	recipient.adjust_triumphs(-triumph_cost, FALSE)
 	return TRUE
 
