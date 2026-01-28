@@ -63,77 +63,6 @@
 			ADD_TRAIT(recipient, TRAIT_PSYDONITE, TRAIT_GENERIC)
 			recipient.mind?.special_items["Psycross"] = /obj/item/clothing/neck/roguetown/psicross
 
-/datum/virtue/combat/duelist
-	name = "Duelist's Apprentice"
-	desc = "I have trained under a duelist of considerable skill. I have a pair of dueling weapons - both a hunting sword and dagger - stowed away."
-	custom_text = "Guaranteed Journeyman for Swords & Knives."
-	added_stashed_items = list("Duelist's Messer" = /obj/item/rogueweapon/sword/short/messer/iron/virtue,
-								"Duelist's Parrying Dagger" = /obj/item/rogueweapon/huntingknife/idagger/virtue)
-
-/datum/virtue/combat/duelist/apply_to_human(mob/living/carbon/human/recipient)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/swords, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/knives, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-
-/datum/virtue/combat/executioner
-	name = "Dungeoneer's Apprentice"
-	desc = "I was set to be a dungeoneer some time ago, and I was taught by one. I have an axe and whip stashed away, should the need arise."
-	custom_text = "Guaranteed Journeyman for Axes & Whips/Flails."
-	added_stashed_items = list("Axe" = /obj/item/rogueweapon/stoneaxe/woodcut,
-								"Whip" = /obj/item/rogueweapon/whip)
-
-/datum/virtue/combat/executioner/apply_to_human(mob/living/carbon/human/recipient)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/whipsflails, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/axes, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-
-/datum/virtue/combat/militia
-	name = "Militiaman"
-	desc = "I have trained with the local garrison in case I'm ever to be levied to fight for my lord. I have a spear and mace stashed away in the event I'm called to arms."
-	custom_text = "Guaranteed Journeyman for Polearms & Maces."
-	added_stashed_items = list("Spear" = /obj/item/rogueweapon/spear,
-								"Mace" = /obj/item/rogueweapon/mace)
-
-/datum/virtue/combat/militia/apply_to_human(mob/living/carbon/human/recipient)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/polearms, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/maces, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-
-/datum/virtue/combat/brawler
-	name = "Brawler's Apprentice"
-	desc = "I have trained under a skilled brawler, and have some experience fighting with my fists. I have a katar and some knuckledusters stashed away, too."
-	custom_text = "Guaranteed Journeyman for Unarmed & Wrestling."
-	added_stashed_items = list("Knuckles" = /obj/item/rogueweapon/knuckles/bronzeknuckles,
-								"More Knuckles" = /obj/item/rogueweapon/knuckles/bronzeknuckles)
-
-/datum/virtue/combat/brawler/apply_to_human(mob/living/carbon/human/recipient)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/unarmed, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/wrestling, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-
-
-/datum/virtue/combat/bowman
-	name = "Toxophilite"
-	desc = "I've had an interest in archery from a young age, and I always keep a spare bow and quiver around."
-	custom_text = "+1 to Bows, Up to Legendary, Minimum Apprentice"
-	added_stashed_items = list("Recurve Bow" = /obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve,
-								"Quiver (Arrows)" = /obj/item/quiver/arrows
-	)
-
-/datum/virtue/combat/bowman/apply_to_human(mob/living/carbon/human/recipient)
-	if(recipient.get_skill_level(/datum/skill/combat/bows) < SKILL_LEVEL_APPRENTICE)
-		recipient.adjust_skillrank_up_to(/datum/skill/combat/bows, SKILL_LEVEL_APPRENTICE, silent = TRUE)
-	else
-		added_skills = list(list(/datum/skill/combat/bows, 1, 6))
-
-/datum/virtue/combat/shepherd
-	name = "Capable Shepherd"
-	desc = "Years of protecting my herd from brigands and thieves have taught me how to use the simplest of weapons in self-defense."
-	custom_text = "Guaranteed Journeyman for Staffs & Slings."
-	added_stashed_items = list("Iron Quarterstaff" = /obj/item/rogueweapon/woodstaff/quarterstaff/iron,
-								"Sling" = /obj/item/gun/ballistic/revolver/grenadelauncher/sling,
-								"Pouch of Iron Sling Bullets" = /obj/item/quiver/sling/iron)
-
-/datum/virtue/combat/shepherd/apply_to_human(mob/living/carbon/human/recipient)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/staves, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-	recipient.adjust_skillrank_up_to(/datum/skill/combat/slings, SKILL_LEVEL_JOURNEYMAN, silent = TRUE)
-
 /*/datum/virtue/combat/tavern_brawler
 	name = "Tavern Brawler"
 	desc = "I've never met a problem my fists couldn't solve."
@@ -182,36 +111,28 @@
 /datum/virtue/combat/tough_hide
 	name = "Natural Armor"
 	desc = "Whether by natural means or other means, my skin is strong enough to resist being pierced and cut."
-	custom_text = "This will replace your SHIRT slot with a regenerating, unremoveable armor."
+	custom_text = "This will add a layer of natural armor as your skin armor."
 
 /datum/virtue/combat/tough_hide/apply_to_human(mob/living/carbon/human/recipient)
 	. = ..()
 	if(!recipient)
 		return
 
-	var/was_nudist = HAS_TRAIT(recipient, TRAIT_NUDIST)
-	if(was_nudist)
-		REMOVE_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
+	// Remove existing skin armor if any
+	if(recipient.skin_armor)
+		qdel(recipient.skin_armor)
 
-	// Remove whatever shirt they spawned with
-	var/obj/item/clothing/shirt = recipient.wear_shirt
-	if(shirt)
-		qdel(shirt)
-
-	// Equip the skin armor
-	recipient.equip_to_slot_or_del(
-		new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/weak(recipient),
-		SLOT_SHIRT,
-		TRUE
-	)
-	if(was_nudist)
-		ADD_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
+	// Equip the tough hide as skin armor with regeneration
+	recipient.skin_armor = new /obj/item/clothing/suit/roguetown/armor/skin_armor/tough_hide(recipient)
+	ADD_TRAIT(recipient.skin_armor, TRAIT_NODROP, CURSED_ITEM_TRAIT)
 	
 	if(alert(recipient, "Would you like to change the name or description of your skin?", "TOUGH HIDE", "MAKE IT SO", "I RESCIND") == "MAKE IT SO") // Query user
-		addtimer(CALLBACK(src, .proc/customize_skin, recipient), 5 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(customize_skin), recipient), 5 SECONDS)
 
 /datum/virtue/combat/tough_hide/proc/customize_skin(mob/living/carbon/human/recipient)
-	var/obj/item/clothing/hide = recipient.wear_shirt
+	var/obj/item/clothing/hide = recipient.skin_armor
+	if(!hide)
+		return
 	var/inputty = stripped_input(recipient, "What would you like to name your hide?", "TOUGH HIDE", null, 200)
 	if(inputty)
 		hide.name = inputty

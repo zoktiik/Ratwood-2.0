@@ -115,3 +115,53 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 
+// SKIN ARMOR (non-shirt slot, with regeneration)
+
+/obj/item/clothing/suit/roguetown/armor/skin_armor/tough_hide
+	slot_flags = null
+	name = "tough hide"
+	desc = "My skin has always been tough enough to stop most cuts and bruises, with time it will mend."
+	icon_state = null
+	body_parts_covered = FULL_BODY
+	body_parts_inherent = FULL_BODY
+	armor = list("blunt" = 50, "slash" = 35, "stab" = 35, "piercing" = 20, "fire" = 5, "acid" = 0)
+	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
+	blocksound = SOFTHIT
+	blade_dulling = DULLING_BASHCHOP
+	sewrepair = FALSE
+	max_integrity = 125 // Lower max integrity to balance out non-shirt slot and having basic crit prevention
+	item_flags = DROPDEL
+	resistance_flags = FIRE_PROOF
+	surgery_cover = FALSE
+	flags_inv = null
+	
+	/// Regeneration variables
+	var/repair_time = 35 SECONDS // Longer regen time to balance non-shirt slot
+	var/reptimer
+	var/repairmsg_begin = "My hide begins to slowly mend its abuse.."
+	var/repairmsg_continue = "My hide mends some of its abuse.."
+	var/repairmsg_stop = "My hide stops mending from the onslaught!"
+	var/repairmsg_end = "My hide has become taut with newfound vigor!"
+
+/obj/item/clothing/suit/roguetown/armor/skin_armor/tough_hide/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
+	..()
+	if(reptimer)
+		to_chat(loc, span_notice(repairmsg_stop))
+		deltimer(reptimer)
+
+	to_chat(loc, span_notice(repairmsg_begin))
+	reptimer = addtimer(CALLBACK(src, PROC_REF(armour_regen)), repair_time, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
+
+/obj/item/clothing/suit/roguetown/armor/skin_armor/tough_hide/proc/armour_regen(var/repair_percent = 0.2 * max_integrity)
+	if(obj_integrity >= max_integrity)
+		to_chat(loc, span_notice(repairmsg_end))
+		if(reptimer)
+			deltimer(reptimer)
+		return
+
+	to_chat(loc, span_notice(repairmsg_continue))
+	obj_integrity = min(obj_integrity + repair_percent, max_integrity)
+	if(obj_broken)
+		obj_fix(full_repair = FALSE)
+	reptimer = addtimer(CALLBACK(src, PROC_REF(armour_regen)), repair_time, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
+

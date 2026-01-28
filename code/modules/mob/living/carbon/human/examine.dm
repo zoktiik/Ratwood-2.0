@@ -405,6 +405,14 @@
 			str = "[m3] some kind of shirt!"
 		. += str
 
+	//skin armor (natural armor layer)
+	if(skin_armor)
+		var/str = "[m3] a layer of [skin_armor.get_examine_string(user)]. "
+		str += "[skin_armor.integrity_check(is_smart)]"
+		if(is_stupid)
+			str = "[m3] some weird tough skin!"
+		. += str
+
 	//uniform
 	if(wear_pants && !(SLOT_PANTS in obscured))
 		//accessory

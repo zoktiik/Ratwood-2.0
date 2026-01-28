@@ -18,20 +18,24 @@
 			V.handle_added_languages(recipient)
 			V.handle_stats(recipient)
 
-// Bronze Golem Pack: Both Bronze Arms
-// For those who have replaced both arms with mechanical prosthetics
+// Bronze Golem Pack: All Bronze Limbs
+// For those who have replaced all limbs with mechanical prosthetics
 /datum/virtue/pack/bronzegolem
-	name = "Bronze Golem (-3 TRI)"
-	desc = "Through wealth, misfortune, or perhaps experimentation, both of my arms have been replaced with bronze prosthetics. I am part man, part machine - a walking testament to artifice."
-	triumph_cost = 3
+	name = "Bronze Golem (-6 TRI)"
+	desc = "Through wealth, misfortune, or perhaps experimentation, all of my limbs have been replaced with bronze prosthetics. I am more machine than man - a walking testament to artifice and engineering."
+	triumph_cost = 6
 	granted_virtues = list(
 		/datum/virtue/utility/bronzearm_r,
-		/datum/virtue/utility/bronzearm_l
+		/datum/virtue/utility/bronzearm_l,
+		/datum/virtue/utility/bronzeleg_r,
+		/datum/virtue/utility/bronzeleg_l
 	)
-	custom_text = "Grants both Bronze Arm virtues:\n\
+	custom_text = "Grants all four Bronze Limb virtues:\n\
 	- Bronze Arm (R): Right arm replaced with bronze prosthetic\n\
 	- Bronze Arm (L): Left arm replaced with bronze prosthetic\n\
-	- +1 Engineering skill from studying the mechanisms"
+	- Bronze Leg (R): Right leg replaced with bronze prosthetic\n\
+	- Bronze Leg (L): Left leg replaced with bronze prosthetic\n\
+	- +4 Engineering skill total from studying the mechanisms"
 
 // Enchanting Performer Pack: Socialite + Performer + Second Voice
 // For entertainers, bards, and charismatic performers
@@ -65,17 +69,19 @@
 	- Rich and Shrewd: Appraise spell, see prices, coinpurse stashed (SEEPRICES)\n\
 	- Equestrian: Tame goat mount, +1 Riding, saddle stashed, navigate doors while mounted (EQUESTRIAN)"
 
-// Scrappy Survivor Pack: Cunning Provisioner + Forester + Feral Appetite
+// Feral Survivor Pack: Natural Armour + Pilgrim + Feral Appetite
 /datum/virtue/pack/scrappysurvivor
-	name = "Scrappy Survivor (-10 TRI)"
-	desc = "I've lived through hard times - poverty, famine, or exile taught me to make do with what I have. I can fish, farm, forage, and most importantly, I can stomach anything. Spoiled rations? Raw meat? Doesn't matter - I'll eat it and keep going."
-	triumph_cost = 10
+	name = "Feral Survivor (-20 TRI)"
+	desc = "I've lived through hard times in the wilds - poverty, famine, or exile taught me to survive like an animal. My skin has grown thick from exposure to the elements, I know the basics of homesteading, and most importantly, I can stomach anything. Spoiled rations? Raw meat? Doesn't matter - I'll eat it and keep going."
+	triumph_cost = 20
 	granted_virtues = list(
-		/datum/virtue/utility/forester,
+		/datum/virtue/combat/naturalarmour,
+		/datum/virtue/utility/homesteader,
 		/datum/virtue/utility/feral_appetite
 	)
-	custom_text = "Grants two virtues for the hardened survivor:\n\
-	- Forester: Cooking, Athletics, Farming, Fishing, Lumberjacking skills, Trusty Hoe (HOMESTEAD_EXPERT trait)\n\
+	custom_text = "Grants three virtues for the feral survivor:\n\
+	- Natural Armour: Tough hide that regenerates over time (skin armor slot with regeneration)\n\
+	- Pilgrim: Cooking, Athletics, Farming, Fishing, Lumberjacking, Knife skills, hoe/knife/food bag stashed (HOMESTEAD_EXPERT trait)\n\
 	- Feral Appetite: Can safely eat raw, toxic or spoiled food (NASTY_EATER trait)"
 
 // High Society Pack: Nobility + Socialite
