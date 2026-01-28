@@ -75,7 +75,7 @@
 	desc = "I've lived through hard times in the wilds - poverty, famine, or exile taught me to survive like an animal. My skin has grown thick from exposure to the elements, I know the basics of homesteading, and most importantly, I can stomach anything. Spoiled rations? Raw meat? Doesn't matter - I'll eat it and keep going."
 	triumph_cost = 20
 	granted_virtues = list(
-		/datum/virtue/combat/naturalarmour,
+		/datum/virtue/combat/tough_hide,
 		/datum/virtue/utility/homesteader,
 		/datum/virtue/utility/feral_appetite
 	)
