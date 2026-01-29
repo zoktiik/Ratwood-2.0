@@ -124,18 +124,18 @@
 	icon_state = null
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
-	armor = list("blunt" = 50, "slash" = 35, "stab" = 35, "piercing" = 20, "fire" = 5, "acid" = 0)
+	armor = list("blunt" = 50, "slash" = 40, "stab" = 40, "piercing" = 20, "fire" = 5, "acid" = 0)
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
-	max_integrity = 125 // Lower max integrity to balance out non-shirt slot and having basic crit prevention
+	max_integrity = 225
 	item_flags = DROPDEL
 	resistance_flags = FIRE_PROOF
 	surgery_cover = FALSE
 	flags_inv = null
 	
 	/// Regeneration variables
-	var/repair_time = 35 SECONDS // Longer regen time to balance non-shirt slot
+	var/repair_time = 25 SECONDS // Longer regen time to balance non-shirt slot
 	var/reptimer
 	var/repairmsg_begin = "My hide begins to slowly mend its abuse.."
 	var/repairmsg_continue = "My hide mends some of its abuse.."
