@@ -286,73 +286,8 @@
 	added_traits = list(TRAIT_SLEUTH)
 	custom_text = "- Upon right clicking a track, you will Mark the person who made them <i>(Expert skill required, not exclusive to this Virtue)</i>.\n- Further tracks found will be automatically highlighted as theirs, along with the person themselves, if they are not sneaking or invisible at the time.\n- Reduces the cooldown for tracking, allows track examining right away, and movement no longer cancels tracking."
 
-/datum/virtue/utility/bronzearm_r
-	name = "Bronze Arm (R)"
-	desc = "Through connections or wealth, my arm had been replaced by one of bronze and gears, that can grip and hold onto things. I've learned just a bit of Engineering as a result."
-	custom_text = "Replaces your Right arm with a prosthetic Bronze one. Incompatible with Wood Arm (R) vice"
-	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
-
-/datum/virtue/utility/bronzearm_r/apply_to_human(mob/living/carbon/human/recipient)
-	. = ..()
-	var/obj/item/bodypart/O = recipient.get_bodypart(BODY_ZONE_R_ARM)
-	if(O)
-		O.drop_limb()
-		qdel(O)
-	if(recipient.charflaw)
-		if(recipient.charflaw.type == /datum/charflaw/limbloss/arm_r)
-			to_chat(recipient, span_info("In my foolishness I believed a sharlatan who wished to trade in my wooden arm for one of bronze. It fell apart. Now I've no arm at all."))
-		else
-			var/obj/item/bodypart/r_arm/prosthetic/bronzeright/L = new()
-			L.attach_limb(recipient)
-
-/datum/virtue/utility/bronzearm_l
-	name = "Bronze Arm (L)"
-	desc = "Through connections or wealth, my arm had been replaced by one of bronze and gears, that can grip and hold onto things. I've learned just a bit of Engineering as a result."
-	custom_text = "Replaces your Left arm with a prosthetic Bronze one. Incompatible with Wood Arm (L) vice"
-	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
-
-/datum/virtue/utility/bronzearm_l/apply_to_human(mob/living/carbon/human/recipient)
-	. = ..()
-	var/obj/item/bodypart/O = recipient.get_bodypart(BODY_ZONE_L_ARM)
-	if(O)
-		O.drop_limb()
-		qdel(O)
-	if(recipient.charflaw)
-		if(recipient.charflaw.type == /datum/charflaw/limbloss/arm_l)
-			to_chat(recipient, span_info("In my foolishness I believed a sharlatan who wished to trade in my wooden arm for one of bronze. It fell apart. Now I've no arm at all."))
-		else
-			var/obj/item/bodypart/l_arm/prosthetic/bronzeleft/L = new()
-			L.attach_limb(recipient)
-
-/datum/virtue/utility/bronzeleg_r
-	name = "Bronze Leg (R)"
-	desc = "Through connections or wealth, my leg had been replaced by one of bronze and gears, that can walk and support me. I've learned just a bit of Engineering as a result."
-	custom_text = "Replaces your Right leg with a prosthetic Bronze one. Incompatible with Wood Leg (R) vice"
-	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
-
-/datum/virtue/utility/bronzeleg_r/apply_to_human(mob/living/carbon/human/recipient)
-	. = ..()
-	var/obj/item/bodypart/O = recipient.get_bodypart(BODY_ZONE_R_LEG)
-	if(O)
-		O.drop_limb()
-		qdel(O)
-	var/obj/item/bodypart/r_leg/prosthetic/bronzeright/L = new()
-	L.attach_limb(recipient)
-
-/datum/virtue/utility/bronzeleg_l
-	name = "Bronze Leg (L)"
-	desc = "Through connections or wealth, my leg had been replaced by one of bronze and gears, that can walk and support me. I've learned just a bit of Engineering as a result."
-	custom_text = "Replaces your Left leg with a prosthetic Bronze one. Incompatible with Wood Leg (L) vice"
-	added_skills = list(list(/datum/skill/craft/engineering, 1, 6))
-
-/datum/virtue/utility/bronzeleg_l/apply_to_human(mob/living/carbon/human/recipient)
-	. = ..()
-	var/obj/item/bodypart/O = recipient.get_bodypart(BODY_ZONE_L_LEG)
-	if(O)
-		O.drop_limb()
-		qdel(O)
-	var/obj/item/bodypart/l_leg/prosthetic/bronzeleft/L = new()
-	L.attach_limb(recipient)
+// NOTE: Bronze Arm/Leg virtues have been moved to modular_azurepeak/virtues/prosthetics/
+// They are now part of the modular Prosthetic Limbs virtue system
 
 /datum/virtue/utility/woodwalker
 	name = "Woodwalker"

@@ -18,24 +18,9 @@
 			V.handle_added_languages(recipient)
 			V.handle_stats(recipient)
 
-// Bronze Golem Pack: All Bronze Limbs
-// For those who have replaced all limbs with mechanical prosthetics
-/datum/virtue/pack/bronzegolem
-	name = "Bronze Golem (-6 TRI)"
-	desc = "Through wealth, misfortune, or perhaps experimentation, all of my limbs have been replaced with bronze prosthetics. I am more machine than man - a walking testament to artifice and engineering."
-	triumph_cost = 6
-	granted_virtues = list(
-		/datum/virtue/utility/bronzearm_r,
-		/datum/virtue/utility/bronzearm_l,
-		/datum/virtue/utility/bronzeleg_r,
-		/datum/virtue/utility/bronzeleg_l
-	)
-	custom_text = "Grants all four Bronze Limb virtues:\n\
-	- Bronze Arm (R): Right arm replaced with bronze prosthetic\n\
-	- Bronze Arm (L): Left arm replaced with bronze prosthetic\n\
-	- Bronze Leg (R): Right leg replaced with bronze prosthetic\n\
-	- Bronze Leg (L): Left leg replaced with bronze prosthetic\n\
-	- +4 Engineering skill total from studying the mechanisms"
+// NOTE: Bronze Golem pack has been removed
+// Use the new Prosthetic Limbs virtue system instead, which allows selecting all 4 limbs
+// in bronze, iron, or steel appearance with the same functionality
 
 // Enchanting Performer Pack: Socialite + Performer + Second Voice
 // For entertainers, bards, and charismatic performers

@@ -6,20 +6,13 @@
 		if(v)
 			vice_list += v
 	
-	// Bronze Arm (R) vs Wood Arm (R)
-	if(virtue_type == /datum/virtue/utility/bronzearm_r)
+	// Prosthetic Limbs vs Wood Arms
+	if(virtue_type == /datum/virtue/prosthetics/prosthetic_specialist)
+		// Note: Can't check selected limbs during selection, but wood arm vices shouldn't be selectable with prosthetic virtue
 		for(var/datum/charflaw/vice in vice_list)
-			if(vice && vice.type == /datum/charflaw/limbloss/arm_r)
+			if(vice && (vice.type == /datum/charflaw/limbloss/arm_r || vice.type == /datum/charflaw/limbloss/arm_l))
 				if(show_message && user)
-					to_chat(user, span_warning("Bronze Arm (R) virtue conflicts with Wood Arm (R) vice!"))
-				return TRUE
-	
-	// Bronze Arm (L) vs Wood Arm (L)
-	if(virtue_type == /datum/virtue/utility/bronzearm_l)
-		for(var/datum/charflaw/vice in vice_list)
-			if(vice && vice.type == /datum/charflaw/limbloss/arm_l)
-				if(show_message && user)
-					to_chat(user, span_warning("Bronze Arm (L) virtue conflicts with Wood Arm (L) vice!"))
+					to_chat(user, span_warning("Prosthetic Limbs virtue conflicts with Wood Arm vice!"))
 				return TRUE
 	
 	// Night-eyed vs Colorblind
@@ -50,33 +43,19 @@
 /datum/preferences/proc/check_virtue_virtue_conflict(virtue_type, other_virtue_type, show_message = FALSE, mob/user = null)
 	if(!virtue_type || !other_virtue_type)
 		return FALSE
-	if(virtue_type == /datum/virtue/utility/bronzearm_r && other_virtue_type == /datum/virtue/utility/bronzearm_l)
-		if(show_message && user)
-			to_chat(user, span_warning("Bronze Arm (R) virtue conflicts with Bronze Arm (L) virtue - you can't have both bronze arms!"))
-		return TRUE
-	if(virtue_type == /datum/virtue/utility/bronzearm_l && other_virtue_type == /datum/virtue/utility/bronzearm_r)
-		if(show_message && user)
-			to_chat(user, span_warning("Bronze Arm (L) virtue conflicts with Bronze Arm (R) virtue - you can't have both bronze arms!"))
-		return TRUE
+	// Note: Prosthetic specialist handles its own zone conflicts internally during selection
+	return FALSE
 
 /datum/preferences/proc/check_vice_virtue_conflict(vice_type, show_message = FALSE, mob/user = null)
 	// Check if selected vice conflicts with any selected virtue
 	var/list/virtue_list = list(virtue, virtuetwo)
 	
-	// Wood Arm (R) vs Bronze Arm (R)
-	if(vice_type == /datum/charflaw/limbloss/arm_r)
+	// Wood Arm (R/L) vs Prosthetic Limbs
+	if(vice_type == /datum/charflaw/limbloss/arm_r || vice_type == /datum/charflaw/limbloss/arm_l)
 		for(var/datum/virtue/virt in virtue_list)
-			if(virt && virt.type == /datum/virtue/utility/bronzearm_r)
+			if(virt && virt.type == /datum/virtue/prosthetics/prosthetic_specialist)
 				if(show_message && user)
-					to_chat(user, span_warning("Wood Arm (R) vice conflicts with Bronze Arm (R) virtue!"))
-				return TRUE
-	
-	// Wood Arm (L) vs Bronze Arm (L)
-	if(vice_type == /datum/charflaw/limbloss/arm_l)
-		for(var/datum/virtue/virt in virtue_list)
-			if(virt && virt.type == /datum/virtue/utility/bronzearm_l)
-				if(show_message && user)
-					to_chat(user, span_warning("Wood Arm (L) vice conflicts with Bronze Arm (L) virtue!"))
+					to_chat(user, span_warning("Wood Arm vice conflicts with Prosthetic Limbs virtue!"))
 				return TRUE
 	
 	// Colorblind vs Night-eyed
