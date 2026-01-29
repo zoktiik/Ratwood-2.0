@@ -125,7 +125,6 @@
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 	armor = list("blunt" = 50, "slash" = 35, "stab" = 35, "piercing" = 20, "fire" = 5, "acid" = 0)
-	prevent_crits = list(BCLASS_CUT, BCLASS_BLUNT)
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
 	sewrepair = FALSE
