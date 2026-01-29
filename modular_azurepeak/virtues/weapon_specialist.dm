@@ -70,7 +70,7 @@
 			"cost" = 2
 		),
 		"Iron Greataxe" = list(
-			"items" = list(/obj/item/rogueweapon/greataxe/iron),
+			"items" = list(/obj/item/rogueweapon/greataxe),
 			"skills" = list(/datum/skill/combat/axes),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
