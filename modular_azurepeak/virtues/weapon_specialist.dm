@@ -1,10 +1,9 @@
 /datum/virtue/combat/weapon_specialist
 	name = "Weapon Specialist"
 	desc = "I trained with several weapons of my choice, mastering their use and keeping them close at hand."
-	custom_text = "Select weapons to specialize in (up to 3 points). Basic weapons cost 1 point, quality steel weapons cost 2-3 points. You will receive each weapon stashed and a matching skill bonus."
+	custom_text = "Select weapons to specialize in (up to 3 points). You will receive each weapon stashed and a matching skill bonus."
 	var/max_points = 3
 	var/list/weapon_options = list(
-		// SWORDS (Iron/Bronze = 1pt, Steel = 2pt)
 		"Iron Arming Sword" = list(
 			"items" = list(/obj/item/rogueweapon/sword/iron),
 			"skills" = list(/datum/skill/combat/swords),
@@ -41,7 +40,6 @@
 			"cost" = 2
 		),
 		
-		// KNIVES/DAGGERS (Bronze = 1pt, Steel = 2pt)
 		"Bronze Hunting Knife" = list(
 			"items" = list(/obj/item/rogueweapon/huntingknife/bronze),
 			"skills" = list(/datum/skill/combat/knives),
@@ -56,15 +54,7 @@
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 1
 		),
-		"Steel Parrying Dagger" = list(
-			"items" = list(/obj/item/rogueweapon/huntingknife/idagger/steel),
-			"skills" = list(/datum/skill/combat/knives),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
 		
-		// AXES (Bronze/Iron = 1pt, Steel = 2-3pt)
 		"Bronze Axe" = list(
 			"items" = list(/obj/item/rogueweapon/stoneaxe/woodcut/bronze),
 			"skills" = list(/datum/skill/combat/axes),
@@ -79,22 +69,14 @@
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 2
 		),
-		"Steel Axe" = list(
-			"items" = list(/obj/item/rogueweapon/stoneaxe/woodcut/steel),
-			"skills" = list(/datum/skill/combat/axes),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		"Steel Greataxe" = list(
-			"items" = list(/obj/item/rogueweapon/greataxe/steel),
+		"Iron Greataxe" = list(
+			"items" = list(/obj/item/rogueweapon/greataxe/iron),
 			"skills" = list(/datum/skill/combat/axes),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 3
 		),
 		
-		// MACES/BLUNT (Bronze = 1pt, Steel = 2-3pt)
 		"Bronze Mace" = list(
 			"items" = list(/obj/item/rogueweapon/mace/bronze),
 			"skills" = list(/datum/skill/combat/maces),
@@ -109,29 +91,20 @@
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 2
 		),
-		"Steel Mace" = list(
-			"items" = list(/obj/item/rogueweapon/mace/steel),
+		"Iron Flail" = list(
+			"items" = list(/obj/item/rogueweapon/flail),
 			"skills" = list(/datum/skill/combat/maces),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
+			"cost" = 2
 		),
-		"Steel Morningstar" = list(
-			"items" = list(/obj/item/rogueweapon/mace/steel/morningstar),
+		"Iron Warhammer" = list(
+			"items" = list(/obj/item/rogueweapon/mace/warhammer),
 			"skills" = list(/datum/skill/combat/maces),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
+			"cost" = 2
 		),
-		"Steel Warhammer" = list(
-			"items" = list(/obj/item/rogueweapon/mace/warhammer/steel),
-			"skills" = list(/datum/skill/combat/maces),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		
-		// POLEARMS (Bronze/Wood = 1pt)
 		"Bronze Spear" = list(
 			"items" = list(/obj/item/rogueweapon/spear/bronze),
 			"skills" = list(/datum/skill/combat/polearms),
@@ -144,10 +117,9 @@
 			"skills" = list(/datum/skill/combat/polearms),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 2
+			"cost" = 1
 		),
 		
-		// WHIPS (1pt)
 		"Leather Whip" = list(
 			"items" = list(/obj/item/rogueweapon/whip),
 			"skills" = list(/datum/skill/combat/whipsflails),
@@ -155,38 +127,7 @@
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 1
 		),
-		
-		// UNARMED (Bronze = 1pt)
-		"Bronze Knuckles (Pair)" = list(
-			"items" = list(/obj/item/rogueweapon/knuckles/bronzeknuckles, /obj/item/rogueweapon/knuckles/bronzeknuckles),
-			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 2
-		),
-		"Bronze Katar" = list(
-			"items" = list(/obj/item/rogueweapon/katar/bronze),
-			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 2
-		),
-		"Recurve Bow" = list(
-			"items" = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve, /obj/item/quiver/arrows),
-			"skills" = list(/datum/skill/combat/bows),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 2
-		),
-		"Shepherd's Tools" = list(
-			"items" = list(/obj/item/rogueweapon/woodstaff/quarterstaff/iron, /obj/item/gun/ballistic/revolver/grenadelauncher/sling, /obj/item/quiver/sling/iron),
-			"skills" = list(/datum/skill/combat/staves, /datum/skill/combat/slings),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 2
-		),
-		
-		// CLASSIC COMBINATIONS FROM DELETED VIRTUES (2pt each for pairs)
+		// CLASSIC COMBINATIONS FROM DELETED VIRTUES
 		"Duelist's Set" = list(
 			"items" = list(/obj/item/rogueweapon/sword/short/messer/iron/virtue, /obj/item/rogueweapon/huntingknife/idagger/virtue),
 			"skills" = list(/datum/skill/combat/swords, /datum/skill/combat/knives),
@@ -207,31 +148,64 @@
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 3
-		)
+		),
+		"Shepherd's Tools" = list(
+			"items" = list(/obj/item/rogueweapon/woodstaff/quarterstaff/iron, /obj/item/gun/ballistic/revolver/grenadelauncher/sling, /obj/item/quiver/sling/iron),
+			"skills" = list(/datum/skill/combat/staves, /datum/skill/combat/slings),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Archer's Set" = list(
+			"items" = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve, /obj/item/quiver/arrows),
+			"skills" = list(/datum/skill/combat/bows),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Pugilist, Bronze Knuckles (Pair)" = list(
+			"items" = list(/obj/item/rogueweapon/knuckles/bronzeknuckles, /obj/item/rogueweapon/knuckles/bronzeknuckles),
+			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+
+		"Pugilist, Bronze Katar (Pair)" = list(
+			"items" = list(/obj/item/rogueweapon/katar/bronze, /obj/item/rogueweapon/katar/bronze),
+			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
 	)
 
 /datum/virtue/combat/weapon_specialist/apply_to_human(mob/living/carbon/human/recipient)
 	var/remaining_points = max_points
 	var/list/choices = list()
 	for(var/weapon_name in weapon_options)
-		choices += weapon_name
+		var/list/option = weapon_options[weapon_name]
+		var/cost = option["cost"]
+		// Add cost to the display name
+		choices["[weapon_name] ([cost]pt)"] = weapon_name
 	
 	var/list/selected = list()
 	while(remaining_points > 0 && length(choices))
-		var/prompt = "Select a weapon ([remaining_points] points left):"
-		var/chosen = input(recipient, prompt, "Weapon Specialization") as null|anything in choices
-		if(!chosen)
+		var/prompt = "Select a weapon - You have [remaining_points] point\s remaining ([max_points - remaining_points]/[max_points] spent):"
+		var/chosen_display = input(recipient, prompt, "Weapon Specialization") as null|anything in choices
+		if(!chosen_display)
 			break
 		
+		var/chosen = choices[chosen_display]
 		var/list/option = weapon_options[chosen]
 		var/cost = option["cost"]
 		if(cost > remaining_points)
-			to_chat(recipient, span_warning("Not enough points for [chosen]."))
+			to_chat(recipient, span_warning("Not enough points for [chosen] ([cost]pt). You have [remaining_points]pt remaining."))
 			continue
 		
 		selected += chosen
 		remaining_points -= cost
-		choices -= chosen
+		choices -= chosen_display
 	
 	if(length(selected))
 		for(var/chosen in selected)
@@ -240,13 +214,11 @@
 			// Add weapons to stashed items
 			if(option["items"])
 				var/list/items = option["items"]
-				var/item_index = 1
 				for(var/item_type in items)
-					var/item_name = chosen
-					if(length(items) > 1)
-						item_name = "[chosen] ([item_index])"
+					// Use the actual item name from the item type
+					var/obj/item/temp_item = item_type
+					var/item_name = initial(temp_item.name)
 					recipient.mind?.special_items[item_name] = item_type
-					item_index++
 			
 			// Adjust skill levels
 			if(option["skills"])
