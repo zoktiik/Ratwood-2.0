@@ -4,6 +4,58 @@
 	custom_text = "Select weapons to specialize in (up to 3 points). You will receive each weapon stashed and a matching skill bonus."
 	var/max_points = 3
 	var/list/weapon_options = list(
+		// CLASSIC COMBINATIONS FROM DELETED VIRTUES
+		"Duelist's Set" = list(
+			"items" = list(/obj/item/rogueweapon/sword/short/messer/iron/virtue, /obj/item/rogueweapon/huntingknife/idagger/virtue),
+			"skills" = list(/datum/skill/combat/swords, /datum/skill/combat/knives),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Dungeoneer's Set" = list(
+			"items" = list(/obj/item/rogueweapon/stoneaxe/woodcut, /obj/item/rogueweapon/whip),
+			"skills" = list(/datum/skill/combat/axes, /datum/skill/combat/whipsflails),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Militiaman's Set" = list(
+			"items" = list(/obj/item/rogueweapon/spear, /obj/item/rogueweapon/mace),
+			"skills" = list(/datum/skill/combat/polearms, /datum/skill/combat/maces),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Shepherd's Tools" = list(
+			"items" = list(/obj/item/rogueweapon/woodstaff/quarterstaff/iron, /obj/item/gun/ballistic/revolver/grenadelauncher/sling, /obj/item/quiver/sling/iron),
+			"skills" = list(/datum/skill/combat/staves, /datum/skill/combat/slings),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Archer's Set" = list(
+			"items" = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve, /obj/item/quiver/arrows),
+			"skills" = list(/datum/skill/combat/bows),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+		"Pugilist, Bronze Knuckles (Pair)" = list(
+			"items" = list(/obj/item/rogueweapon/knuckles/bronzeknuckles, /obj/item/rogueweapon/knuckles/bronzeknuckles),
+			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+
+		"Pugilist, Bronze Katar (Pair)" = list(
+			"items" = list(/obj/item/rogueweapon/katar/bronze, /obj/item/rogueweapon/katar/bronze),
+			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
+			"min_level" = SKILL_LEVEL_JOURNEYMAN,
+			"max_level" = SKILL_LEVEL_JOURNEYMAN,
+			"cost" = 3
+		),
+
 		"Iron Arming Sword" = list(
 			"items" = list(/obj/item/rogueweapon/sword/iron),
 			"skills" = list(/datum/skill/combat/swords),
@@ -23,7 +75,7 @@
 			"skills" = list(/datum/skill/combat/swords),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 2
+			"cost" = 1
 		),
 		"Iron Short Sword" = list(
 			"items" = list(/obj/item/rogueweapon/sword/short/iron),
@@ -47,7 +99,7 @@
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 1
 		),
-		"Parrying Dagger" = list(
+		"Iron Parrying Dagger" = list(
 			"items" = list(/obj/item/rogueweapon/huntingknife/idagger/virtue),
 			"skills" = list(/datum/skill/combat/knives),
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
@@ -126,57 +178,6 @@
 			"min_level" = SKILL_LEVEL_JOURNEYMAN,
 			"max_level" = SKILL_LEVEL_JOURNEYMAN,
 			"cost" = 1
-		),
-		// CLASSIC COMBINATIONS FROM DELETED VIRTUES
-		"Duelist's Set" = list(
-			"items" = list(/obj/item/rogueweapon/sword/short/messer/iron/virtue, /obj/item/rogueweapon/huntingknife/idagger/virtue),
-			"skills" = list(/datum/skill/combat/swords, /datum/skill/combat/knives),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		"Dungeoneer's Set" = list(
-			"items" = list(/obj/item/rogueweapon/stoneaxe/woodcut, /obj/item/rogueweapon/whip),
-			"skills" = list(/datum/skill/combat/axes, /datum/skill/combat/whipsflails),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		"Militiaman's Set" = list(
-			"items" = list(/obj/item/rogueweapon/spear, /obj/item/rogueweapon/mace),
-			"skills" = list(/datum/skill/combat/polearms, /datum/skill/combat/maces),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		"Shepherd's Tools" = list(
-			"items" = list(/obj/item/rogueweapon/woodstaff/quarterstaff/iron, /obj/item/gun/ballistic/revolver/grenadelauncher/sling, /obj/item/quiver/sling/iron),
-			"skills" = list(/datum/skill/combat/staves, /datum/skill/combat/slings),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		"Archer's Set" = list(
-			"items" = list(/obj/item/gun/ballistic/revolver/grenadelauncher/bow/recurve, /obj/item/quiver/arrows),
-			"skills" = list(/datum/skill/combat/bows),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-		"Pugilist, Bronze Knuckles (Pair)" = list(
-			"items" = list(/obj/item/rogueweapon/knuckles/bronzeknuckles, /obj/item/rogueweapon/knuckles/bronzeknuckles),
-			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
-		),
-
-		"Pugilist, Bronze Katar (Pair)" = list(
-			"items" = list(/obj/item/rogueweapon/katar/bronze, /obj/item/rogueweapon/katar/bronze),
-			"skills" = list(/datum/skill/combat/unarmed, /datum/skill/combat/wrestling),
-			"min_level" = SKILL_LEVEL_JOURNEYMAN,
-			"max_level" = SKILL_LEVEL_JOURNEYMAN,
-			"cost" = 3
 		),
 	)
 

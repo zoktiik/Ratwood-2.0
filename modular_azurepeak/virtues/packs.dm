@@ -56,9 +56,9 @@
 
 // Feral Survivor Pack: Natural Armour + Pilgrim + Feral Appetite
 /datum/virtue/pack/scrappysurvivor
-	name = "Feral Survivor (-20 TRI)"
+	name = "Feral Survivor (-10 TRI)"
 	desc = "I've lived through hard times in the wilds - poverty, famine, or exile taught me to survive like an animal. My skin has grown thick from exposure to the elements, I know the basics of homesteading, and most importantly, I can stomach anything. Spoiled rations? Raw meat? Doesn't matter - I'll eat it and keep going."
-	triumph_cost = 20
+	triumph_cost = 10
 	granted_virtues = list(
 		/datum/virtue/combat/tough_hide,
 		/datum/virtue/utility/homesteader,
@@ -84,16 +84,18 @@
 
 // Trusted Housekeeper Pack: Resident + Cunning Provisioner
 /datum/virtue/pack/housekeeper
-	name = "Trusted Housekeeper (-9 TRI)"
+	name = "Trusted Housekeeper (-7 TRI)"
 	desc = "I've served the households of this city for years - cooking, cleaning, and managing provisions. I know every street, have a home here, and my skills in the kitchen are unmatched. The city trusts me, and I know how to make do."
-	triumph_cost = 9
+	triumph_cost = 7
 	granted_virtues = list(
 		/datum/virtue/utility/resident,
-		/datum/virtue/utility/granary
+		/datum/virtue/utility/granary,
+		/datum/virtue/utility/homesteader
 	)
 	custom_text = "Grants two virtues for the city servant:\n\
 	- Resident: City residency, treasury account, home in the city\n\
-	- Cunning Provisioner: Cooking & Fishing skills, food bag stashed (HOMESTEAD_EXPERT)"
+	- Cunning Provisioner: Cooking & Fishing skills, food bag stashed (HOMESTEAD_EXPERT)\n\
+	- Pilgrim: Cooking, Athletics, Farming, Fishing, Lumberjacking, Knife skills, hoe/knife/food bag stashed."
 
 // Broken Soul Pack: Ugly + Tolerant + Deadened
 /datum/virtue/pack/brokensoul
