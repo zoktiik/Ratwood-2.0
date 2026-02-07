@@ -111,33 +111,39 @@
 /datum/virtue/combat/tough_hide
 	name = "Natural Armor"
 	desc = "Whether by natural means or other means, my skin is strong enough to resist being pierced and cut."
-	custom_text = "This will add a layer of natural armor as your skin armor."
+	custom_text = "This will replace your SHIRT slot with a regenerating, unremoveable armor."
 
 /datum/virtue/combat/tough_hide/apply_to_human(mob/living/carbon/human/recipient)
 	. = ..()
 	if(!recipient)
 		return
 
-	// Remove existing skin armor if any
-	if(recipient.skin_armor)
-		qdel(recipient.skin_armor)
+	var/was_nudist = HAS_TRAIT(recipient, TRAIT_NUDIST)
+	if(was_nudist)
+		REMOVE_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
 
-	// Equip the tough hide as skin armor with regeneration
-	recipient.skin_armor = new /obj/item/clothing/suit/roguetown/armor/skin_armor/tough_hide(recipient)
-	ADD_TRAIT(recipient.skin_armor, TRAIT_NODROP, CURSED_ITEM_TRAIT)
+	// Remove whatever shirt they spawned with
+	var/obj/item/clothing/shirt = recipient.wear_shirt
+	if(shirt)
+		qdel(shirt)
+
+	// Equip the skin armor
+	recipient.equip_to_slot_or_del(
+		new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/weak(recipient),
+		SLOT_SHIRT,
+		TRUE
+	)
+	if(was_nudist)
+		ADD_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
 	
 	if(alert(recipient, "Would you like to change the name or description of your skin?", "TOUGH HIDE", "MAKE IT SO", "I RESCIND") == "MAKE IT SO") // Query user
-		addtimer(CALLBACK(src, PROC_REF(customize_skin), recipient), 5 SECONDS)
+		addtimer(CALLBACK(src, .proc/customize_skin, recipient), 5 SECONDS)
 
 /datum/virtue/combat/tough_hide/proc/customize_skin(mob/living/carbon/human/recipient)
-	var/obj/item/clothing/hide = recipient.skin_armor
-	if(!hide)
-		return
+	var/obj/item/clothing/hide = recipient.wear_shirt
 	var/inputty = stripped_input(recipient, "What would you like to name your hide?", "TOUGH HIDE", null, 200)
 	if(inputty)
 		hide.name = inputty
 	inputty = stripped_input(recipient, "How would you describe your hide?", "TOUGH HIDE", null, 200)
 	if(inputty)
 		hide.desc = inputty
-
-
