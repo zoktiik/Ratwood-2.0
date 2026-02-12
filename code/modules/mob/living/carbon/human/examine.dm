@@ -129,16 +129,18 @@
 				rank_color = "#ECB20A"
 			if(SOCIAL_RANK_ROYAL)
 				rank_color = "#FFBF00"
-		var/social_strata = "<a href='?src=[REF(src)];social_strata=1'><font color='[rank_color]'>⚜</font></A>"
+		var/social_strata = "<a href='?src=[REF(src)];social_strata=1'><font color='#[rank_color]'>⚜</font></A>"
+		if(family_datum)
+			social_strata = "<a href='?src=[REF(src)];social_strata=1'><font color='#[rank_color]'>⛯</font></A>"
 		var/display1
 		var/display2 = "[(!HAS_TRAIT(usr, TRAIT_OUTLANDER) && src.social_rank) ? "[social_strata]" : " "]"
 		if ((valid_headshot_link(src, headshot_link, TRUE)) && (user.client?.prefs.chatheadshot))
 			if(display_as_wanderer)
-				display1 = span_info("ø ------------ ø\n<img src=[headshot_link] width=100 height=100/>\nThis is <EM>[used_name]</EM>, the wandering [race_name].")
+				display1 = span_info("ø ------------ ø\n[chat_headshot(headshot_link)]\nThis is <EM>[used_name]</EM>, the wandering [race_name].")
 			else if(used_title)
-				display1 = span_info("ø ------------ ø\n<img src=[headshot_link] width=100 height=100/>\nThis is <EM>[used_name]</EM>, the [race_name] [used_title].")
+				display1 = span_info("ø ------------ ø\n[chat_headshot(headshot_link)]\nThis is <EM>[used_name]</EM>, the [race_name] [used_title].")
 			else
-				display1 = span_info("ø ------------ ø\n<img src=[headshot_link] width=100 height=100/>\nThis is the <EM>[used_name]</EM>, the [race_name].")
+				display1 = span_info("ø ------------ ø\n[chat_headshot(headshot_link)]\nThis is the <EM>[used_name]</EM>, the [race_name].")
 		else
 			if(display_as_wanderer)
 				display1 = span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the wandering [race_name].")
@@ -146,7 +148,7 @@
 				display1 = span_info("ø ------------ ø\nThis is <EM>[used_name]</EM>, the [race_name] [used_title].")
 			else
 				display1 = span_info("ø ------------ ø\nThis is the <EM>[used_name]</EM>, the [race_name].")
-		. = list("[display1] [display2]")	
+		. = list("[display1] [display2]")
 
 		if(HAS_TRAIT(src, TRAIT_WITCH))
 			if(HAS_TRAIT(user, TRAIT_NOBLE) || HAS_TRAIT(user, TRAIT_INQUISITION) || HAS_TRAIT(user, TRAIT_WITCH))
@@ -307,6 +309,13 @@
 
 		if (HAS_TRAIT(src, TRAIT_LEPROSY))
 			. += span_necrosis("A LEPER...")
+
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			if(family_datum == H.family_datum && family_datum)
+				var/family_text = ReturnRelation(user)
+				if(family_text)
+					. += family_text
 
 		if (HAS_TRAIT(src, TRAIT_BEAUTIFUL))
 			switch (pronouns)
@@ -583,7 +592,7 @@
 
 	//ID
 	if(wear_ring && !(SLOT_RING in obscured))
-		var/str = "[wear_ring.get_examine_string(user)] on [m2] hands. "
+		var/str = "[m3] [wear_ring.get_examine_string(user)] on [m2] hands. "
 		if(is_smart && istype(wear_ring, /obj/item/clothing/ring/active))
 			var/obj/item/clothing/ring/active/AR = wear_ring
 			if(AR.cooldowny)
@@ -846,10 +855,10 @@
 		. += span_warning("[msg.Join("\n")]")
 
 	// Show especially large embedded objects at a glance
-	for(var/obj/item/bodypart/part in bodyparts)
-		if (LAZYLEN(part.embedded_objects))
-			for(var/obj/item/stuck_thing in part.embedded_objects)
-				if (stuck_thing.w_class >= WEIGHT_CLASS_SMALL)
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		if(LAZYLEN(part.embedded_objects))
+			for(var/obj/item/stuck_thing as anything in part.embedded_objects)
+				if(stuck_thing.w_class >= WEIGHT_CLASS_SMALL)
 					. += span_bloody("<b>[m3] \a [stuck_thing] stuck in [m2] [part.name]!</b>")
 
 	if(ishuman(user))
