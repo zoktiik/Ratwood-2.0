@@ -147,3 +147,48 @@
 		list(/datum/skill/combat/knives, 1, 2)
 	)
 
+
+
+/datum/virtue/utility/larcenous
+	name = "Larcenous"
+	desc = "Whether it was asked of you, or by a calling for the rush deep within your hollow heart, you seek things that don't belong you. You know how to work a lock, and have stashed a ring of them, for just the occasion."
+	added_stashed_items = list("Lockpick Ring" = /obj/item/lockpickring/mundane)
+	added_skills = list(list(/datum/skill/misc/lockpicking, 3, 6))
+
+/datum/virtue/utility/granary
+	name = "Cunning Provisioner"
+	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
+	desc = "You've worked in or around the docks enough to steal away a sack of supplies that no one would surely miss, just in case. You've picked up on some cooking and fishing tips in your spare time, as well."
+	added_stashed_items = list("Bag of Food" = /obj/item/storage/roguebag/food)
+	added_skills = list(list(/datum/skill/craft/cooking, 3, 6),
+						list(/datum/skill/labor/fishing, 2, 6))
+
+/datum/virtue/utility/forester
+	name = "Forester"
+	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
+	desc = "The forest is your home, or at least, it used to be. You always long to return and roam free once again, and you have not forgotten your knowledge on how to be self sufficient."
+	added_stashed_items = list("Trusty hoe" = /obj/item/rogueweapon/hoe)
+	added_skills = list(list(/datum/skill/craft/cooking, 2, 2),
+						list(/datum/skill/misc/athletics, 2, 2),
+						list(/datum/skill/labor/farming, 2, 2),
+						list(/datum/skill/labor/fishing, 2, 2),
+						list(/datum/skill/labor/lumberjacking, 2, 2)
+	)
+
+/datum/virtue/utility/homesteader
+	name = "Pilgrim (-3 TRI)"
+	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
+	desc= "As they say, 'hearth is where the heart is'. You are intimately familiar with the labors of lyfe, and have stowed away everything necessary to start anew: a hunting dagger, your trusty hoe, and a sack of assorted supplies."
+	triumph_cost = 3
+	added_stashed_items = list(
+		"Hoe" = /obj/item/rogueweapon/hoe,
+		"Bag of Food" = /obj/item/storage/roguebag/food,
+		"Hunting Knife" = /obj/item/rogueweapon/huntingknife
+	)
+	added_skills = list(list(/datum/skill/craft/cooking, 3, 3),
+						list(/datum/skill/misc/athletics, 2, 2),
+						list(/datum/skill/labor/farming, 3, 3),
+						list(/datum/skill/labor/fishing, 3, 3),
+						list(/datum/skill/labor/lumberjacking, 2, 2),
+						list(/datum/skill/combat/knives, 2, 2)
+	)

@@ -25,9 +25,9 @@
 // Enchanting Performer Pack: Socialite + Performer + Second Voice
 // For entertainers, bards, and charismatic performers
 /datum/virtue/pack/enchanter
-	name = "Enchanting Performer (-12 TRI)"
+	name = "Enchanting Performer (-8 TRI)"
 	desc = "I am a master of the stage and salon alike - beautiful, talented, and able to become anyone through voice and charm. My performances captivate audiences, and my social graces open every door."
-	triumph_cost = 12
+	triumph_cost = 8
 	granted_virtues = list(
 		/datum/virtue/utility/socialite,
 		/datum/virtue/utility/performer,
@@ -56,7 +56,7 @@
 
 // Feral Survivor Pack: Natural Armour + Pilgrim + Feral Appetite
 /datum/virtue/pack/scrappysurvivor
-	name = "Feral Survivor (-10 TRI)"
+	name = "Feral Survivor (-12 TRI)"
 	desc = "I've lived through hard times in the wilds - poverty, famine, or exile taught me to survive like an animal. My skin has grown thick from exposure to the elements, I know the basics of homesteading, and most importantly, I can stomach anything. Spoiled rations? Raw meat? Doesn't matter - I'll eat it and keep going."
 	triumph_cost = 10
 	granted_virtues = list(
@@ -68,6 +68,19 @@
 	- Natural Armour: Tough hide that regenerates over time (skin armor slot with regeneration)\n\
 	- Pilgrim: Cooking, Athletics, Farming, Fishing, Lumberjacking, Knife skills, hoe/knife/food bag stashed (HOMESTEAD_EXPERT trait)\n\
 	- Feral Appetite: Can safely eat raw, toxic or spoiled food (NASTY_EATER trait)"
+
+	// Sturdy Giant Pack: Natural Armor + Giant
+/datum/virtue/pack/sturdygiant
+	name = "Sturdy Giant (-12 TRI)"
+	desc = "I am both large and hardy — my size and thick skin make me difficult to wound."
+	triumph_cost = 12
+	granted_virtues = list(
+		/datum/virtue/combat/tough_hide,
+		/datum/virtue/size/giant
+	)
+	custom_text = "Grants two virtues for the hulking creature.:\n\
+	- Natural Armour: Tough hide that replaces your shirt slot with a regenerating skin armor.\n\
+	- Giant: Increased sprite size and +1 Constitution."
 
 // High Society Pack: Nobility + Socialite
 /datum/virtue/pack/highsociety
@@ -84,9 +97,9 @@
 
 // Trusted Housekeeper Pack: Resident + Cunning Provisioner
 /datum/virtue/pack/housekeeper
-	name = "Trusted Housekeeper (-7 TRI)"
+	name = "Trusted Housekeeper (-6 TRI)"
 	desc = "I've served the households of this city for years - cooking, cleaning, and managing provisions. I know every street, have a home here, and my skills in the kitchen are unmatched. The city trusts me, and I know how to make do."
-	triumph_cost = 7
+	triumph_cost = 6
 	granted_virtues = list(
 		/datum/virtue/utility/resident,
 		/datum/virtue/utility/granary,
