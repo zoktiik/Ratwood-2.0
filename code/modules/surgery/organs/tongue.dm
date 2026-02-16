@@ -44,9 +44,9 @@
 	. = ..()
 	if(say_mod && M.dna && M.dna.species)
 		M.dna.species.say_mod = say_mod
-	if (modifies_speech)
-		RegisterSignal(M, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	// Always register handle_speech to check for TRAIT_COMICSANS and other speech modifications
 	M.UnregisterSignal(M, COMSIG_MOB_SAY)
+	RegisterSignal(M, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	for(var/datum/wound/facial/ears/tongue_wound as anything in M.get_wounds())
 		qdel(tongue_wound)
 

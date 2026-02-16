@@ -51,7 +51,7 @@
 	if(stat == UNCONSCIOUS || HAS_TRAIT(src, TRAIT_BLIND) || eye_blind) // UNCONSCIOUS or has blind trait, or has temporary blindness
 		if(stat == CONSCIOUS)
 //			throw_alert("blind", /atom/movable/screen/alert/blind)
-			overlay_fullscreen("blind", /atom/movable/screen/fullscreen/blind)
+			overlay_fullscreen("blind", /atom/movable/screen/fullscreen/impaired_2)
 		else
 			overlay_fullscreen("blind", /atom/movable/screen/fullscreen/blackimageoverlay)
 		// You are blind why should you be able to make out details like color, only shapes near you

@@ -16,6 +16,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Isolationist"=/datum/charflaw/isolationist,
 	"Junkie"=/datum/charflaw/addiction/junkie,
 	"Leper (+1 TRI)"=/datum/charflaw/leprosy,
+	"Lumbering Giant (-1 TRI)"=/datum/charflaw/lumbering_giant,
 	"Masochist"=/datum/charflaw/addiction/masochist,
 	"Missing Nose"=/datum/charflaw/missing_nose,
 	"Mute (+1 TRI)"=/datum/charflaw/mute,
@@ -753,3 +754,17 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	ADD_TRAIT(vamp_wannabe, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
 	ADD_TRAIT(vamp_wannabe, TRAIT_VAMPBITE, TRAIT_GENERIC)
 	vamp_wannabe.adjust_triumphs(1)
+
+/datum/charflaw/lumbering_giant
+	name = "Lumbering Giant (-1 TRI)"
+	desc = "I've always been larger than most, towering over my peers. However, my size offers no additional strength or resilience — I simply lumber about."
+
+/datum/charflaw/lumbering_giant/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	// Apply size transformation only - no traits, no stat bonuses
+	H.transform = H.transform.Scale(1.25, 1.25)
+	H.transform = H.transform.Translate(0, (0.25 * 16))
+	H.update_transform()
+	H.adjust_triumphs(-1)

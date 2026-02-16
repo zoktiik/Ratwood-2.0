@@ -35,6 +35,14 @@
 					to_chat(user, span_warning("Socialite virtue conflicts with Eerie Beauty vice!"))
 				return TRUE
 	
+	// Giant virtue or Sturdy Giant pack vs Lumbering Giant vice
+	if(virtue_type == /datum/virtue/size/giant || virtue_type == /datum/virtue/pack/sturdygiant)
+		for(var/datum/charflaw/vice in vice_list)
+			if(vice && vice.type == /datum/charflaw/lumbering_giant)
+				if(show_message && user)
+					to_chat(user, span_warning("Giant-related virtues conflict with Lumbering Giant vice!"))
+				return TRUE
+	
 	// Deathless (no hunger/breath) vs any food/breathing related vices
 	// Deathless conflicts with nothing currently, but kept for future reference
 	
@@ -96,6 +104,18 @@
 			if(virt && virt.type == /datum/virtue/utility/secondvoice)
 				if(show_message && user)
 					to_chat(user, span_warning("Unintelligible vice conflicts with Second Voice virtue!"))
+				return TRUE
+	
+	// Lumbering Giant vs Giant virtue or Sturdy Giant pack
+	if(vice_type == /datum/charflaw/lumbering_giant)
+		for(var/datum/virtue/virt in virtue_list)
+			if(virt && virt.type == /datum/virtue/size/giant)
+				if(show_message && user)
+					to_chat(user, span_warning("Lumbering Giant vice conflicts with Giant virtue!"))
+				return TRUE
+			if(virt && virt.type == /datum/virtue/pack/sturdygiant)
+				if(show_message && user)
+					to_chat(user, span_warning("Lumbering Giant vice conflicts with Sturdy Giant virtue pack!"))
 				return TRUE
 	
 	return FALSE
