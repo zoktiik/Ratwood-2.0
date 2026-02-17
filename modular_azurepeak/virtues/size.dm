@@ -5,6 +5,9 @@
 	custom_text = "Increases your sprite size."
 
 /datum/virtue/size/giant/apply_to_human(mob/living/carbon/human/recipient)
+	// Don't apply transform to preview dummies
+	if(istype(recipient, /mob/living/carbon/human/dummy))
+		return
 	recipient.transform = recipient.transform.Scale(1.25, 1.25)
 	recipient.transform = recipient.transform.Translate(0, (0.25 * 16))
 	recipient.update_transform()

@@ -763,6 +763,9 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
+	// Don't apply transform to preview dummies
+	if(istype(H, /mob/living/carbon/human/dummy))
+		return
 	// Apply size transformation only - no traits, no stat bonuses
 	H.transform = H.transform.Scale(1.25, 1.25)
 	H.transform = H.transform.Translate(0, (0.25 * 16))
