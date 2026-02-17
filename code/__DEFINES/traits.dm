@@ -326,6 +326,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_NUDIST = "I <b>refuse</b> to wear clothes. They are a hindrance to my freedom.",
 	TRAIT_CYCLOPS_LEFT = span_warning("My left eye has been poked out..."),
 	TRAIT_CYCLOPS_RIGHT = span_warning("My right eye has been poked out..."),
+	TRAIT_BLIND_VICE = span_info("Though I lost my eyes long ago, my other senses have sharpened, allowing me to perceive nearby shapes and movement."),
 	TRAIT_LEECHIMMUNE = "Leeches are reluctant to bite me.",
 	TRAIT_BITERHELM = "Whether through design or symbiosis, I can now bite into others while wearing a visored helmet.",
 	TRAIT_INHUMEN_ANATOMY = "My anatomy is inhumen, preventing me from wearing hats and shoes.",

@@ -299,7 +299,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/noeyeall
 	name = "Blindness"
-	desc = "I lost both of my eyes long ago."
+	desc = "I lost both of my eyes long ago. My other senses have sharpened, allowing me to perceive nearby shapes and movement."
 
 /datum/charflaw/noeyeall/on_mob_creation(mob/user)
 	..()
