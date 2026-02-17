@@ -328,22 +328,58 @@
 			. += span_sans("[m3] an oddly annoying face and voice.")
 
 		if (HAS_TRAIT(src, TRAIT_SCARRED))
-			. += span_warning("[m2] face is marked with terrible scars.")
+			switch (pronouns)
+				if (HE_HIM, SHE_HER_M)
+					. += span_scarred_masc("[m2] face is marked with terrible scars.")
+				if (SHE_HER, HE_HIM_F)
+					. += span_scarred_fem("[m2] face is marked with terrible scars.")
+				if (THEY_THEM, THEY_THEM_F, IT_ITS)
+					. += span_scarred_nb("[m2] face is marked with terrible scars.")
 
 		if (HAS_TRAIT(src, TRAIT_DISFIGURED))
-			. += span_warning("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
+			switch (pronouns)
+				if (HE_HIM, SHE_HER_M)
+					. += span_disfigured_masc("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
+				if (SHE_HER, HE_HIM_F)
+					. += span_disfigured_fem("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
+				if (THEY_THEM, THEY_THEM_F, IT_ITS)
+					. += span_disfigured_nb("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
 
 		if (HAS_TRAIT(src, TRAIT_UNSETTLING_BEAUTY))
-			if(user.has_stress_event(/datum/stressevent/uncanny))
-				. += span_warning("[m1] unsettlingly beautiful... something is deeply wrong.")
-			else
-				. += span_info("[m1] hauntingly beautiful.")
+			switch (pronouns)
+				if (HE_HIM, SHE_HER_M)
+					if(user.has_stress_event(/datum/stressevent/uncanny))
+						. += span_unsettling_masc("[m1] unsettlingly handsome... something is deeply wrong.")
+					else
+						. += span_unsettling_masc("[m1] hauntingly handsome.")
+				if (SHE_HER, HE_HIM_F)
+					if(user.has_stress_event(/datum/stressevent/uncanny))
+						. += span_unsettling_fem("[m1] unsettlingly beautiful... something is deeply wrong.")
+					else
+						. += span_unsettling_fem("[m1] hauntingly beautiful.")
+				if (THEY_THEM, THEY_THEM_F, IT_ITS)
+					if(user.has_stress_event(/datum/stressevent/uncanny))
+						. += span_unsettling_nb("[m1] unsettlingly attractive... something is deeply wrong.")
+					else
+						. += span_unsettling_nb("[m1] hauntingly attractive.")
 
 		if (HAS_TRAIT(src, TRAIT_BEAUTIFUL_UNCANNY))
-			if(user.has_stress_event(/datum/stressevent/beautiful))
-				. += span_info("[m1] possess[p_es()] an otherworldly beauty.")
-			else
-				. += span_warning("There's something eerily wrong about [m2] appearance.")
+			switch (pronouns)
+				if (HE_HIM, SHE_HER_M)
+					if(user.has_stress_event(/datum/stressevent/beautiful))
+						. += span_uncanny_masc("[m1] possess[p_es()] an otherworldly handsomeness.")
+					else
+						. += span_uncanny_masc("There's something eerily wrong about [m2] appearance.")
+				if (SHE_HER, HE_HIM_F)
+					if(user.has_stress_event(/datum/stressevent/beautiful))
+						. += span_uncanny_fem("[m1] possess[p_es()] an otherworldly beauty.")
+					else
+						. += span_uncanny_fem("There's something eerily wrong about [m2] appearance.")
+				if (THEY_THEM, THEY_THEM_F, IT_ITS)
+					if(user.has_stress_event(/datum/stressevent/beautiful))
+						. += span_uncanny_nb("[m1] possess[p_es()] an otherworldly allure.")
+					else
+						. += span_uncanny_nb("There's something eerily wrong about [m2] appearance.")
 
 		// Shouldn't be able to tell they are unrevivable through a mask as a Necran
 		if(HAS_TRAIT(src, TRAIT_DNR) && src != user)
