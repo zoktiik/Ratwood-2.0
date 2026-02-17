@@ -32,8 +32,8 @@
 				if(!sheath.sheathed) // if no weapon in there
 					if(sheath.eat_sword(user, K, TRUE))
 						user.visible_message(
-							span_notice("[user] slips [W] into \the [src]'s sheath."),
-							span_notice("I slip [W] into \the [src]'s sheath.")
+							span_notice("[user] slips [W] into [src]'s sheath."),
+							span_notice("I slip [W] into [src]'s sheath.")
 						)
 						return
 	..()	
