@@ -202,7 +202,7 @@
 	if(istype(I, /obj/item/natural/cloth))
 		var/obj/item/natural/cloth/T = I
 		if(T.wet >= 10)
-			to_chat(user, span_warning("[T] is already soaked!")) //So we dont waste water if its already at max wetness or higher
+			to_chat(user, span_warning("[T] is already soaked!"))
 			return
 		var/removereg = /datum/reagent/water
 		if(!reagents.has_reagent(/datum/reagent/water, 5))
