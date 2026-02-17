@@ -311,6 +311,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/obj/item/bodypart/head/head = H.get_bodypart(BODY_ZONE_HEAD)
 	head?.add_wound(/datum/wound/facial/eyes/left/permanent)
 	head?.add_wound(/datum/wound/facial/eyes/right/permanent)
+	ADD_TRAIT(H, TRAIT_BLIND_VICE, TRAIT_GENERIC)
 	H.update_fov_angles()
 	H.adjust_triumphs(1)
 

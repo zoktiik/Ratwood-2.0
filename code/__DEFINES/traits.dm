@@ -569,6 +569,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 //mob traits
 #define TRAIT_BLIND 			"blind"
+#define TRAIT_BLIND_VICE 		"blind_vice" // For people with the Blind character flaw
 #define TRAIT_MUTE				"mute"
 #define TRAIT_ZOMBIE_SPEECH 	"zombie_speech"
 #define TRAIT_GARGLE_SPEECH		"gargle_speech"
