@@ -701,6 +701,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["hair_color"]			>> hair_color
 	S["facial_hair_color"]	>> facial_hair_color
 	S["eye_color"]			>> eye_color
+	S["baotha_mark_color"]	>> baotha_mark_color
 	S["family"]				>> family
 	S["gender_choice"] 		>> gender_choice
 	S["setspouse"] 			>> setspouse
@@ -903,6 +904,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	age				= sanitize_inlist(age, pref_species.possible_ages)
 	eye_color		= sanitize_hexcolor(eye_color, 3, 0)
+	baotha_mark_color = sanitize_hexcolor(baotha_mark_color, 6, 0)
 	family 			= family
 	gender_choice 	= gender_choice
 	setspouse 		= setspouse
@@ -980,6 +982,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["hair_color"]			, hair_color)
 	WRITE_FILE(S["facial_hair_color"]	, facial_hair_color)
 	WRITE_FILE(S["eye_color"]			, eye_color)
+	WRITE_FILE(S["baotha_mark_color"]	, baotha_mark_color)
 	WRITE_FILE(S["extra_language"]		, extra_language)
 	WRITE_FILE(S["selected_title"]		, selected_title)
 	WRITE_FILE(S["extra_language_1"]	, extra_language_1)

@@ -41,6 +41,13 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Wood Arm (L) (+1 TRI)"=/datum/charflaw/limbloss/arm_l,
 	"Wood Arm (R) (+1 TRI)"=/datum/charflaw/limbloss/arm_r,
 	"Hemophage (+1 TRI)"=/datum/charflaw/hemophage,
+	"Chronic Migraines (+3 TRI)"=/datum/charflaw/chronic_migraine,
+	"Weak Heart (+6 TRI)"=/datum/charflaw/weak_heart,
+	"Tremors (+4 TRI)"=/datum/charflaw/tremors,
+	"Nightmares (+1 TRI)"=/datum/charflaw/nightmares,
+	"Chronic Arthritis (+3 TRI)"=/datum/charflaw/chronic_arthritis,
+	"Chronic Back Pain (+3 TRI)"=/datum/charflaw/chronic_back_pain,
+	"Old War Wound (+5 TRI)"=/datum/charflaw/old_war_wound,
 	))
 
 /datum/charflaw
@@ -750,30 +757,69 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/marked_by_baotha
 	name = "Marked by Baotha"
-	desc = "Whether through intentionally seeking out heretical ritualists or against my will, I have been marked by Baotha. I am branded visibly on my groin and am able to be impregnated regardless of physical states that would usually prevent this. I will need to sate my new urges often to avoid stress..."
+	desc = "Whether through intentionally seeking out heretical ritualists or against my will, I have been marked by Baotha. I am branded visibly on my groin and am able to be impregnated regardless of physical states that would usually prevent this. The mark causes random surges of arousal and involuntary bodily reactions..."
+	var/next_arousal_surge = 0
+	var/next_emote = 0
 
 /datum/charflaw/marked_by_baotha/on_mob_creation(mob/user)
-
-	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[user.gender == "male" ? "m" : "f"]", -BODY_LAYER)
-	user.add_overlay(marking_overlay)
-
+	if(!ishuman(user))
+		return
+	
+	var/mob/living/carbon/human/H = user
+	
+	// Get mark color from preferences, default to purple
+	var/mark_color = "#b967ff" // Default purple
+	if(H.client?.prefs?.baotha_mark_color)
+		mark_color = "#[H.client.prefs.baotha_mark_color]"
+	
+	// Apply colored marking overlay
+	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_LAYER)
+	marking_overlay.color = mark_color
+	H.add_overlay(marking_overlay)
+	
 	spawn(40)
-
-	ADD_TRAIT(user, TRAIT_BAOTHA_FERTILITY_BOON, TRAIT_GENERIC)
-
-	var/obj/item/organ/vagina/vagina = user.getorganslot(ORGAN_SLOT_VAGINA)
+	
+	ADD_TRAIT(H, TRAIT_BAOTHA_FERTILITY_BOON, TRAIT_GENERIC)
+	
+	var/obj/item/organ/vagina/vagina = H.getorganslot(ORGAN_SLOT_VAGINA)
 	if(vagina && !vagina.fertility)
 		vagina.fertility = TRUE
+	
+	// Initialize timers with random delays
+	next_arousal_surge = world.time + rand(3 MINUTES, 8 MINUTES)
+	next_emote = world.time + rand(1 MINUTES, 3 MINUTES)
 
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-
-		// Add the adjusted Nymphomaniac addiction flaw
-		if(!H.has_flaw(/datum/charflaw/addiction/lovefiend))
-			var/datum/charflaw/addiction/lovefiend/L = new
-			L.time = 45
-			H.vices += L
-			L.on_mob_creation(H)
+/datum/charflaw/marked_by_baotha/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	
+	var/mob/living/carbon/human/H = user
+	
+	// Skip if dead, unconscious, or certain antagonist types
+	if(H.stat != CONSCIOUS)
+		return
+	if(H.mind?.antag_datums)
+		for(var/datum/antagonist/D in H.mind.antag_datums)
+			if(istype(D, /datum/antagonist/vampire/lord) || istype(D, /datum/antagonist/werewolf) || istype(D, /datum/antagonist/skeleton) || istype(D, /datum/antagonist/zombie) || istype(D, /datum/antagonist/lich))
+				return
+	
+	// Random arousal surges
+	if(world.time >= next_arousal_surge)
+		if(H.sexcon)
+			var/arousal_amount = rand(35, 45)
+			H.sexcon.adjust_arousal(arousal_amount)
+			if(prob(30)) // 30% chance to notify the player
+				to_chat(H, span_love(pick("The mark burns with desire...", "A wave of heat washes over me...", "My body betrays me...")))
+		// Set next surge time
+		next_arousal_surge = world.time + rand(2 MINUTES, 40 MINUTES)
+	
+	// Random involuntary emotes
+	if(world.time >= next_emote)
+		if(prob(40)) // 40% chance to actually emote when the timer triggers
+			var/emote_choice = pick("shiver", "twitch", "tremble")
+			H.emote(emote_choice)
+		// Set next emote time
+		next_emote = world.time + rand(2 MINUTES, 40 MINUTES)
 
 /datum/charflaw/hemophage
 	name = "Hemophage (+1 TRI)"
@@ -801,3 +847,328 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	H.transform = H.transform.Translate(0, (0.25 * 16))
 	H.update_transform()
 	H.adjust_triumphs(-1)
+
+/datum/charflaw/chronic_migraine
+	name = "Chronic Migraines (+2 TRI)"
+	desc = "You suffer from frequent, debilitating headaches that can strike without warning."
+	var/next_migraine = 0
+
+/datum/charflaw/chronic_migraine/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	to_chat(H, span_warning("You feel the familiar pressure building behind your eyes."))
+	H.adjust_triumphs(2)
+	next_migraine = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/chronic_migraine/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(world.time >= next_migraine)
+		if(prob(30))
+			H.blur_eyes(6)
+			H.adjustBruteLoss(3)
+			to_chat(H, span_boldwarning("A severe migraine strikes! Your vision blurs and your head pounds!"))
+			H.emote("groan")
+		else
+			H.adjustBruteLoss(1)
+			to_chat(H, span_warning("A migraine headache begins to build."))
+		next_migraine = world.time + rand(15 MINUTES, 40 MINUTES)
+
+	// Light sensitivity check (can still happen between migraines)
+	if(prob(1))
+		if(H.loc && H.loc.luminosity > 2)
+			H.adjustBruteLoss(1)
+			to_chat(H, span_warning("The bright light makes your head throb!"))
+
+/datum/charflaw/weak_heart
+	name = "Weak Heart (+3 TRI)"
+	desc = "You were born with a weak heart. Heart attacks occur at half the stress threshold (15 instead of 30), chest pains when stressed, and increased risk during exhaustion."
+	var/next_chest_pain = 0
+
+/datum/charflaw/weak_heart/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	ADD_TRAIT(user, TRAIT_WEAK_HEART, "[type]")
+	user.adjust_triumphs(3)
+	next_chest_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/weak_heart/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_WEAK_HEART, "[type]")
+
+/datum/charflaw/weak_heart/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	
+	// Chest pain warnings when stressed
+	var/stress = H.get_stress_amount()
+	if(stress >= 10 && world.time >= next_chest_pain)
+		to_chat(H, span_warning("Your heart tightens in your chest..."))
+		if(stress >= 15 && prob(30))
+			to_chat(H, span_danger("Sharp pain shoots through your chest!"))
+			H.adjustOxyLoss(2)
+			H.emote("gasp")
+		next_chest_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+	
+	// Warning when running with high stamina
+	if(H.m_intent == MOVE_INTENT_RUN && H.stamina > (H.max_stamina * 0.7) && prob(3))
+		to_chat(H, span_warning("Your heart pounds heavily as you exert yourself!"))
+
+/datum/charflaw/tremors
+	name = "Tremors (+3 TRI)"
+	desc = "Your body tremors periodically, causing you to drop what's in your hands and lose your grip for a short time. High stress makes the tremors worse."
+	var/next_tremor_time = 0
+	var/base_tremor_interval = 30 MINUTES
+	var/stress_tremor_interval = 15 MINUTES
+
+/datum/charflaw/tremors/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_TREMORS, "[type]")
+	schedule_next_tremor(H)
+	H.adjust_triumphs(3)
+
+/datum/charflaw/tremors/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_TREMORS, "[type]")
+
+/datum/charflaw/tremors/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(world.time >= next_tremor_time)
+		trigger_tremor(H)
+		schedule_next_tremor(H)
+
+/datum/charflaw/tremors/proc/schedule_next_tremor(mob/living/carbon/human/H)
+	if(!H)
+		return
+
+	var/tremor_interval = base_tremor_interval
+	var/stress_level = H.get_stress_amount()
+
+	if(stress_level >= 6)
+		tremor_interval = stress_tremor_interval
+	else if(stress_level >= 4)
+		tremor_interval = (base_tremor_interval + stress_tremor_interval) / 2
+
+	// Add some randomness so it's not perfectly predictable
+	tremor_interval = tremor_interval + rand(-30 SECONDS, 30 SECONDS)
+	next_tremor_time = world.time + tremor_interval
+
+/datum/charflaw/tremors/proc/trigger_tremor(mob/living/carbon/human/H)
+	if(!H)
+		return
+
+	// Visual and audio feedback
+	to_chat(H, span_warning("Your hands begin to shake uncontrollably!"))
+	H.visible_message(span_warning("[H]'s hands begin trembling!"))
+
+	// Drop everything in hands - respects TRAIT_NODROP
+	var/dropped_anything = FALSE
+	for(var/obj/item/I in H.held_items)
+		if(I)
+			if(H.dropItemToGround(I, force = FALSE, silent = FALSE))
+				to_chat(H, span_warning("You drop [I] as your hands shake!"))
+				dropped_anything = TRUE
+	
+	// Fallback: try dropping from each hand explicitly if nothing was dropped
+	if(!dropped_anything)
+		var/obj/item/left_item = H.get_item_for_held_index(1)
+		var/obj/item/right_item = H.get_item_for_held_index(2)
+		if(left_item)
+			if(H.dropItemToGround(left_item, force = FALSE, silent = FALSE))
+				to_chat(H, span_warning("You drop [left_item] as your hands shake!"))
+		if(right_item)
+			if(H.dropItemToGround(right_item, force = FALSE, silent = FALSE))
+				to_chat(H, span_warning("You drop [right_item] as your hands shake!"))
+
+	// Apply temporary inability to grip
+	H.apply_status_effect(/datum/status_effect/tremor_grip_loss)
+
+	// Shake the screen slightly for immersion
+	if(H.client)
+		animate(H.client, pixel_x = rand(-2, 2), pixel_y = rand(-2, 2), time = 2)
+		addtimer(CALLBACK(src, PROC_REF(reset_screen_shake), H), 2)
+
+/datum/charflaw/tremors/proc/reset_screen_shake(mob/living/carbon/human/H)
+	if(H?.client)
+		animate(H.client, pixel_x = 0, pixel_y = 0, time = 2)
+
+/datum/status_effect/tremor_grip_loss
+	id = "tremor_grip_loss"
+	duration = 6 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/tremor_grip_loss
+
+/datum/status_effect/tremor_grip_loss/on_apply()
+	. = ..()
+	if(!.)
+		return
+
+	var/mob/living/carbon/human/H = owner
+	to_chat(H, span_warning("Your hands are shaking too much to grip anything!"))
+
+	// Periodic shaking during the effect
+	addtimer(CALLBACK(src, PROC_REF(shake_hands)), 2 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(shake_hands)), 4 SECONDS)
+
+	return TRUE
+
+/datum/status_effect/tremor_grip_loss/on_remove()
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	to_chat(H, span_notice("Your hands steady themselves."))
+
+/datum/status_effect/tremor_grip_loss/proc/shake_hands()
+	if(!owner)
+		return
+	var/mob/living/carbon/human/H = owner
+	H.visible_message(span_warning("[H]'s hands continue to tremble."), \
+					  span_warning("Your hands continue to shake..."))
+
+/atom/movable/screen/alert/status_effect/tremor_grip_loss
+	name = "Trembling Hands"
+	desc = "My hands are shaking uncontrollably! I can't grip anything!"
+
+/datum/charflaw/nightmares
+	name = "Nightmares (+1 TRI)"
+	desc = "You suffer from terrible nightmares. You scream in your sleep and take longer to rest."
+	var/next_scream = 0
+
+/datum/charflaw/nightmares/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	user.adjust_triumphs(1)
+	next_scream = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/nightmares/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+
+	if(user.stat == UNCONSCIOUS && user.IsSleeping())
+		if(world.time >= next_scream)
+			next_scream = world.time + rand(15 MINUTES, 40 MINUTES)
+			user.emote("scream")
+
+/datum/charflaw/chronic_arthritis
+	name = "Chronic Arthritis (+2 TRI)"
+	desc = "Your joints ache constantly, causing periodic pain flares and reduced mobility."
+	var/next_pain_flare = 0
+
+/datum/charflaw/chronic_arthritis/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	to_chat(H, span_warning("Your joints feel stiff and painful - a reminder of your chronic arthritis."))
+	H.adjust_triumphs(2)
+	next_pain_flare = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/chronic_arthritis/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(world.time >= next_pain_flare)
+		var/pain_msg = pick("Your joints throb with arthritic pain!",
+						   "A sharp ache shoots through your limbs!",
+						   "Your joints feel stiff and painful!")
+		to_chat(H, span_warning(pain_msg))
+		H.adjustStaminaLoss(5)
+		next_pain_flare = world.time + rand(15 MINUTES, 40 MINUTES)
+
+	// Weather can still trigger between scheduled flares
+	if(prob(1) && H.loc)
+		if(SSParticleWeather.runningWeather && SSParticleWeather.runningWeather.can_weather(H) && prob(30))
+			H.adjustStaminaLoss(3)
+			to_chat(H, span_warning("The weather makes your arthritis act up."))
+
+/datum/charflaw/chronic_back_pain
+	name = "Chronic Back Pain (+2 TRI)"
+	desc = "Years of wear and tear have left you with persistent lower back pain that affects your mobility."
+	var/next_back_pain = 0
+
+/datum/charflaw/chronic_back_pain/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	to_chat(H, span_warning("Your lower back aches with familiar, persistent pain."))
+	H.adjust_triumphs(2)
+	next_back_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/chronic_back_pain/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	// Running can still trigger between scheduled pains
+	if(H.m_intent == MOVE_INTENT_RUN && prob(5))
+		H.adjustStaminaLoss(3)
+		to_chat(H, span_warning("Running aggravates your chronic back pain!"))
+
+	if(world.time >= next_back_pain)
+		// Check for actual armor weight by AC
+		var/has_heavy_armor = FALSE
+		var/has_medium_armor = FALSE
+		
+		if(H.wear_armor)
+			switch(H.wear_armor.armor_class)
+				if(ARMOR_CLASS_HEAVY)
+					has_heavy_armor = TRUE
+				if(ARMOR_CLASS_MEDIUM)
+					has_medium_armor = TRUE
+		
+		if(H.wear_shirt && !has_heavy_armor) // Only check shirt if not already heavy
+			switch(H.wear_shirt.armor_class)
+				if(ARMOR_CLASS_HEAVY)
+					has_heavy_armor = TRUE
+				if(ARMOR_CLASS_MEDIUM)
+					has_medium_armor = TRUE
+		
+		if(has_heavy_armor)
+			H.adjustStaminaLoss(8)
+			to_chat(H, span_warning("Your heavy armour puts severe strain on your already painful back!"))
+		else if(has_medium_armor)
+			H.adjustStaminaLoss(5)
+			to_chat(H, span_warning("The weight of your equipment aggravates your chronic back pain!"))
+		
+		next_back_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/old_war_wound
+	name = "Old War Wound (+3 TRI)"
+	desc = "An old injury from your past still haunts you, causing chronic pain and occasional flare-ups."
+	var/next_wound_pain = 0
+
+/datum/charflaw/old_war_wound/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/wound_desc = pick("shrapnel wound", "old arrow wound", "deep scar", "poorly healed fracture")
+	to_chat(H, span_warning("You feel the familiar ache of your old [wound_desc]."))
+	H.adjustBruteLoss(rand(3, 8))
+	H.adjust_triumphs(3)
+	next_wound_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+
+/datum/charflaw/old_war_wound/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	if(world.time >= next_wound_pain)
+		// Stress-triggered pain flares
+		if(H.health < (H.maxHealth * 0.7) || H.get_stress_amount() > 10)
+			H.adjustStaminaLoss(5)
+			to_chat(H, span_warning("Your old war wound flares up from the stress!"))
+		else
+			// Random phantom pain
+			var/pain_type = pick("sharp", "throbbing", "burning", "aching")
+			H.adjustStaminaLoss(3)
+			to_chat(H, span_warning("A [pain_type] pain shoots through your old wound."))
+		next_wound_pain = world.time + rand(15 MINUTES, 40 MINUTES)

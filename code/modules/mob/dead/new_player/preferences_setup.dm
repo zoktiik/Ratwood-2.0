@@ -70,9 +70,24 @@
 	mannequin.update_body()
 	mannequin.update_hair()
 	mannequin.rebuild_obscured_flags()
+	// Reapply vice visual effects after body updates
+	apply_vice_overlays(mannequin)
 	COMPILE_OVERLAYS(mannequin)
 	parent.show_character_previews(new /mutable_appearance(mannequin))
 	unset_busy_human_dummy(DUMMY_HUMAN_SLOT_PREFERENCES)
+
+/datum/preferences/proc/apply_vice_overlays(mob/living/carbon/human/character)
+	// Check for Baotha mark and apply colored overlay
+	for(var/i = 1 to 5)
+		var/datum/charflaw/vice = vars["vice[i]"]
+		if(istype(vice, /datum/charflaw/marked_by_baotha))
+			var/mark_color = "#b967ff" // Default purple
+			if(baotha_mark_color)
+				mark_color = "#[baotha_mark_color]"
+			var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[character.gender == "male" ? "m" : "f"]", -BODY_LAYER)
+			marking_overlay.color = mark_color
+			character.add_overlay(marking_overlay)
+			break
 
 
 /datum/preferences/proc/spec_check(mob/user)

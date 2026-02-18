@@ -95,6 +95,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/facial_hair_color = "000"		//Facial hair color
 	var/skin_tone = "caucasian1"		//Skin color
 	var/eye_color = "000"				//Eye color
+	var/baotha_mark_color = "b967ff"	// Baotha mark color (purple)
 	var/extra_language = "None" // Extra language
 	var/extra_language_1 = "None" // Additional triumph language slot 1
 	var/extra_language_2 = "None" // Additional triumph language slot 2
@@ -526,6 +527,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<b>Voice Identity</b>: <a href='?_src_=prefs;preference=voicetype;task=input'>[voice_type]</a><BR>"
 			// LETHALSTONE EDIT END
 			dat += "<b>Voice Pack</b>: <a href='?_src_=prefs;preference=voicepack;task=input'>[voice_pack]</a><BR>"
+			// Only show Baotha mark color if marked by baotha vice is selected
+			var/has_baotha_vice = FALSE
+			for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5))
+				if(istype(vice, /datum/charflaw/marked_by_baotha))
+					has_baotha_vice = TRUE
+					break
+			if(has_baotha_vice)
+				dat += "<b>Baotha Mark Color</b>: <a href='?_src_=prefs;preference=baotha_mark_color;task=input'><font color='#[baotha_mark_color]'>⬤</font> Change</a><BR>"
 
 			dat += "<BR>"
 			dat += "<b>Race:</b> <a href='?_src_=prefs;preference=species;task=input'>[pref_species.name]</a>[spec_check(user) ? "" : " (!)"]<BR>"
@@ -1871,6 +1880,11 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 							to_chat(user, "<font color='red'>This voice color is too dark for mortals.</font>")
 							return
 						voice_color = sanitize_hexcolor(new_voice)
+
+				if("baotha_mark_color")
+					var/new_mark_color = color_pick_sanitized(user, "Choose your Baotha mark color:", "Character Preference", "#"+baotha_mark_color)
+					if(new_mark_color)
+						baotha_mark_color = sanitize_hexcolor(new_mark_color, 6)
 
 				if("extra_language")
 					var/static/list/selectable_languages = list(
