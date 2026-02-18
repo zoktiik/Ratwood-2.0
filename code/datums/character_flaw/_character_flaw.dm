@@ -818,7 +818,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	
 	// Random involuntary emotes
 	if(world.time >= next_emote)
-		var/emote_choice = pick("shiver", "twitch", "tremble")
+		var/emote_choice = pick("shiver", "twitch", "groan")
 		H.emote(emote_choice)
 		// Set next emote time
 		next_emote = world.time + rand(2 MINUTES, 25 MINUTES)
