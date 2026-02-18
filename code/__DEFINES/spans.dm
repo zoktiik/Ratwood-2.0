@@ -161,18 +161,6 @@
 #define span_beautiful_masc(str) ("<span class='beautifulmasc'>" + str + "</span>")
 #define span_beautiful_fem(str) ("<span class='beautifulfem'>" + str + "</span>")
 #define span_beautiful_nb(str) ("<span class='beautifulnb'>" + str + "</span>")
-#define span_scarred_masc(str) ("<span class='scarredmasc'>" + str + "</span>")
-#define span_scarred_fem(str) ("<span class='scarredfem'>" + str + "</span>")
-#define span_scarred_nb(str) ("<span class='scarrednb'>" + str + "</span>")
-#define span_disfigured_masc(str) ("<span class='disfiguredmasc'>" + str + "</span>")
-#define span_disfigured_fem(str) ("<span class='disfiguredfem'>" + str + "</span>")
-#define span_disfigured_nb(str) ("<span class='disfigurednb'>" + str + "</span>")
-#define span_unsettling_masc(str) ("<span class='unsettlingmasc'>" + str + "</span>")
-#define span_unsettling_fem(str) ("<span class='unsettlingfem'>" + str + "</span>")
-#define span_unsettling_nb(str) ("<span class='unsettlingnb'>" + str + "</span>")
-#define span_uncanny_masc(str) ("<span class='uncannymasc'>" + str + "</span>")
-#define span_uncanny_fem(str) ("<span class='uncannyfem'>" + str + "</span>")
-#define span_uncanny_nb(str) ("<span class='uncannynb'>" + str + "</span>")
 #define span_orator(str) ("<span class='orator'>" + str + "</span>")
 
 /// Displays a tooltip. Tooltip is text-only, and HTML will be ignored.

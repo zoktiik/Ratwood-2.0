@@ -36,17 +36,15 @@
 	languages_possible = languages_possible_base
 
 /obj/item/organ/tongue/proc/handle_speech(datum/source, list/speech_args)
-	var/mob/living/carbon/speaker = source
-	if(HAS_TRAIT(speaker, TRAIT_COMICSANS))
-		speech_args[SPEECH_SPANS] |= SPAN_SANS
+	return
 
 /obj/item/organ/tongue/Insert(mob/living/carbon/M, special = FALSE, drop_if_replaced = TRUE)
 	. = ..()
 	if(say_mod && M.dna && M.dna.species)
 		M.dna.species.say_mod = say_mod
-	// Always register handle_speech to check for TRAIT_COMICSANS and other speech modifications
+	if(modifies_speech)
+		RegisterSignal(M, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	M.UnregisterSignal(M, COMSIG_MOB_SAY)
-	RegisterSignal(M, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 	for(var/datum/wound/facial/ears/tongue_wound as anything in M.get_wounds())
 		qdel(tongue_wound)
 
