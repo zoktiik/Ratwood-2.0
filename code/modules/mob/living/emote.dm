@@ -856,6 +856,7 @@
 	emote_type = EMOTE_AUDIBLE
 	only_forced_audio = TRUE
 	show_runechat = FALSE
+	stat_allowed = UNCONSCIOUS
 
 /datum/emote/living/scream/agony
 	key = "agony"

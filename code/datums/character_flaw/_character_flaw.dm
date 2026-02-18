@@ -821,7 +821,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		var/emote_choice = pick("shiver", "twitch", "tremble")
 		H.emote(emote_choice)
 		// Set next emote time
-		next_emote = world.time + rand(15 MINUTES, 40 MINUTES)
+		next_emote = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/hemophage
 	name = "Hemophage (+1 TRI)"
@@ -861,7 +861,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	to_chat(H, span_warning("You feel the familiar pressure building behind your eyes."))
 	H.adjust_triumphs(2)
-	next_migraine = world.time + rand(15 MINUTES, 40 MINUTES)
+	next_migraine = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/chronic_migraine/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -880,7 +880,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			H.blur_eyes(3)
 			to_chat(H, span_warning("A painful migraine headache strikes."))
 			H.emote("groan")
-		next_migraine = world.time + rand(15 MINUTES, 40 MINUTES)
+		next_migraine = world.time + rand(2 MINUTES, 25 MINUTES)
 
 	// Light sensitivity check (can still happen between migraines)
 	if(prob(1))
@@ -898,7 +898,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	ADD_TRAIT(user, TRAIT_WEAK_HEART, "[type]")
 	user.adjust_triumphs(3)
-	next_chest_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+	next_chest_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/weak_heart/on_removal(mob/user)
 	if(!ishuman(user))
@@ -922,7 +922,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			H.adjustOxyLoss(1)
 		else
 			to_chat(H, span_warning("You feel a flutter in your chest."))
-		next_chest_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+		next_chest_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 	
 	// Warning when running with high stamina
 	if(H.m_intent == MOVE_INTENT_RUN && H.stamina > (H.max_stamina * 0.7) && prob(3))
@@ -1056,16 +1056,16 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(!ishuman(user))
 		return
 	user.adjust_triumphs(1)
-	next_scream = world.time + rand(15 MINUTES, 40 MINUTES)
+	next_scream = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/nightmares/flaw_on_life(mob/user)
 	if(!ishuman(user))
 		return
 
-	if(user.stat == UNCONSCIOUS && user.IsSleeping())
+	if(user.IsSleeping())
 		if(world.time >= next_scream)
-			next_scream = world.time + rand(15 MINUTES, 40 MINUTES)
-			user.emote("scream")
+			next_scream = world.time + rand(2 MINUTES, 25 MINUTES)
+			user.emote("strain")
 
 /datum/charflaw/chronic_arthritis
 	name = "Chronic Arthritis (+2 TRI)"
@@ -1078,7 +1078,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	to_chat(H, span_warning("Your joints feel stiff and painful - a reminder of your chronic arthritis."))
 	H.adjust_triumphs(2)
-	next_pain_flare = world.time + rand(15 MINUTES, 40 MINUTES)
+	next_pain_flare = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/chronic_arthritis/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -1091,7 +1091,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 						   "Your joints feel stiff and painful!")
 		to_chat(H, span_warning(pain_msg))
 		H.adjustStaminaLoss(5)
-		next_pain_flare = world.time + rand(15 MINUTES, 40 MINUTES)
+		next_pain_flare = world.time + rand(2 MINUTES, 25 MINUTES)
 
 	// Weather can still trigger between scheduled flares
 	if(prob(1) && H.loc)
@@ -1110,7 +1110,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	to_chat(H, span_warning("Your lower back aches with familiar, persistent pain."))
 	H.adjust_triumphs(2)
-	next_back_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+	next_back_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/chronic_back_pain/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -1152,7 +1152,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			H.adjustStaminaLoss(3)
 			to_chat(H, span_warning(pick("Your lower back aches painfully.", "A sharp pain shoots through your back.", "Your chronic back pain flares up.")))
 		
-		next_back_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+		next_back_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/old_war_wound
 	name = "Old War Wound (+3 TRI)"
@@ -1167,7 +1167,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	to_chat(H, span_warning("You feel the familiar ache of your old [wound_desc]."))
 	H.adjustBruteLoss(rand(3, 8))
 	H.adjust_triumphs(3)
-	next_wound_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+	next_wound_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/old_war_wound/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -1184,4 +1184,4 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			var/pain_type = pick("sharp", "throbbing", "burning", "aching")
 			H.adjustStaminaLoss(3)
 			to_chat(H, span_warning("A [pain_type] pain shoots through your old wound."))
-		next_wound_pain = world.time + rand(15 MINUTES, 40 MINUTES)
+		next_wound_pain = world.time + rand(2 MINUTES, 25 MINUTES)
