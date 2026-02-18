@@ -41,13 +41,13 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Wood Arm (L) (+1 TRI)"=/datum/charflaw/limbloss/arm_l,
 	"Wood Arm (R) (+1 TRI)"=/datum/charflaw/limbloss/arm_r,
 	"Hemophage (+1 TRI)"=/datum/charflaw/hemophage,
-	"Chronic Migraines (+3 TRI)"=/datum/charflaw/chronic_migraine,
-	"Weak Heart (+6 TRI)"=/datum/charflaw/weak_heart,
-	"Tremors (+4 TRI)"=/datum/charflaw/tremors,
+	"Chronic Migraines (+2 TRI)"=/datum/charflaw/chronic_migraine,
+	"Weak Heart (+3 TRI)"=/datum/charflaw/weak_heart,
+	"Tremors (+3 TRI)"=/datum/charflaw/tremors,
 	"Nightmares (+1 TRI)"=/datum/charflaw/nightmares,
-	"Chronic Arthritis (+3 TRI)"=/datum/charflaw/chronic_arthritis,
-	"Chronic Back Pain (+3 TRI)"=/datum/charflaw/chronic_back_pain,
-	"Old War Wound (+5 TRI)"=/datum/charflaw/old_war_wound,
+	"Chronic Arthritis (+2 TRI)"=/datum/charflaw/chronic_arthritis,
+	"Chronic Back Pain (+2 TRI)"=/datum/charflaw/chronic_back_pain,
+	"Old War Wound (+3 TRI)"=/datum/charflaw/old_war_wound,
 	))
 
 /datum/charflaw
