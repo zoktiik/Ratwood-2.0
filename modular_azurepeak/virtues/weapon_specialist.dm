@@ -215,10 +215,19 @@
 			// Add weapons to stashed items
 			if(option["items"])
 				var/list/items = option["items"]
+				var/list/item_count = list() // Track how many of each item type we've added
 				for(var/item_type in items)
 					// Use the actual item name from the item type
 					var/obj/item/temp_item = item_type
 					var/item_name = initial(temp_item.name)
+					
+					// If we've already added this item type, append a number to make it unique
+					if(item_count[item_type])
+						item_count[item_type]++
+						item_name = "[item_name] [item_count[item_type]]"
+					else
+						item_count[item_type] = 1
+					
 					recipient.mind?.special_items[item_name] = item_type
 			
 			// Adjust skill levels
