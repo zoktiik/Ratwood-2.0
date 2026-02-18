@@ -788,11 +788,10 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(H.client?.prefs?.baotha_mark_color)
 		mark_color = "#[H.client.prefs.baotha_mark_color]"
 	
-	// Apply colored marking overlay
-	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_UNDER_LAYER)
+	// Apply as overlay on body
+	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_ADJ_LAYER)
 	marking_overlay.color = mark_color
 	H.add_overlay(marking_overlay)
-	H.update_body_parts()
 
 /datum/charflaw/marked_by_baotha/flaw_on_life(mob/user)
 	if(!ishuman(user))
