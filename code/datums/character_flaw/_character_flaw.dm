@@ -767,18 +767,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	
 	var/mob/living/carbon/human/H = user
 	
-	// Get mark color from preferences, default to purple
-	var/mark_color = "#b967ff" // Default purple
-	if(H.client?.prefs?.baotha_mark_color)
-		mark_color = "#[H.client.prefs.baotha_mark_color]"
-	
-	// Apply colored marking overlay
-	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_LAYER)
-	marking_overlay.color = mark_color
-	H.add_overlay(marking_overlay)
-	
-	spawn(40)
-	
 	ADD_TRAIT(H, TRAIT_BAOTHA_FERTILITY_BOON, TRAIT_GENERIC)
 	
 	var/obj/item/organ/vagina/vagina = H.getorganslot(ORGAN_SLOT_VAGINA)
@@ -788,6 +776,23 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	// Initialize timers with random delays
 	next_arousal_surge = world.time + rand(3 MINUTES, 8 MINUTES)
 	next_emote = world.time + rand(1 MINUTES, 3 MINUTES)
+
+/datum/charflaw/marked_by_baotha/apply_post_equipment(mob/user)
+	if(!ishuman(user))
+		return
+	
+	var/mob/living/carbon/human/H = user
+	
+	// Get mark color from preferences, default to purple
+	var/mark_color = "#b967ff" // Default purple
+	if(H.client?.prefs?.baotha_mark_color)
+		mark_color = "#[H.client.prefs.baotha_mark_color]"
+	
+	// Apply colored marking overlay
+	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_UNDER_LAYER)
+	marking_overlay.color = mark_color
+	H.add_overlay(marking_overlay)
+	H.update_body_parts()
 
 /datum/charflaw/marked_by_baotha/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -806,20 +811,18 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	// Random arousal surges
 	if(world.time >= next_arousal_surge)
 		if(H.sexcon)
-			var/arousal_amount = rand(35, 45)
+			var/arousal_amount = rand(15, 45)
 			H.sexcon.adjust_arousal(arousal_amount)
-			if(prob(30)) // 30% chance to notify the player
-				to_chat(H, span_love(pick("The mark burns with desire...", "A wave of heat washes over me...", "My body betrays me...")))
+			to_chat(H, span_love(pick("The mark burns with desire...", "A wave of heat washes over me...", "My body betrays me...")))
 		// Set next surge time
-		next_arousal_surge = world.time + rand(2 MINUTES, 40 MINUTES)
+		next_arousal_surge = world.time + rand(2 MINUTES, 10 MINUTES)
 	
 	// Random involuntary emotes
 	if(world.time >= next_emote)
-		if(prob(40)) // 40% chance to actually emote when the timer triggers
-			var/emote_choice = pick("shiver", "twitch", "tremble")
-			H.emote(emote_choice)
+		var/emote_choice = pick("shiver", "twitch", "tremble")
+		H.emote(emote_choice)
 		// Set next emote time
-		next_emote = world.time + rand(2 MINUTES, 40 MINUTES)
+		next_emote = world.time + rand(15 MINUTES, 40 MINUTES)
 
 /datum/charflaw/hemophage
 	name = "Hemophage (+1 TRI)"
@@ -867,14 +870,17 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 
 	if(world.time >= next_migraine)
-		if(prob(30))
+		// Randomly severe or mild, but always happens
+		if(prob(40))
 			H.blur_eyes(6)
 			H.adjustBruteLoss(3)
 			to_chat(H, span_boldwarning("A severe migraine strikes! Your vision blurs and your head pounds!"))
 			H.emote("groan")
 		else
-			H.adjustBruteLoss(1)
-			to_chat(H, span_warning("A migraine headache begins to build."))
+			H.adjustBruteLoss(2)
+			H.blur_eyes(3)
+			to_chat(H, span_warning("A painful migraine headache strikes."))
+			H.emote("groan")
 		next_migraine = world.time + rand(15 MINUTES, 40 MINUTES)
 
 	// Light sensitivity check (can still happen between migraines)
@@ -905,14 +911,18 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	var/mob/living/carbon/human/H = user
 	
-	// Chest pain warnings when stressed
+	// Chest pain warnings when stressed or timed
 	var/stress = H.get_stress_amount()
-	if(stress >= 10 && world.time >= next_chest_pain)
-		to_chat(H, span_warning("Your heart tightens in your chest..."))
-		if(stress >= 15 && prob(30))
+	if(world.time >= next_chest_pain)
+		if(stress >= 15)
 			to_chat(H, span_danger("Sharp pain shoots through your chest!"))
-			H.adjustOxyLoss(2)
+			H.adjustOxyLoss(3)
 			H.emote("gasp")
+		else if(stress >= 10)
+			to_chat(H, span_warning("Your heart tightens in your chest..."))
+			H.adjustOxyLoss(1)
+		else
+			to_chat(H, span_warning("You feel a flutter in your chest."))
 		next_chest_pain = world.time + rand(15 MINUTES, 40 MINUTES)
 	
 	// Warning when running with high stamina
@@ -1132,12 +1142,16 @@ GLOBAL_LIST_INIT(character_flaws, list(
 				if(ARMOR_CLASS_MEDIUM)
 					has_medium_armor = TRUE
 		
+		// Always trigger a message and effect
 		if(has_heavy_armor)
 			H.adjustStaminaLoss(8)
 			to_chat(H, span_warning("Your heavy armour puts severe strain on your already painful back!"))
 		else if(has_medium_armor)
 			H.adjustStaminaLoss(5)
 			to_chat(H, span_warning("The weight of your equipment aggravates your chronic back pain!"))
+		else
+			H.adjustStaminaLoss(3)
+			to_chat(H, span_warning(pick("Your lower back aches painfully.", "A sharp pain shoots through your back.", "Your chronic back pain flares up.")))
 		
 		next_back_pain = world.time + rand(15 MINUTES, 40 MINUTES)
 

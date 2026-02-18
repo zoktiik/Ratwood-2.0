@@ -1880,7 +1880,13 @@ var/forgerites = list("Ritual of Blessed Reforgance")
 		target.sexcon.set_arousal(100)
 		loc.visible_message(span_cult("[target] moans and shivers on top of the rune. Lashes of purple flame dance across their lower abdomen as a new marking appears against their form."))
 		spawn(20)
-			var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[target.gender == "male" ? "m" : "f"]", -BODY_LAYER)
+			// Get mark color from preferences, default to purple
+			var/mark_color = "#b967ff" // Default purple
+			if(target.client?.prefs?.baotha_mark_color)
+				mark_color = "#[target.client.prefs.baotha_mark_color]"
+			
+			var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[target.gender == "male" ? "m" : "f"]", -BODY_UNDER_LAYER)
+			marking_overlay.color = mark_color
 			target.add_overlay(marking_overlay)
 			target.update_body_parts()
 			playsound(target, 'sound/health/fastbeat.ogg', 60)
