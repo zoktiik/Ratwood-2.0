@@ -3022,6 +3022,10 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	character.jumpsuit_style = jumpsuit_style
 
+	// Remove existing vices first to prevent double-application of effects (e.g. on re-apply preferences)
+	for(var/datum/charflaw/existing_vice in character.vices)
+		existing_vice.on_removal(character)
+
 	// Apply multiple vices system
 	character.vices = list()
 	for(var/i = 1 to 5)

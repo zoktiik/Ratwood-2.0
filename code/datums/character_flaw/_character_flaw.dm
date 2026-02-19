@@ -850,6 +850,17 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	H.update_transform()
 	H.adjust_triumphs(-1)
 
+/datum/charflaw/lumbering_giant/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if(istype(H, /mob/living/carbon/human/dummy))
+		return
+	// Reverse the transform applied in on_mob_creation
+	H.transform = H.transform.Translate(0, -(0.25 * 16))
+	H.transform = H.transform.Scale(1/1.25, 1/1.25)
+	H.update_transform()
+
 /datum/charflaw/chronic_migraine
 	name = "Chronic Migraines (+2 TRI)"
 	desc = "You suffer from frequent, debilitating headaches that can strike without warning."
