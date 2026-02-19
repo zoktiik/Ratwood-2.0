@@ -31,6 +31,21 @@
 /datum/stressevent/vice/godfearing
 	desc = list(span_boldred("Time to pray to my Patron."),span_boldred("I need to visit my Patron's realm."))
 
+/datum/stressevent/vice/big_ears
+	timer = 30 SECONDS
+	stressadd = 2
+	desc = list(span_boldred("All this noise is maddening!"),span_boldred("I can't stand all this chatter!"))
+
+/datum/stressevent/vice/light_sensitive
+	timer = 10 SECONDS
+	stressadd = 2
+	desc = list(span_boldred("This brightness is agonizing."),span_boldred("The light is blinding me!"))
+
+/datum/stressevent/vice/astrata_scorched
+	timer = 10 SECONDS
+	stressadd = 3
+	desc = list(span_boldred("Astrata's light sears through me!"),span_boldred("The sun burns me to the marrow!"),span_boldred("Get me out of the light!"))
+
 /datum/stressevent/miasmagas
 	timer = 10 SECONDS
 	stressadd = 2

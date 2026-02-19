@@ -15,7 +15,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Hunted (+1 TRI)"=/datum/charflaw/hunted,
 	"Isolationist"=/datum/charflaw/isolationist,
 	"Junkie"=/datum/charflaw/addiction/junkie,
-	"Leper (+1 TRIUMPHS)"=/datum/charflaw/leprosy,
 	"Marked by Baotha" =/datum/charflaw/marked_by_baotha,
 	"Leper (+1 TRI)"=/datum/charflaw/leprosy,
 	"Lumbering Giant (-1 TRI)"=/datum/charflaw/lumbering_giant,
@@ -48,6 +47,14 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Chronic Arthritis (+2 TRI)"=/datum/charflaw/chronic_arthritis,
 	"Chronic Back Pain (+2 TRI)"=/datum/charflaw/chronic_back_pain,
 	"Old War Wound (+3 TRI)"=/datum/charflaw/old_war_wound,
+	"Hard of Hearing (+2 TRI)"=/datum/charflaw/hard_of_hearing,
+	"Noc-Scorched (+2 TRI)"=/datum/charflaw/noc_scorched,
+	"Big Ears (+1 TRI)"=/datum/charflaw/big_ears,
+	"Disgraced Noble (+2 TRI)"=/datum/charflaw/disgraced_noble,
+	"Light Sensitivity"=/datum/charflaw/light_sensitive,
+	"Spurned (+2 TRI)"=/datum/charflaw/spurned,
+	"Illiterate"=/datum/charflaw/illiterate,
+	"Astrata-Scorched (+2 TRI)"=/datum/charflaw/astrata_scorched,
 	))
 
 /datum/charflaw
@@ -1196,3 +1203,340 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			H.adjustStaminaLoss(3)
 			to_chat(H, span_warning("A [pain_type] pain shoots through your old wound."))
 		next_wound_pain = world.time + rand(2 MINUTES, 25 MINUTES)
+
+/datum/charflaw/hard_of_hearing
+	name = "Hard of Hearing (+2 TRI)"
+	desc = "My hearing has deteriorated. I struggle to make out what people say from more than a couple paces away, unless they raise their voice."
+
+/datum/charflaw/hard_of_hearing/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_PARTIAL_DEAF, TRAIT_GENERIC)
+	H.adjust_triumphs(2)
+
+/datum/charflaw/hard_of_hearing/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_PARTIAL_DEAF, TRAIT_GENERIC)
+
+/datum/charflaw/noc_scorched
+	name = "Noc-Scorched (+2 TRI)"
+	desc = "You bear a scar from prolonged exposure to lycanthropy in your youth. Standing beneath the open night sky fills your veins with a primal, beastly fire. Wearing a hood or headgear protects you from the moon's influence."
+	var/in_moonlight = FALSE
+	var/next_emote = 0
+	var/next_burn = 0
+
+/datum/charflaw/noc_scorched/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	H.adjust_triumphs(2)
+
+/datum/charflaw/noc_scorched/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	H.remove_status_effect(/datum/status_effect/moon_touched)
+
+/datum/charflaw/noc_scorched/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.stat != CONSCIOUS)
+		return
+
+	// Check moonlight exposure conditions: night, outdoors, and no headgear
+	var/turf/T = get_turf(H)
+	var/exposed = (GLOB.tod == "night") && isturf(T) && T.can_see_sky() && !H.head
+
+	if(exposed)
+		if(!in_moonlight)
+			// First tick of moonlight exposure
+			in_moonlight = TRUE
+			to_chat(H, span_danger("The moonlight washes over you... something horrible stirs inside."))
+			next_emote = world.time + rand(20 SECONDS, 40 SECONDS)
+			next_burn = world.time + rand(30 SECONDS, 60 SECONDS)
+		// Continuously refresh the moon_touched status effect while exposed
+		H.apply_status_effect(/datum/status_effect/moon_touched)
+
+		// Periodic involuntary animal emotes
+		if(world.time >= next_emote)
+			var/emote_roll = rand(1, 3)
+			switch(emote_roll)
+				if(1)
+					H.emote("growl", forced = TRUE)
+					to_chat(H, span_warning("A guttural growl escapes your throat before you can stop it..."))
+				if(2)
+					H.emote("howl", forced = TRUE)
+					to_chat(H, span_danger("An overwhelming urge seizes you - you tilt your head back and howl at the moon!"))
+				if(3)
+					H.visible_message(span_warning("[H] drools involuntarily, eyes wide and feral."), \
+					                  span_warning("Drool runs down your chin as something primal and ancient takes hold..."))
+					H.emote("drool", forced = TRUE)
+			next_emote = world.time + rand(30 SECONDS, 90 SECONDS)
+
+		// Periodic burning sensations under moonlight
+		if(world.time >= next_burn)
+			var/burn_msg = pick(
+				"Your skin prickles and burns under the lunar glow!",
+				"The moonlight scorches your flesh like silver flame!",
+				"Your entire body feels as though it is on fire from within!",
+				"Reality slips away from you - something wild and ancient claws at the edges of your mind...")
+			to_chat(H, span_danger(burn_msg))
+			H.adjustOxyLoss(rand(1, 2))
+			next_burn = world.time + rand(30 SECONDS, 90 SECONDS)
+	if(!exposed)
+		if(in_moonlight)
+			// Left moonlight - clear effects
+			in_moonlight = FALSE
+			H.remove_status_effect(/datum/status_effect/moon_touched)
+			to_chat(H, span_notice("The burning fades... the beast retreats."))
+
+// Status effects for character flaws
+/datum/status_effect/moon_touched
+	id = "moon_touched"
+	duration = 15 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/moon_touched
+
+/datum/status_effect/bigearsannoy_cd
+	id = "bigearsannoy_cd"
+	duration = 8 SECONDS
+	alert_type = null
+
+/datum/status_effect/moon_touched/on_apply()
+	. = ..()
+	if(!.)
+		return
+	ADD_TRAIT(owner, TRAIT_SILVER_WEAK, "moon_touched")
+	ADD_TRAIT(owner, TRAIT_NOCSIGHT, "moon_touched")
+	return TRUE
+
+/datum/status_effect/moon_touched/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_SILVER_WEAK, "moon_touched")
+	REMOVE_TRAIT(owner, TRAIT_NOCSIGHT, "moon_touched")
+
+/atom/movable/screen/alert/status_effect/moon_touched
+	name = "Moon-Touched"
+	desc = "The moonlight has awakened something primal in me. My night vision sharpens but my body burns and my mind is slipping..."
+
+// ============ BIG EARS ============
+
+/datum/charflaw/big_ears
+	name = "Big Ears (+1 TRI)"
+	desc = "You are acutely sensitive to loud noise. Yelling and shouts set your nerves on edge and chip away at your composure."
+
+/datum/charflaw/big_ears/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_BIG_EARS, TRAIT_GENERIC)
+	H.adjust_triumphs(1)
+
+/datum/charflaw/big_ears/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_BIG_EARS, TRAIT_GENERIC)
+
+// ============ DISGRACED NOBLE ============
+
+/datum/charflaw/disgraced_noble
+	name = "Disgraced Noble (+2 TRI)"
+	desc = "Requires a nobleman character. Your house has fallen from grace - you retain your title in name only. Other nobles recognize your shame, your estate income is forfeit, and your name is a whisper of scandal in the halls of power."
+	var/applied = FALSE
+
+/datum/charflaw/disgraced_noble/apply_post_equipment(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+
+	// Requirement: must be a noble job or have TRAIT_NOBLE
+	if(!H.is_noble())
+		to_chat(H, span_warning("The Disgraced Noble vice requires a noble character. It has been removed without effect."))
+		return
+
+	applied = TRUE
+	ADD_TRAIT(H, TRAIT_DISGRACED_NOBLE, TRAIT_GENERIC)
+	// Strip noble income from the treasury subsystem
+	SStreasury.noble_incomes -= H
+	to_chat(H, span_warning("Your house's fall from grace is a weight you carry every day. Your estate income is forfeit."))
+	H.adjust_triumphs(2)
+
+/datum/charflaw/disgraced_noble/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	if(applied)
+		REMOVE_TRAIT(user, TRAIT_DISGRACED_NOBLE, TRAIT_GENERIC)
+
+// ============ LIGHT SENSITIVITY ============
+
+/datum/charflaw/light_sensitive
+	name = "Light Sensitivity"
+	desc = "Bright lights cause you discomfort and distress. You do best in dim or candlelit spaces."
+	var/last_light_check = 0
+
+/datum/charflaw/light_sensitive/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_LIGHT_SENSITIVE, TRAIT_GENERIC)
+
+/datum/charflaw/light_sensitive/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_LIGHT_SENSITIVE, TRAIT_GENERIC)
+	user.remove_stress(/datum/stressevent/vice/light_sensitive)
+
+/datum/charflaw/light_sensitive/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	if(world.time < last_light_check + 5 SECONDS)
+		return
+	last_light_check = world.time
+	var/mob/living/carbon/human/H = user
+	if(!H.loc)
+		return
+	if(H.loc.luminosity > 4)
+		H.add_stress(/datum/stressevent/vice/light_sensitive)
+		if(prob(20))
+			var/light_msg = pick(
+				"The brightness is unbearable - your eyes ache and your head throbs!",
+				"All this light makes your skin crawl...",
+				"You squint painfully against the glare.",
+				"Even the torchlight feels like daggers in your eyes.")
+			to_chat(H, span_warning(light_msg))
+	if(H.loc.luminosity <= 4)
+		H.remove_stress(/datum/stressevent/vice/light_sensitive)
+
+//SPURNED - Healing miracles doesn't work
+/datum/charflaw/spurned
+	name = "Spurned"
+	desc = "The gods have forsaken me. Healing miracles have no effect on me."
+
+/datum/charflaw/spurned/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_SPURNED, TRAIT_GENERIC)
+	to_chat(H, span_warning("The divine has turned its back on me. Healing miracles will not save me."))
+	H.adjust_triumphs(2)
+
+/datum/charflaw/spurned/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_SPURNED, TRAIT_GENERIC)
+
+//ILLITERATE - Cannot read or train reading
+/datum/charflaw/illiterate
+	name = "Illiterate"
+	desc = "I never learned to read and never will. All reading skills are removed and cannot be trained."
+
+/datum/charflaw/illiterate/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_ILLITERATE, TRAIT_GENERIC)
+	// Set reading skill to 0 and remove all experience
+	H.adjust_skillrank(/datum/skill/misc/reading, -6, TRUE)
+	if(H.skills && H.skills.skill_experience)
+		var/datum/skill/reading_skill = SSskills.all_skills[/datum/skill/misc/reading]
+		if(reading_skill)
+			H.skills.skill_experience[reading_skill] = 0
+	to_chat(H, span_warning("I never learned to read, and I never will. The written word is forever beyond me."))
+
+/datum/charflaw/illiterate/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	REMOVE_TRAIT(user, TRAIT_ILLITERATE, TRAIT_GENERIC)
+
+//ASTRATA-SCORCHED - Sunlight discomfort, silver weakness, and critical fragility in direct sun
+/datum/charflaw/astrata_scorched
+	name = "Astrata-Scorched (+2 TRI)"
+	desc = "You once bore the dark hunger of the sanguine, but were cured. Astrata's light now scorches your once-shadowed flesh. Silver burns you deeply, the sun's gaze strips away your resilience, and the old hunger lingers — blood is still your only true sustenance. Incompatible with Hemophage."
+	var/in_sunlight = FALSE
+	var/next_burn = 0
+
+/datum/charflaw/astrata_scorched/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	// Incompatible with hemophage - if somehow applied remove without effect
+	if(HAS_TRAIT(H, TRAIT_HEMOPHAGE))
+		to_chat(H, span_warning("Astrata-Scorched is incompatible with Hemophage. It has been removed without effect."))
+		return
+	ADD_TRAIT(H, TRAIT_ASTRATA_SCORCHED, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_VAMPBITE, TRAIT_GENERIC)
+	to_chat(H, span_warning("Astrata's light finds me... and it burns. Silver scalds my flesh, the sun strips me bare, and the old hunger has never truly left me."))
+	H.adjust_triumphs(2)
+
+/datum/charflaw/astrata_scorched/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	REMOVE_TRAIT(H, TRAIT_ASTRATA_SCORCHED, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_VAMPBITE, TRAIT_GENERIC)
+	H.remove_status_effect(/datum/status_effect/sun_scorched)
+
+/datum/charflaw/astrata_scorched/flaw_on_life(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.stat != CONSCIOUS)
+		return
+
+	// Check sunlight exposure: outdoors during day or dawn, no headgear
+	var/turf/T = get_turf(H)
+	var/exposed = (GLOB.tod == "day" || GLOB.tod == "dawn") && isturf(T) && T.can_see_sky() && !H.head
+
+	if(exposed)
+		if(!in_sunlight)
+			in_sunlight = TRUE
+			to_chat(H, span_danger("Astrata's light finds its way into your flesh... something inside recoils."))
+			next_burn = world.time + rand(30 SECONDS, 60 SECONDS)
+		// Continuously refresh the sun_scorched status effect (grants critical weakness) while exposed
+		H.apply_status_effect(/datum/status_effect/sun_scorched)
+		H.add_stress(/datum/stressevent/vice/astrata_scorched)
+
+		// Periodic burning from the sun
+		if(world.time >= next_burn)
+			var/sun_msg = pick(
+				"Astrata's light sears through you like a brand!",
+				"The sun's gaze strips away all strength and resilience!",
+				"Your flesh prickles and burns beneath the sun's relentless gaze!",
+				"The light scalds you from the inside out...")
+			to_chat(H, span_danger(sun_msg))
+			H.adjustFireLoss(rand(1, 70))
+			next_burn = world.time + rand(30 SECONDS, 90 SECONDS)
+	if(!exposed)
+		if(in_sunlight)
+			in_sunlight = FALSE
+			H.remove_status_effect(/datum/status_effect/sun_scorched)
+			H.remove_stress(/datum/stressevent/vice/astrata_scorched)
+			to_chat(H, span_notice("The burning fades as Astrata's gaze slips away..."))
+
+// Sun-scorched status effect: grants critical weakness while active
+/datum/status_effect/sun_scorched
+	id = "sun_scorched"
+	duration = 15 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/sun_scorched
+
+/datum/status_effect/sun_scorched/on_apply()
+	. = ..();
+	if(!.)
+		return
+	ADD_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, "sun_scorched")
+	return TRUE
+
+/datum/status_effect/sun_scorched/on_remove()
+	. = ..();
+	REMOVE_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, "sun_scorched")
+
+/atom/movable/screen/alert/status_effect/sun_scorched
+	name = "Sun-Scorched"
+	desc = "Astrata's light burns through me. My wounds are grave, silver cuts deep, and the sun strips me of my resilience."
+	icon_state = "moon_touched"

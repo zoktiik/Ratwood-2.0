@@ -249,6 +249,21 @@
 				to_chat(user, span_warning("Unintelligible vice conflicts with Mute vice - you can't have both speech impediments!"))
 			return TRUE
 
+	// === ASTRATA-SCORCHED CONFLICTS ===
+	// Astrata-Scorched conflicts with: Hemophage (still has the hunger, not cured)
+	if(vice_type == /datum/charflaw/astrata_scorched)
+		if(/datum/charflaw/hemophage in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Astrata-Scorched conflicts with Hemophage - you cannot be both sanguine-afflicted and cured of it!"))
+			return TRUE
+
+	// Hemophage conflicts with: Astrata-Scorched
+	if(vice_type == /datum/charflaw/hemophage)
+		if(/datum/charflaw/astrata_scorched in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Hemophage conflicts with Astrata-Scorched - you cannot be both sanguine-afflicted and cured of it!"))
+			return TRUE
+
 	return FALSE
 
 // Global cache for loadout item icons to prevent memory leaks

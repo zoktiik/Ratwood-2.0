@@ -496,7 +496,10 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_STANDARD_BEARER = span_info("The banner is my lifeline. Just as I am to it. The retinue know to rally around me, so long as I keep it safe."),
 	TRAIT_BAOTHA_FERTILITY_BOON = span_info("I have been marked by Baotha. I am branded visibly on my groin and am able to be impregnated regardless of physical states that would usually prevent this"),
 	TRAIT_FUSILIER = span_suppradio("I've been trained in the safe use of smokepowder. Additionally, knowledge above <b><u>journeyman</u></b> status is attainable."),
-	TRAIT_HEMOPHAGE = span_bloody("Nothing but lyfeblood will keep me alive...")
+	TRAIT_HEMOPHAGE = span_bloody("Nothing but lyfeblood will keep me alive..."),
+	TRAIT_SPURNED = span_warning("The gods have forsaken me. Healing miracles have no effect on me."),
+	TRAIT_ILLITERATE = span_warning("I never learned to read and never will. The written word is forever beyond me."),
+	TRAIT_ASTRATA_SCORCHED = span_warning("Astrata's light burns through me. Silver cuts deep, the sun drains my resilience, and direct sunlight sears my flesh.")
 ))
 
 // trait accessor defines
@@ -581,6 +584,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_GARGLE_SPEECH		"gargle_speech"
 #define TRAIT_EMOTEMUTE			"emotemute"
 #define TRAIT_DEAF				"deaf"
+#define TRAIT_PARTIAL_DEAF		"partial_deaf"
+#define TRAIT_BIG_EARS			"big_ears"
+#define TRAIT_LIGHT_SENSITIVE	"light_sensitive"
+#define TRAIT_SPURNED			"spurned"
+#define TRAIT_ILLITERATE		"illiterate"
+#define TRAIT_ASTRATA_SCORCHED	"astrata_scorched"
 #define TRAIT_NEARSIGHT			"nearsighted"
 #define TRAIT_FAT				"fat"
 #define TRAIT_HUSK				"husk"
