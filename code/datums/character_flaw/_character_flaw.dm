@@ -1,5 +1,7 @@
 
 GLOBAL_LIST_INIT(character_flaws, list(
+	"Illiterate"=/datum/charflaw/illiterate,
+	"Light Sensitivity"=/datum/charflaw/light_sensitive,
 	"Alcoholic"=/datum/charflaw/addiction/alcoholic,
 	"Annoying Face"=/datum/charflaw/annoying_face,
 	"Asundered Mind (+1 TRI)"=/datum/charflaw/mind_broken,
@@ -51,9 +53,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Noc-Scorched (+2 TRI)"=/datum/charflaw/noc_scorched,
 	"Big Ears (+1 TRI)"=/datum/charflaw/big_ears,
 	"Disgraced Noble (+2 TRI)"=/datum/charflaw/disgraced_noble,
-	"Light Sensitivity"=/datum/charflaw/light_sensitive,
 	"Spurned (+2 TRI)"=/datum/charflaw/spurned,
-	"Illiterate"=/datum/charflaw/illiterate,
 	"Astrata-Scorched (+2 TRI)"=/datum/charflaw/astrata_scorched,
 	))
 

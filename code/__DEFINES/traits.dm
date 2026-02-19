@@ -275,6 +275,9 @@
 // If you want description to show up you gotta have the trait name defined BEFORE this lol
 
 GLOBAL_LIST_INIT(roguetraits, list(
+	TRAIT_SPURNED = span_warning("The gods have forsaken me. Healing miracles have no effect on me."),
+	TRAIT_ILLITERATE = span_warning("I never learned to read and never will. The written word is forever beyond me."),
+	TRAIT_ASTRATA_SCORCHED = span_warning("Astrata's light burns through me. Silver cuts deep, the sun drains my resilience, and direct sunlight sears my flesh."),
 	TRAIT_STEELHEARTED = span_info("I have hardened nerves, and do not waiver from the sight of violence in battle."),
 	TRAIT_OUTLANDER = span_info("Those of the vale see me as not of their land."),
 	TRAIT_OUTLAW = span_info("This land's nervelocks and castificos reject my touch."),
@@ -497,9 +500,6 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_BAOTHA_FERTILITY_BOON = span_info("I have been marked by Baotha. I am branded visibly on my groin and am able to be impregnated regardless of physical states that would usually prevent this"),
 	TRAIT_FUSILIER = span_suppradio("I've been trained in the safe use of smokepowder. Additionally, knowledge above <b><u>journeyman</u></b> status is attainable."),
 	TRAIT_HEMOPHAGE = span_bloody("Nothing but lyfeblood will keep me alive..."),
-	TRAIT_SPURNED = span_warning("The gods have forsaken me. Healing miracles have no effect on me."),
-	TRAIT_ILLITERATE = span_warning("I never learned to read and never will. The written word is forever beyond me."),
-	TRAIT_ASTRATA_SCORCHED = span_warning("Astrata's light burns through me. Silver cuts deep, the sun drains my resilience, and direct sunlight sears my flesh.")
 ))
 
 // trait accessor defines
