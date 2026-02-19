@@ -84,7 +84,7 @@
 			var/mark_color = "#b967ff" // Default purple
 			if(baotha_mark_color)
 				mark_color = "#[baotha_mark_color]"
-			var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[character.gender == "male" ? "m" : "f"]", -BODY_UNDER_LAYER)
+			var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[character.gender == "male" ? "m" : "f"]", -BODYPARTS_LAYER)
 			marking_overlay.color = mark_color
 			character.add_overlay(marking_overlay)
 			break
