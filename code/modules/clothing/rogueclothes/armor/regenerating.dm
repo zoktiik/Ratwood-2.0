@@ -111,7 +111,7 @@
 	desc = "My skin has always been tough enough to stop most cuts and bruises, with time it will mend."
 	armor = list("blunt" = 25, "slash" = 25, "stab" = 25, "piercing" = 20, "fire" = 5, "acid" = 0)
 	max_integrity = 150
-	repair_time = 45 SECONDS
+	repair_time = 60 SECONDS
 	body_parts_covered = FULL_BODY
 	body_parts_inherent = FULL_BODY
 
