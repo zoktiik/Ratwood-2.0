@@ -588,6 +588,10 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			standing += bodyhair_overlay
 #endif
 
+	// Apply Baotha mark if present
+	if(H.baotha_mark_overlay)
+		standing += H.baotha_mark_overlay
+
 	if(standing.len)
 		H.overlays_standing[BODY_LAYER] = standing
 

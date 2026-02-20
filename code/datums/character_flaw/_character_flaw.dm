@@ -795,10 +795,12 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(H.client?.prefs?.baotha_mark_color)
 		mark_color = "#[H.client.prefs.baotha_mark_color]"
 	
-	// Apply as overlay on body
-	var/mutable_appearance/marking_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODYPARTS_LAYER)
-	marking_overlay.color = mark_color
-	H.add_overlay(marking_overlay)
+	// Create and store the marking overlay
+	H.baotha_mark_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODYPARTS_LAYER)
+	H.baotha_mark_overlay.color = mark_color
+	
+	// Trigger body update to apply it
+	H.update_body()
 
 /datum/charflaw/marked_by_baotha/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -829,6 +831,14 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		H.emote(emote_choice)
 		// Set next emote time
 		next_emote = world.time + rand(2 MINUTES, 25 MINUTES)
+
+/datum/charflaw/marked_by_baotha/on_removal(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	REMOVE_TRAIT(H, TRAIT_BAOTHA_FERTILITY_BOON, TRAIT_GENERIC)
+	H.baotha_mark_overlay = null
+	H.update_body()
 
 /datum/charflaw/hemophage
 	name = "Hemophage (+1 TRI)"
@@ -1290,7 +1300,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			// Left moonlight - clear effects
 			in_moonlight = FALSE
 			H.remove_status_effect(/datum/status_effect/moon_touched)
-			to_chat(H, span_notice("The burning fades... the beast retreats."))
 
 // Status effects for character flaws
 /datum/status_effect/moon_touched
@@ -1514,7 +1523,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			in_sunlight = FALSE
 			H.remove_status_effect(/datum/status_effect/sun_scorched)
 			H.remove_stress(/datum/stressevent/vice/astrata_scorched)
-			to_chat(H, span_notice("The burning fades as Astrata's gaze slips away..."))
 
 // Sun-scorched status effect: grants critical weakness while active
 /datum/status_effect/sun_scorched
