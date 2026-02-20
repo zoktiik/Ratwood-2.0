@@ -31,7 +31,7 @@
 		if(VDrinker && istype(human_victim.wear_neck, /obj/item/clothing/neck/roguetown/psicross/silver))
 			to_chat(src, span_userdanger("SILVER! HISSS!!!"))
 			return
-		if(VDrinker && HAS_TRAIT(human_victim, TRAIT_SILVER_BLESSED))
+		if(VDrinker && (HAS_TRAIT(human_victim, TRAIT_SILVER_BLESSED) || HAS_TRAIT(human_victim, TRAIT_SILVER_CURED)))
 			to_chat(src, span_userdanger("SILVER IN THE BLOOD! HISSS!!!"))
 			return
 		human_victim.add_bite_animation()

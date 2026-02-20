@@ -943,11 +943,11 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(world.time >= next_chest_pain)
 		if(stress >= 15)
 			to_chat(H, span_danger("Sharp pain shoots through your chest!"))
-			H.adjustOxyLoss(3)
+			H.adjustOxyLoss(25)
 			H.emote("gasp")
 		else if(stress >= 10)
 			to_chat(H, span_warning("Your heart tightens in your chest..."))
-			H.adjustOxyLoss(1)
+			H.adjustOxyLoss(35)
 		else
 			to_chat(H, span_warning("You feel a flutter in your chest."))
 		next_chest_pain = world.time + rand(2 MINUTES, 25 MINUTES)
@@ -1241,12 +1241,14 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_SILVER_CURED, TRAIT_GENERIC)
 	H.adjust_triumphs(2)
 
 /datum/charflaw/noc_scorched/on_removal(mob/user)
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
+	REMOVE_TRAIT(H, TRAIT_SILVER_CURED, TRAIT_GENERIC)
 	H.remove_status_effect(/datum/status_effect/moon_touched)
 
 /datum/charflaw/noc_scorched/flaw_on_life(mob/user)
@@ -1293,7 +1295,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 				"Your entire body feels as though it is on fire from within!",
 				"Reality slips away from you - something wild and ancient claws at the edges of your mind...")
 			to_chat(H, span_danger(burn_msg))
-			H.adjustOxyLoss(rand(1, 2))
+			H.adjustOxyLoss(rand(1, 35))
 			next_burn = world.time + rand(120 SECONDS, 240 SECONDS)
 	if(!exposed)
 		if(in_moonlight)
@@ -1304,7 +1306,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 // Status effects for character flaws
 /datum/status_effect/moon_touched
 	id = "moon_touched"
-	duration = 15 SECONDS
+	duration = -1
 	alert_type = /atom/movable/screen/alert/status_effect/moon_touched
 
 /datum/status_effect/bigearsannoy_cd
@@ -1328,6 +1330,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /atom/movable/screen/alert/status_effect/moon_touched
 	name = "Moon-Touched"
 	desc = "The moonlight has awakened something primal in me. My night vision sharpens but my body burns and my mind is slipping..."
+	icon_state = "nite_bad"
 
 // ============ BIG EARS ============
 
@@ -1340,12 +1343,14 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	var/mob/living/carbon/human/H = user
 	ADD_TRAIT(H, TRAIT_BIG_EARS, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_KEENEARS, TRAIT_GENERIC)
 	H.adjust_triumphs(1)
 
 /datum/charflaw/big_ears/on_removal(mob/user)
 	if(!ishuman(user))
 		return
 	REMOVE_TRAIT(user, TRAIT_BIG_EARS, TRAIT_GENERIC)
+	REMOVE_TRAIT(user, TRAIT_KEENEARS, TRAIT_GENERIC)
 
 // ============ DISGRACED NOBLE ============
 
@@ -1476,6 +1481,10 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	ADD_TRAIT(H, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_VAMPBITE, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_SILVER_CURED, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_VAMP_DREAMS, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NIGHT_OWL, TRAIT_GENERIC)
 	to_chat(H, span_warning("Astrata's light finds me... and it burns. Silver scalds my flesh, the sun strips me bare, and the old hunger has never truly left me."))
 	H.adjust_triumphs(2)
 
@@ -1487,6 +1496,11 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	REMOVE_TRAIT(H, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 	REMOVE_TRAIT(H, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
 	REMOVE_TRAIT(H, TRAIT_VAMPBITE, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_SILVER_CURED, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_VAMP_DREAMS, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_NIGHT_OWL, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
 	H.remove_status_effect(/datum/status_effect/sun_scorched)
 
 /datum/charflaw/astrata_scorched/flaw_on_life(mob/user)
@@ -1507,6 +1521,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		// Continuously refresh the sun_scorched status effect (grants critical weakness) while exposed
 		H.apply_status_effect(/datum/status_effect/sun_scorched)
 		H.add_stress(/datum/stressevent/vice/astrata_scorched)
+		ADD_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
 
 		// Periodic burning from the sun
 		if(world.time >= next_burn)
@@ -1523,11 +1538,12 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			in_sunlight = FALSE
 			H.remove_status_effect(/datum/status_effect/sun_scorched)
 			H.remove_stress(/datum/stressevent/vice/astrata_scorched)
+			REMOVE_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
 
 // Sun-scorched status effect: grants critical weakness while active
 /datum/status_effect/sun_scorched
 	id = "sun_scorched"
-	duration = 15 SECONDS
+	duration = -1
 	alert_type = /atom/movable/screen/alert/status_effect/sun_scorched
 
 /datum/status_effect/sun_scorched/on_apply()
@@ -1544,4 +1560,4 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /atom/movable/screen/alert/status_effect/sun_scorched
 	name = "Sun-Scorched"
 	desc = "Astrata's light burns through me. My wounds are grave, silver cuts deep, and the sun strips me of my resilience."
-	icon_state = "moon_touched"
+	icon_state = "sun_bad"
