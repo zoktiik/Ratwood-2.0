@@ -52,7 +52,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Hard of Hearing (+2 TRI)"=/datum/charflaw/hard_of_hearing,
 	"Noc-Scorched (+2 TRI)"=/datum/charflaw/noc_scorched,
 	"Big Ears (+1 TRI)"=/datum/charflaw/big_ears,
-	"Disgraced Noble (+2 TRI)"=/datum/charflaw/disgraced_noble,
+	"Disgraced Noble"=/datum/charflaw/disgraced_noble,
 	"Spurned (+2 TRI)"=/datum/charflaw/spurned,
 	"Astrata-Scorched (+2 TRI)"=/datum/charflaw/astrata_scorched,
 	))
@@ -1254,9 +1254,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		if(!in_moonlight)
 			// First tick of moonlight exposure
 			in_moonlight = TRUE
-			to_chat(H, span_danger("The moonlight washes over you... something horrible stirs inside."))
-			next_emote = world.time + rand(20 SECONDS, 40 SECONDS)
-			next_burn = world.time + rand(30 SECONDS, 60 SECONDS)
+			next_emote = world.time + rand(60 SECONDS, 120 SECONDS)
+			next_burn = world.time + rand(120 SECONDS, 180 SECONDS)
 		// Continuously refresh the moon_touched status effect while exposed
 		H.apply_status_effect(/datum/status_effect/moon_touched)
 
@@ -1274,7 +1273,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 					H.visible_message(span_warning("[H] drools involuntarily, eyes wide and feral."), \
 					                  span_warning("Drool runs down your chin as something primal and ancient takes hold..."))
 					H.emote("drool", forced = TRUE)
-			next_emote = world.time + rand(30 SECONDS, 90 SECONDS)
+			next_emote = world.time + rand(60 SECONDS, 180 SECONDS)
 
 		// Periodic burning sensations under moonlight
 		if(world.time >= next_burn)
@@ -1285,7 +1284,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 				"Reality slips away from you - something wild and ancient claws at the edges of your mind...")
 			to_chat(H, span_danger(burn_msg))
 			H.adjustOxyLoss(rand(1, 2))
-			next_burn = world.time + rand(30 SECONDS, 90 SECONDS)
+			next_burn = world.time + rand(120 SECONDS, 240 SECONDS)
 	if(!exposed)
 		if(in_moonlight)
 			// Left moonlight - clear effects
@@ -1342,7 +1341,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 // ============ DISGRACED NOBLE ============
 
 /datum/charflaw/disgraced_noble
-	name = "Disgraced Noble (+2 TRI)"
+	name = "Disgraced Noble"
 	desc = "Requires a nobleman character. Your house has fallen from grace - you retain your title in name only. Other nobles recognize your shame, your estate income is forfeit, and your name is a whisper of scandal in the halls of power."
 	var/applied = FALSE
 
@@ -1361,7 +1360,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	// Strip noble income from the treasury subsystem
 	SStreasury.noble_incomes -= H
 	to_chat(H, span_warning("Your house's fall from grace is a weight you carry every day. Your estate income is forfeit."))
-	H.adjust_triumphs(2)
 
 /datum/charflaw/disgraced_noble/on_removal(mob/user)
 	if(!ishuman(user))
@@ -1496,8 +1494,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(exposed)
 		if(!in_sunlight)
 			in_sunlight = TRUE
-			to_chat(H, span_danger("Astrata's light finds its way into your flesh... something inside recoils."))
-			next_burn = world.time + rand(30 SECONDS, 60 SECONDS)
+			next_burn = world.time + rand(120 SECONDS, 180 SECONDS)
 		// Continuously refresh the sun_scorched status effect (grants critical weakness) while exposed
 		H.apply_status_effect(/datum/status_effect/sun_scorched)
 		H.add_stress(/datum/stressevent/vice/astrata_scorched)
@@ -1511,7 +1508,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 				"The light scalds you from the inside out...")
 			to_chat(H, span_danger(sun_msg))
 			H.adjustFireLoss(rand(1, 70))
-			next_burn = world.time + rand(30 SECONDS, 90 SECONDS)
+			next_burn = world.time + rand(120 SECONDS, 240 SECONDS)
 	if(!exposed)
 		if(in_sunlight)
 			in_sunlight = FALSE

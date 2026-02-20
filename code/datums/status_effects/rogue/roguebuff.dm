@@ -578,8 +578,8 @@
 	return TRUE
 
 /datum/status_effect/buff/healing/tick()
-	// Check if owner is spurned - healing miracles don't work (except from inhumen patrons)
-	if(HAS_TRAIT(owner, TRAIT_SPURNED) && !inhumen_source)
+	// Check if owner is spurned - healing miracles don't work
+	if(HAS_TRAIT(owner, TRAIT_SPURNED))
 		to_chat(owner, span_warning("The divine blessing washes over me, but I feel nothing. I am forsaken."))
 		return
 	var/obj/effect/temp_visual/heal/H = new /obj/effect/temp_visual/heal_rogue(get_turf(owner))
