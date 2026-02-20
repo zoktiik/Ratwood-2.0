@@ -1280,8 +1280,3 @@
 		qdel(src)
 	else
 		src.dir = pick(dir_list) //Random directions are fun :)
-
-/atom/proc/smooth_icon()
-	// Delegate to legacy global smoothing helper to stay
-	// compatible with the existing icon_smoothing.dm system.
-	/proc/smooth_icon(src)
