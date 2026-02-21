@@ -110,71 +110,64 @@
 
 /datum/charflaw/addiction/alcoholic
 	name = "Alcoholic"
-	desc = "Drinking alcohol is my favorite thing."
+	desc = "I need to drink alcohol regularly. If I go too long without a drink, I'll become increasingly stressed and suffer withdrawal symptoms (reduced WIL and LCK)."
 	time = 40 MINUTES
 	needsate_text = "Time for a drink."
 	stress_event = /datum/stressevent/vice/alcoholic
-	debuff = /datum/status_effect/debuff/addiction
 
 
 /// KLEPTOMANIAC
 
 /datum/charflaw/addiction/kleptomaniac
 	name = "Thief-borne"
-	desc = "As a child I had to rely on theft to survive. Whether that changed or not, I just can't get over it."
+	desc = "I must steal something regularly to satisfy my compulsion. Going too long without theft causes mounting stress and anxiety (reduced WIL and LCK)."
 	time = 30 MINUTES
 	needsate_text = "I need to STEAL something! I'll die if I don't!"
 	stress_event = /datum/stressevent/vice/kleptomaniac
-	debuff = /datum/status_effect/debuff/addiction
 
 
 /// JUNKIE
 
 /datum/charflaw/addiction/junkie
 	name = "Junkie"
-	desc = "I need a REAL high to take the pain of this rotten world away."
+	desc = "I need hard drugs like ozium, moon dust, or lux regularly. Without my fix, I'll suffer increasing stress and withdrawal symptoms (reduced WIL and LCK)."
 	time = 40 MINUTES
 	needsate_text = "Time to get really high."
 	stress_event = /datum/stressevent/vice/junkie
-	debuff = /datum/status_effect/debuff/addiction
 
 /// Smoker
 
 /datum/charflaw/addiction/smoker
 	name = "Smoker"
-	desc = "I need to smoke something to take the edge off."
+	desc = "I need to smoke pipe weed, zig, or westleach regularly. Going without causes mounting stress and irritability (reduced WIL and LCK)."
 	time = 40 MINUTES
 	needsate_text = "Time for a flavorful smoke."
 	stress_event = /datum/stressevent/vice/smoker
-	debuff = /datum/status_effect/debuff/addiction
 
 /// GOD-FEARING
 
 /datum/charflaw/addiction/godfearing
 	name = "Devout Follower"
-	desc = "I need to pray to my Patron in their realm, it will make me and my prayers stronger."
+	desc = "I must pray regularly to maintain my spiritual well-being. Neglecting prayer causes stress and spiritual malaise (reduced WIL and LCK)."
 	time = 40 MINUTES
 	needsate_text = "Time to pray to my Patron."
 	stress_event = /datum/stressevent/vice/godfearing
-	debuff = /datum/status_effect/debuff/addiction
 
 /// SADIST
 
 /datum/charflaw/addiction/sadist
 	name = "Sadist"
-	desc = "There is no greater pleasure than the suffering of another."
+	desc = "I need to inflict pain on others regularly to feel satisfied. Going too long without hurting someone causes mounting stress and irritability (reduced WIL and LCK)."
 	time = 40 MINUTES
 	needsate_text = "I need to hear someone whimper."
 	stress_event = /datum/stressevent/vice/sadist
-	debuff = /datum/status_effect/debuff/addiction
 
 /// MASOCHIST
 
 /datum/charflaw/addiction/masochist
 	name = "Masochist"
-	desc = "I love the feeling of pain, so much I can't get enough of it."
+	desc = "I need to experience pain regularly to feel alive. Without it, I become increasingly stressed and anxious (reduced WIL and LCK)."
 	time = 40 MINUTES
 	needsate_text = "I need someone to HURT me."
 	stress_event = /datum/stressevent/vice/masochist
-	debuff = /datum/status_effect/debuff/addiction
 
