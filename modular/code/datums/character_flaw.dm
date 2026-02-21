@@ -4,3 +4,4 @@
 	time = 90 MINUTES
 	needsate_text = "I'm feeling randy."
 	stress_event = /datum/stressevent/vice/nympho
+	debuff = /datum/status_effect/debuff/addiction

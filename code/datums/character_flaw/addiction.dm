@@ -152,7 +152,7 @@
 	time = 40 MINUTES
 	needsate_text = "Time to pray to my Patron."
 	stress_event = /datum/stressevent/vice/godfearing
-
+	debuff = /datum/status_effect/debuff/addiction
 /// SADIST
 
 /datum/charflaw/addiction/sadist
