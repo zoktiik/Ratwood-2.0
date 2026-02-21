@@ -114,6 +114,7 @@
 	time = 40 MINUTES
 	needsate_text = "Time for a drink."
 	stress_event = /datum/stressevent/vice/alcoholic
+	debuff = /datum/status_effect/debuff/addiction
 
 
 /// KLEPTOMANIAC
@@ -124,6 +125,7 @@
 	time = 30 MINUTES
 	needsate_text = "I need to STEAL something! I'll die if I don't!"
 	stress_event = /datum/stressevent/vice/kleptomaniac
+	debuff = /datum/status_effect/debuff/addiction
 
 
 /// JUNKIE
@@ -134,6 +136,7 @@
 	time = 40 MINUTES
 	needsate_text = "Time to get really high."
 	stress_event = /datum/stressevent/vice/junkie
+	debuff = /datum/status_effect/debuff/addiction
 
 /// Smoker
 
@@ -143,6 +146,7 @@
 	time = 40 MINUTES
 	needsate_text = "Time for a flavorful smoke."
 	stress_event = /datum/stressevent/vice/smoker
+	debuff = /datum/status_effect/debuff/addiction
 
 /// GOD-FEARING
 
@@ -152,6 +156,7 @@
 	time = 40 MINUTES
 	needsate_text = "Time to pray to my Patron."
 	stress_event = /datum/stressevent/vice/godfearing
+	debuff = /datum/status_effect/debuff/addiction
 
 /// SADIST
 
@@ -161,6 +166,7 @@
 	time = 40 MINUTES
 	needsate_text = "I need to hear someone whimper."
 	stress_event = /datum/stressevent/vice/sadist
+	debuff = /datum/status_effect/debuff/addiction
 
 /// MASOCHIST
 
@@ -170,4 +176,5 @@
 	time = 40 MINUTES
 	needsate_text = "I need someone to HURT me."
 	stress_event = /datum/stressevent/vice/masochist
+	debuff = /datum/status_effect/debuff/addiction
 

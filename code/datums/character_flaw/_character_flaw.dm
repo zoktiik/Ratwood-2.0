@@ -157,7 +157,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/badsight
 	name = "Bad Eyesight"
-	desc = "I need spectacles to see normally from my years spent reading books."
+	desc = "I need spectacles to see normally. Without them, my vision is blurred and I suffer reduced perception (-20 PER) and speed (-5 SPD). Years of reading have improved my literacy (+1 Reading skill, +1 TRI)."
 
 /datum/charflaw/badsight/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -197,7 +197,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/paranoid
 	name = "Paranoid"
-	desc = "I'm even more anxious than most people. I'm extra paranoid of other races and the sight of blood."
+	desc = "I'm anxious around people of different races (more than 2 nearby causes stress) and around blood (more than 3 blood puddles nearby causes stress)."
 	var/last_check = 0
 
 /datum/charflaw/paranoid/flaw_on_life(mob/user)
@@ -231,7 +231,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/isolationist
 	name = "Isolationist"
-	desc = "I don't like being near people. They might be trying to do something to me..."
+	desc = "I get stressed when more than 3 people are near me. I prefer solitude and small groups."
 	var/last_check = 0
 
 /datum/charflaw/isolationist/flaw_on_life(mob/user)
@@ -257,7 +257,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/clingy
 	name = "Clingy"
-	desc = "I like being around people, it's just so lively..."
+	desc = "I get stressed when I'm alone or only near 1 other person. I need to be around people to feel comfortable."
 	var/last_check = 0
 
 /datum/charflaw/clingy/flaw_on_life(mob/user)
@@ -283,7 +283,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/noeyer
 	name = "Cyclops (R)"
-	desc = "I lost my right eye long ago."
+	desc = "I lost my right eye long ago. My field of vision is significantly reduced on the right side. I start with an eyepatch. +1 TRI"
 
 /datum/charflaw/noeyer/on_mob_creation(mob/user)
 	..()
@@ -299,7 +299,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/noeyel
 	name = "Cyclops (L)"
-	desc = "I lost my left eye long ago."
+	desc = "I lost my left eye long ago. My field of vision is significantly reduced on the left side. I start with an eyepatch. +1 TRI"
 
 /datum/charflaw/noeyel/on_mob_creation(mob/user)
 	..()
@@ -333,7 +333,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/colorblind
 	name = "Colorblind"
-	desc = "I was cursed with flawed eyesight from birth, and can't discern things others can. Incompatible with Night-eyed virtue."
+	desc = "I see the world in grayscale. I cannot perceive colors at all. Incompatible with Night-eyed virtue. +1 TRI"
 
 /datum/charflaw/colorblind/on_mob_creation(mob/user)
 	..()
@@ -355,7 +355,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/ugly
 	name = "Ugly"
-	desc = "My face is ugly and makes everyone who looks at me miserable. Incompatible with Beautiful virtue."
+	desc = "My face is ugly, making me unseemly to others. Social interactions suffer. Incompatible with Socialite (Beautiful) virtue."
 
 /datum/charflaw/ugly/on_mob_creation(mob/user)
 	..()
@@ -371,7 +371,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/nudist
 	name = "Nudist"
-	desc = "I refuse to wear clothes. They are a hindrance to my freedom."
+	desc = "I refuse to wear clothes. I'm compelled to remain unclothed and will automatically remove clothing."
 
 /datum/charflaw/nudist/on_mob_creation(mob/user)
 	..()
@@ -387,7 +387,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/inhumen_anatomy
 	name = "Inhumen Anatomy"
-	desc = "My anatomy is inhumen, preventing me from wearing hats and shoes."
+	desc = "My anatomy is non-human, preventing me from wearing any hats or shoes. These items simply don't fit my body."
 
 /datum/charflaw/inhumen_anatomy/on_mob_creation(mob/user)
 	..()
@@ -403,7 +403,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/missing_nose
 	name = "Missing Nose"
-	desc = "I struggle to breathe. My stamina regeneration is halved."
+	desc = "I have no nose, making breathing difficult. My stamina regeneration is halved."
 
 /datum/charflaw/missing_nose/on_mob_creation(mob/user)
 	..()
@@ -419,7 +419,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/disfigured
 	name = "Disfigured"
-	desc = "No one can recognize me. My face has been permanently altered."
+	desc = "My face has been permanently altered beyond recognition. No one can identify me by my face - I am completely unrecognizable."
 
 /datum/charflaw/disfigured/on_mob_creation(mob/user)
 	..()
@@ -435,7 +435,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/pacifism
 	name = "Pacifism"
-	desc = "I cannot harm another living being."
+	desc = "I cannot harm any living being. I am physically unable to attack or hurt others."
 
 /datum/charflaw/pacifism/on_mob_creation(mob/user)
 	..()
@@ -451,7 +451,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/annoying_face
 	name = "Annoying Face"
-	desc = "I am cursed with an odd voice and appearance."
+	desc = "I have an odd voice and appearance. My text appears in Comic Sans font."
 
 /datum/charflaw/annoying_face/on_mob_creation(mob/user)
 	..()
@@ -467,7 +467,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/eerie_beauty
 	name = "Eerie Beauty"
-	desc = "Some would say my visage is an artwork created by the gods themselves; others call me an unsettling abomination. Incompatible with Socialite virtue."
+	desc = "My appearance is hauntingly beautiful in an unsettling way. My beauty makes others deeply uncomfortable. Incompatible with Socialite virtue."
 
 /datum/charflaw/eerie_beauty/on_mob_creation(mob/user)
 	..()
@@ -483,7 +483,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/nude_sleeper
 	name = "Nude Sleeper"
-	desc = "I can't fall asleep unless I'm nude and in bed."
+	desc = "I can only fall asleep if I'm completely nude and in a bed. I cannot sleep while clothed."
 
 /datum/charflaw/nude_sleeper/on_mob_creation(mob/user)
 	..()
@@ -499,7 +499,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/unsettling_beauty
 	name = "Unsettling Beauty"
-	desc = "My appearance is deeply unsettling to most. There's something profoundly wrong about my features that disturbs those who look upon me. Incompatible with Socialite virtue."
+	desc = "My appearance is profoundly wrong and disturbing to others. Something about my features is deeply unsettling. Incompatible with Socialite virtue."
 
 /datum/charflaw/unsettling_beauty/on_mob_creation(mob/user)
 	..()
@@ -515,7 +515,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/scarred
 	name = "Scarred"
-	desc = "My face bears terrible scars that make identification difficult, but not impossible."
+	desc = "My face bears terrible scars that obscure my identity, making me harder to recognize (but not impossible like Disfigured)."
 
 /datum/charflaw/scarred/on_mob_creation(mob/user)
 	..()
@@ -540,7 +540,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/unintelligible
 	name = "Unintelligible"
-	desc = "I cannot speak the common tongue!"
+	desc = "I cannot speak the common tongue. I lose knowledge of the Common language and lose all Reading skill. +1 TRI"
 
 /datum/charflaw/unintelligible/on_mob_creation(mob/user)
 	var/mob/living/carbon/human/recipient = user
@@ -556,7 +556,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/greedy
 	name = "Greedy"
-	desc = "I can't get enough of mammons, I need more and more! I've also become good at knowing how much things are worth"
+	desc = "I need to maintain a certain amount of mammons on my person. The requirement increases over time (capped at 250 mammons). Without enough coins, I suffer stress and withdrawal (reduced stats). I can see item prices."
 	var/last_checked_mammons = 0
 	var/required_mammons = 0
 	var/next_mammon_increase = 0
@@ -630,7 +630,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/narcoleptic
 	name = "Narcoleptic"
-	desc = "I get drowsy during the day and tend to fall asleep suddenly, but I can sleep easier if I want to, and moon dust can help me stay awake."
+	desc = "I randomly fall asleep during the day (every 7-15 minutes when conscious). Sleep lasts 30-50 seconds. Pain and moon dust can delay episodes. I can fall asleep faster when intentionally resting. +1 TRI"
 	var/last_unconsciousness = 0
 	var/next_sleep = 0
 	var/concious_timer = (10 MINUTES)
@@ -701,7 +701,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/sleepless
 	name = "Insomnia"
-	desc = "I do not sleep. I cannot sleep. I've tried everything."
+	desc = "I cannot sleep. Ever. I am permanently unable to rest or sleep. +1 TRI"
 
 /datum/charflaw/sleepless/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_NOSLEEP, TRAIT_GENERIC)
@@ -711,7 +711,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/mute
 	name = "Mute"
-	desc = "I was born without the ability to speak."
+	desc = "I cannot speak at all. I am permanently mute and cannot vocalize. +1 TRI"
 
 /datum/charflaw/mute/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_PERMAMUTE, TRAIT_GENERIC)
@@ -721,7 +721,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/critweakness
 	name = "Critical Weakness"
-	desc = "My body is as fragile as an eggshell. A critical strike is like to end me then and there."
+	desc = "Critical hits against me are vastly more lethal. A single crit can easily kill me. +1 TRI"
 
 /datum/charflaw/critweakness/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_CRITICAL_WEAKNESS, TRAIT_GENERIC)
@@ -731,14 +731,14 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/silverweakness
 	name = "Silver Weakness"
-	desc = "I'm sensitive to silver — it burns and injures me more than it should."
+	desc = "Silver weapons deal triple damage to me. Silver burns and wounds me far more severely than normal."
 
 /datum/charflaw/silverweakness/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 
 /datum/charflaw/leprosy
 	name = "Leper (+1 TRI)"
-	desc = "I am cursed with leprosy! Too poor to afford treatment, my skin now lays violated by lesions, my extremities are numb, and my presence disturbs even the most stalwart men."
+	desc = "I am afflicted with leprosy. All my stats are reduced by 1 (STR, INT, PER, CON, WIL, SPD, LCK). My appearance disturbs others. +1 TRI"
 
 /datum/charflaw/leprosy/apply_post_equipment(mob/user)
 	var/mob/living/carbon/human/H = user
@@ -755,7 +755,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/mind_broken
 	name = "Asundered Mind (+1 TRI)"
-	desc = "My mind is asundered, wether it was by own means or an unfortunate accident. Nothing seems real to me..."
+	desc = "My mind is shattered. I suffer permanent, infinite hallucinations and psychosis. Reality is a twisted nightmare. +1 TRI"
 
 /datum/charflaw/mind_broken/apply_post_equipment(mob/living/carbon/human/insane_fool)
 	insane_fool.hallucination = INFINITY
@@ -764,7 +764,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/marked_by_baotha
 	name = "Marked by Baotha"
-	desc = "Whether through intentionally seeking out heretical ritualists or against my will, I have been marked by Baotha. I am branded visibly on my groin and am able to be impregnated regardless of physical states that would usually prevent this. The mark causes random surges of arousal and involuntary bodily reactions..."
+	desc = "I bear Baotha's mark on my groin, granting fertility regardless of normal limitations. The mark causes random surges of arousal and involuntary bodily reactions (shiver/twitch/groan) every few minutes. The mark is visible on my body."
 	var/next_arousal_surge = 0
 	var/next_emote = 0
 
@@ -842,8 +842,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/hemophage
 	name = "Hemophage (+1 TRI)"
-	desc = "Whether by curse or my people, blood is the only thing to keep me alive. Normal sources of nutrition and hydration will make me ill. <br>\
-	<small>Any element of a virtue that modifies eating will be canceled out by Hemophage.</small>"
+	desc = "I can only sustain myself on blood. Normal food and drink make me ill and provide no nutrition. I can bite others to drink blood. Any eating-related virtue benefits are negated. +1 TRI"
 
 /datum/charflaw/hemophage/on_mob_creation(mob/living/carbon/human/vamp_wannabe)
 	ADD_TRAIT(vamp_wannabe, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
@@ -852,7 +851,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/lumbering_giant
 	name = "Lumbering Giant (-1 TRI)"
-	desc = "I've always been larger than most, towering over my peers. However, my size offers no additional strength or resilience — I simply lumber about."
+	desc = "I'm 25% larger than normal people, but gain no strength or resilience from my size. I just tower awkwardly over others. This consumes 1 triumph instead of granting it. -1 TRI"
 
 /datum/charflaw/lumbering_giant/on_mob_creation(mob/user)
 	if(!ishuman(user))
@@ -880,7 +879,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/chronic_migraine
 	name = "Chronic Migraines (+2 TRI)"
-	desc = "You suffer from frequent, debilitating headaches that can strike without warning."
+	desc = "I suffer frequent, debilitating headaches every 2-25 minutes. Migraines cause vision blur and damage (2-3 brute). Bright light triggers additional minor headaches. +2 TRI"
 	var/next_migraine = 0
 
 /datum/charflaw/chronic_migraine/on_mob_creation(mob/user)
@@ -918,7 +917,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/weak_heart
 	name = "Weak Heart (+3 TRI)"
-	desc = "You were born with a weak heart. Heart attacks occur at half the stress threshold (15 instead of 30), chest pains when stressed, and increased risk during exhaustion."
+	desc = "My heart is fragile. Heart attacks occur at 15 stress instead of 30. I suffer periodic chest pains (oxygen loss) every 2-25 minutes. Running with high stamina causes heart strain. +3 TRI"
 	var/next_chest_pain = 0
 
 /datum/charflaw/weak_heart/on_mob_creation(mob/user)
@@ -958,7 +957,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/tremors
 	name = "Tremors (+3 TRI)"
-	desc = "Your body tremors periodically, causing you to drop what's in your hands and lose your grip for a short time. High stress makes the tremors worse."
+	desc = "My hands shake uncontrollably every 15-30 minutes, forcing me to drop everything I'm holding for 6 seconds. High stress (6+) causes more frequent tremors. I cannot grip items during episodes. +3 TRI"
 	var/next_tremor_time = 0
 	var/base_tremor_interval = 30 MINUTES
 	var/stress_tremor_interval = 15 MINUTES
@@ -1077,7 +1076,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/nightmares
 	name = "Nightmares (+1 TRI)"
-	desc = "You suffer from terrible nightmares. You scream in your sleep and take longer to rest."
+	desc = "I suffer terrible nightmares. While sleeping, I periodically scream and strain, making it harder to get restful sleep. +1 TRI"
 	var/next_scream = 0
 
 /datum/charflaw/nightmares/on_mob_creation(mob/user)
@@ -1097,7 +1096,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/chronic_arthritis
 	name = "Chronic Arthritis (+2 TRI)"
-	desc = "Your joints ache constantly, causing periodic pain flares and reduced mobility."
+	desc = "My joints ache constantly. Every 2-25 minutes, I suffer pain flares that drain stamina (5 points). Weather can trigger additional pain between flares. +2 TRI"
 	var/next_pain_flare = 0
 
 /datum/charflaw/chronic_arthritis/on_mob_creation(mob/user)
@@ -1129,7 +1128,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/chronic_back_pain
 	name = "Chronic Back Pain (+2 TRI)"
-	desc = "Years of wear and tear have left you with persistent lower back pain that affects your mobility."
+	desc = "My back hurts constantly. Every 2-25 minutes I suffer pain that drains stamina (3-8 points depending on armor weight). Running triggers additional pain. Heavy armor (8 stamina) worsens pain significantly. +2 TRI"
 	var/next_back_pain = 0
 
 /datum/charflaw/chronic_back_pain/on_mob_creation(mob/user)
@@ -1184,7 +1183,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/old_war_wound
 	name = "Old War Wound (+3 TRI)"
-	desc = "An old injury from your past still haunts you, causing chronic pain and occasional flare-ups."
+	desc = "An old injury haunts me. Every 2-25 minutes, the wound flares up causing stamina loss (3-5 points). Low health (<70%) or high stress (10+) triggers more severe flare-ups. I start with 3-8 brute damage. +3 TRI"
 	var/next_wound_pain = 0
 
 /datum/charflaw/old_war_wound/on_mob_creation(mob/user)
@@ -1216,7 +1215,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/hard_of_hearing
 	name = "Hard of Hearing (+2 TRI)"
-	desc = "My hearing has deteriorated. I struggle to make out what people say from more than a couple paces away, unless they raise their voice."
+	desc = "My hearing is severely impaired. I can only hear people clearly if they're very close, or if they yell. Distant conversations are muffled or inaudible. +2 TRI"
 
 /datum/charflaw/hard_of_hearing/on_mob_creation(mob/user)
 	if(!ishuman(user))
@@ -1232,7 +1231,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/noc_scorched
 	name = "Noc-Scorched (+2 TRI)"
-	desc = "You bear a scar from prolonged exposure to lycanthropy in your youth. Standing beneath the open night sky fills your veins with a primal, beastly fire. Wearing a hood or headgear protects you from the moon's influence."
+	desc = "I was exposed to lycanthropy and bear its scar. Under the open night sky without headgear: I gain night vision and silver weakness, suffer periodic burning (oxygen damage), and involuntarily growl/howl/drool. Silver cannot cure me again. +2 TRI"
 	var/in_moonlight = FALSE
 	var/next_emote = 0
 	var/next_burn = 0
@@ -1336,7 +1335,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/big_ears
 	name = "Big Ears (+1 TRI)"
-	desc = "You are acutely sensitive to loud noise. Yelling and shouts set your nerves on edge and chip away at your composure."
+	desc = "I'm extremely sensitive to loud noises. Yelling and shouts near me cause stress. However, I have enhanced hearing and can hear better than most. +1 TRI"
 
 /datum/charflaw/big_ears/on_mob_creation(mob/user)
 	if(!ishuman(user))
@@ -1356,7 +1355,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/disgraced_noble
 	name = "Disgraced Noble"
-	desc = "Requires a nobleman character. Your house has fallen from grace - you retain your title in name only. Other nobles recognize your shame, your estate income is forfeit, and your name is a whisper of scandal in the halls of power."
+	desc = "Requires a noble character. My house has fallen from grace. Other nobles recognize my shame, I lose all estate income from the treasury, and my title is merely ceremonial. I retain the title in name only."
 	var/applied = FALSE
 
 /datum/charflaw/disgraced_noble/apply_post_equipment(mob/user)
@@ -1385,7 +1384,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/light_sensitive
 	name = "Light Sensitivity"
-	desc = "Bright lights cause you discomfort and distress. You do best in dim or candlelit spaces."
+	desc = "Bright lights (luminosity >4) cause me stress. I do best in dim, candlelit spaces or darkness."
 	var/last_light_check = 0
 
 /datum/charflaw/light_sensitive/on_mob_creation(mob/user)
@@ -1424,7 +1423,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 //SPURNED - Healing miracles doesn't work
 /datum/charflaw/spurned
 	name = "Spurned"
-	desc = "The gods have forsaken me. Healing miracles have no effect on me."
+	desc = "The gods have forsaken me. Healing miracles and divine magic have no beneficial effect on me. +2 TRI"
 
 /datum/charflaw/spurned/on_mob_creation(mob/user)
 	if(!ishuman(user))
@@ -1442,7 +1441,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 //ILLITERATE - Cannot read or train reading
 /datum/charflaw/illiterate
 	name = "Illiterate"
-	desc = "I never learned to read and never will. All reading skills are removed and cannot be trained."
+	desc = "I never learned to read and never will. All Reading skills are removed and set to 0, and cannot be trained or improved."
 
 /datum/charflaw/illiterate/on_mob_creation(mob/user)
 	if(!ishuman(user))
@@ -1521,7 +1520,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		// Continuously refresh the sun_scorched status effect (grants critical weakness) while exposed
 		H.apply_status_effect(/datum/status_effect/sun_scorched)
 		H.add_stress(/datum/stressevent/vice/astrata_scorched)
-		ADD_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
+
 
 		// Periodic burning from the sun
 		if(world.time >= next_burn)
@@ -1538,7 +1537,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			in_sunlight = FALSE
 			H.remove_status_effect(/datum/status_effect/sun_scorched)
 			H.remove_stress(/datum/stressevent/vice/astrata_scorched)
-			REMOVE_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
 
 // Sun-scorched status effect: grants critical weakness while active
 /datum/status_effect/sun_scorched
@@ -1551,11 +1549,13 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(!.)
 		return
 	ADD_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, "sun_scorched")
+	ADD_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, "sun_scorched")
 	return TRUE
 
 /datum/status_effect/sun_scorched/on_remove()
 	. = ..();
 	REMOVE_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, "sun_scorched")
+	REMOVE_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, "sun_scorched")
 
 /atom/movable/screen/alert/status_effect/sun_scorched
 	name = "Sun-Scorched"
