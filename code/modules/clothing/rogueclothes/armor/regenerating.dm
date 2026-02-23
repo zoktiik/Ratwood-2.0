@@ -109,11 +109,11 @@
 /obj/item/clothing/suit/roguetown/armor/regenerating/skin/weak
 	name = "tough skin"
 	desc = "My skin has always been tough enough to stop most cuts and bruises, with time it will mend."
-	armor = list("blunt" = 25, "slash" = 25, "stab" = 25, "piercing" = 20, "fire" = 5, "acid" = 0)
-	max_integrity = 150
-	repair_time = 60 SECONDS
-	body_parts_covered = FULL_BODY
-	body_parts_inherent = FULL_BODY
+	armor = list("blunt" = 30, "slash" = 30, "stab" = 25, "piercing" = 25, "fire" = 5, "acid" = 0)
+	max_integrity = 265
+	repair_time = 120 SECONDS
+	body_parts_covered = ALMOST_FULL_BODY
+	body_parts_inherent = ALMOST_FULL_BODY
 
 // SKIN ARMOR (non-shirt slot, with regeneration)
 
@@ -122,8 +122,8 @@
 	name = "tough hide"
 	desc = "My skin has always been tough enough to stop most cuts and bruises, with time it will mend."
 	icon_state = null
-	body_parts_covered = FULL_BODY
-	body_parts_inherent = FULL_BODY
+	body_parts_covered = ALMOST_FULL_BODY
+	body_parts_inherent = ALMOST_FULL_BODY
 	armor = list("blunt" = 25, "slash" = 25, "stab" = 25, "piercing" = 20, "fire" = 5, "acid" = 0)
 	blocksound = SOFTHIT
 	blade_dulling = DULLING_BASHCHOP
