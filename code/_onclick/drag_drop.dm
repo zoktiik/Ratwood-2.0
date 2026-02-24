@@ -162,6 +162,7 @@
 			if(!S.cast_check(TRUE, mob))
 				return
 
+/*
 	if(!mob.mmb_intent)
 		mouse_pointer_icon = 'icons/effects/mousemice/human_looking.dmi'
 	else
@@ -169,6 +170,7 @@
 			updateprogbar()
 		else
 			mouse_pointer_icon = mob.mmb_intent.pointer
+*/
 
 /client/proc/handle_left_click(atom/object, location, control, params, list/modifiers)
 	if(!modifiers["shift"] || mob.BehindAtom(object, mob.dir))
