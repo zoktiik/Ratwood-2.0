@@ -157,10 +157,10 @@
 	mob.atkswinging = "middle"
 	if(mob.mmb_intent)
 		mob.used_intent = mob.mmb_intent
-		//if(mob.used_intent.type == INTENT_SPELL && mob.ranged_ability)
-			//var/obj/effect/proc_holder/spell/S = mob.ranged_ability
-			///if(!S.cast_check(TRUE, mob))
-			//	return
+		if(mob.used_intent.type == INTENT_SPELL && mob.ranged_ability)
+			var/obj/effect/proc_holder/spell/S = mob.ranged_ability
+			if(!S.cast_check(TRUE, mob))
+				return
 
 	if(!mob.mmb_intent)
 		mouse_pointer_icon = 'icons/effects/mousemice/human_looking.dmi'
