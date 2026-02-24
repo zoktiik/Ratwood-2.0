@@ -126,8 +126,8 @@
 
 	if(modifiers["right"])
 		handle_right_click(object, location, control, params, modifiers)
-	//else if(modifiers["middle"])
-	//	handle_middle_click(object, params, modifiers)
+	else if(modifiers["middle"])
+		handle_middle_click(object, params, modifiers)
 	else if(modifiers["left"])
 		handle_left_click(object, location, control, params, modifiers)
 
