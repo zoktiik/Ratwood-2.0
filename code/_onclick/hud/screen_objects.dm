@@ -625,7 +625,6 @@
 	icon_state = "combat0"
 	icon = 'icons/mob/roguehud.dmi'
 	screen_loc = rogueui_cmode
-	blockscharging = TRUE
 
 /atom/movable/screen/cmode/update_icon()
 	icon_state = "combat[hud.mymob.cmode]"
