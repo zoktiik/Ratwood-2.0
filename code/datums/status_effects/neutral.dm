@@ -181,7 +181,7 @@
 /atom/movable/screen/alert/status_effect/compliance
 	name = "Compliant"
 	desc = "I am currently not resisting any grabs or breakout attempts against me."
-	icon_state = "buckled" // this really needs its own icon
+	icon_state = "compliance"
 
 // Sadly we can't rely on /atom/movable/screen/Click() to return TRUE at all.
 // We MUST use the shitcode method of copypasting if both examine and toggle are to work properly.
