@@ -169,7 +169,6 @@
 			updateprogbar()
 		else
 			mouse_pointer_icon = mob.mmb_intent.pointer
-	return
 
 /client/proc/handle_left_click(atom/object, location, control, params, list/modifiers)
 	if(!modifiers["shift"] || mob.BehindAtom(object, mob.dir))
