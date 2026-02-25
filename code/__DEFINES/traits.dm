@@ -36,6 +36,9 @@
 #define TRAIT_INHUMEN_ANATOMY "Inhumen Anatomy" //can't wear hats and shoes
 #define TRAIT_NASTY_EATER "Inhumen Digestion" //can eat rotten food, organs, poison berries, and drink murky water
 #define TRAIT_WILD_EATER "Beastly Digestion" //can eat raw and rotten food and drink murky water
+#define TRAIT_CARNIVORE "Carnivore" //can only eat meat, gets sick from plant-based foods
+#define TRAIT_HERBIVORE "Herbivore" //can only eat plants, gets sick from meat
+#define TRAIT_LITHOVORE "Lithovore" //can eat rocks and gems for nutrition
 #define INSPIRING_MUSICIAN "Inspiring Musician" // unlocks bardic inspiration stuff
 #define TRAIT_NOFALLDAMAGE1 "Fall Damage Reduction"
 #define TRAIT_NOFALLDAMAGE2 "Fall Damage Immunity"
@@ -338,6 +341,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_INHUMEN_ANATOMY = "My anatomy is inhumen, preventing me from wearing hats and shoes.",
 	TRAIT_NASTY_EATER = span_dead("I can eat bad food, and water that would be toxic to humen will not affect me."),
 	TRAIT_WILD_EATER = span_info("I can eat raw food and drink from dirty water."),
+	TRAIT_CARNIVORE = span_warning("I can only digest meat. Plant-based foods make me ill."),
+	TRAIT_HERBIVORE = span_info("I can only digest plants. Meat makes me sick."),
+	TRAIT_LITHOVORE = span_notice("My unique physiology allows me to consume and digest rocks and gems."),
 	TRAIT_NOFALLDAMAGE1 = span_warning("I can easily handle minor falls."),
 	TRAIT_NOFALLDAMAGE2 = span_warning("I can handle a fall from any height."),
 	TRAIT_GRABIMMUNE = span_warning("My great strength, or slippery agility, prevents others from getting ahold of me!"),

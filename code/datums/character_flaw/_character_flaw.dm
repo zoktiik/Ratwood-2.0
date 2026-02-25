@@ -630,7 +630,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/narcoleptic
 	name = "Narcoleptic"
-	desc = "I randomly fall asleep during the day (every 7-15 minutes when conscious). Sleep lasts 30-50 seconds. Pain and moon dust can delay episodes. I can fall asleep faster when intentionally resting. +1 TRI"
+	desc = "I randomly fall asleep during the day (every 7-15 minutes when conscious). Sleep lasts 30-50 seconds. Pain, stimulants (coffee, tea) and drugs prevent episodes. I can fall asleep faster when intentionally resting. +1 TRI"
 	var/last_unconsciousness = 0
 	var/next_sleep = 0
 	var/concious_timer = (10 MINUTES)
@@ -658,10 +658,30 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(do_sleep)
 		if(next_sleep <= world.time)
 			var/pain = user.get_complex_pain()
-			if(pain >= 40 && pain_pity_charges > 0)
+			// Check if user is on stimulants or drugs that prevent sleep
+			var/on_stimulants = FALSE
+			if(user.has_status_effect(/datum/status_effect/buff/vigorized))
+				on_stimulants = TRUE
+			else if(user.has_status_effect(/datum/status_effect/buff/weed))
+				on_stimulants = TRUE
+			else if(user.has_status_effect(/datum/status_effect/buff/ozium))
+				on_stimulants = TRUE
+			else if(user.has_status_effect(/datum/status_effect/buff/moondust))
+				on_stimulants = TRUE
+			else if(user.has_status_effect(/datum/status_effect/buff/moondust_purest))
+				on_stimulants = TRUE
+			
+			if(on_stimulants)
+				concious_timer = rand(4 MINUTES, 6 MINUTES)
+				to_chat(user, span_info("The stimulants keep me alert..."))
+				do_sleep = FALSE
+				last_unconsciousness = world.time
+			else if(pain >= 40 && pain_pity_charges > 0)
 				pain_pity_charges--
 				concious_timer = rand(1 MINUTES, 2 MINUTES)
 				to_chat(user, span_warning("The pain keeps me awake..."))
+				do_sleep = FALSE
+				last_unconsciousness = world.time
 			else
 				if(prob(40) || drugged_up)
 					drugged_up = FALSE
@@ -672,8 +692,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 					to_chat(user, span_boldwarning("I can't keep my eyes open any longer..."))
 					user.Sleeping(rand(30 SECONDS, 50 SECONDS))
 					user.visible_message(span_warning("[user] suddenly collapses!"))
-			do_sleep = FALSE
-			last_unconsciousness = world.time
+				do_sleep = FALSE
+				last_unconsciousness = world.time
 	else
 		// Been conscious for ~10 minutes (whatever is the conscious timer)
 		if(last_unconsciousness + concious_timer < world.time)
@@ -796,7 +816,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		mark_color = "#[H.client.prefs.baotha_mark_color]"
 	
 	// Create and store the marking overlay
-	H.baotha_mark_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODYPARTS_LAYER)
+	H.baotha_mark_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_LAYER)
 	H.baotha_mark_overlay.color = mark_color
 	
 	// Trigger body update to apply it
@@ -1088,11 +1108,17 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/nightmares/flaw_on_life(mob/user)
 	if(!ishuman(user))
 		return
+	var/mob/living/carbon/human/H = user
 
-	if(user.IsSleeping())
+	if(H.IsSleeping())
 		if(world.time >= next_scream)
 			next_scream = world.time + rand(2 MINUTES, 25 MINUTES)
-			user.emote("strain")
+			// Check if character has Baotha's mark - if so, wet lewd nightmares
+			if(H.has_flaw(/datum/charflaw/marked_by_baotha))
+				var/list/lewd_nightmare_emotes = list("moan", "twitch", "shiver", "groan")
+				H.emote(pick(lewd_nightmare_emotes))
+			else
+				H.emote("strain")
 
 /datum/charflaw/chronic_arthritis
 	name = "Chronic Arthritis (+2 TRI)"
@@ -1561,3 +1587,33 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	name = "Sun-Scorched"
 	desc = "Astrata's light burns through me. My wounds are grave, silver cuts deep, and the sun strips me of my resilience."
 	icon_state = "sun_bad"
+
+/datum/charflaw/carnivore
+	name = "Carnivore"
+	desc = "I can only digest meat. Plant-based foods like berries, fruits, and vegetables make me ill. Eating too much will poison me."
+
+/datum/charflaw/carnivore/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_CARNIVORE, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NASTY_EATER, TRAIT_GENERIC) // Can eat raw meat
+
+/datum/charflaw/herbivore
+	name = "Herbivore"
+	desc = "I can only digest plant-based foods. Meat and animal products make me sick. Eating too much will poison me."
+
+/datum/charflaw/herbivore/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	ADD_TRAIT(H, TRAIT_HERBIVORE, TRAIT_GENERIC)
+
+/datum/charflaw/lithovore
+	name = "Lithovore"
+	desc = "My unique physiology allows me to consume and digest rocks and gems for nutrition. However, I can't gain nutrition from regular food."
+
+/datum/charflaw/lithovore/on_mob_creation(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user

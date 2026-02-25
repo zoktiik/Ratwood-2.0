@@ -18,6 +18,7 @@
 	advjob_examine = FALSE
 	give_bank_account = 15
 	social_rank = SOCIAL_RANK_YEOMAN
+	vice_restrictions = list(/datum/charflaw/noc_scorched, /datum/charflaw/astrata_scorched, /datum/charflaw/silverweakness, /datum/charflaw/noeyeall)
 
 	job_traits = list(
 		TRAIT_NOPAINSTUN,

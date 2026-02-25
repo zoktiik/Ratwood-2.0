@@ -343,16 +343,16 @@
 			. += span_sans("[m3] an oddly annoying face and voice.")
 
 		if (HAS_TRAIT(src, TRAIT_SCARRED))
-			. += span_redtext("[m2] face is marked with terrible scars.")
+			. += span_redtext("[capitalize(m2)] face is marked with terrible scars.")
 
 		if (HAS_TRAIT(src, TRAIT_DISFIGURED))
 			switch (pronouns)
 				if (HE_HIM, SHE_HER_M)
-					. += span_beautiful_masc("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
+					. += span_beautiful_masc("[capitalize(m2)] face is grotesquely disfigured, making [m2] unrecognizable.")
 				if (SHE_HER, HE_HIM_F)
-					. += span_beautiful_fem("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
+					. += span_beautiful_fem("[capitalize(m2)] face is grotesquely disfigured, making [m2] unrecognizable.")
 				if (THEY_THEM, THEY_THEM_F, IT_ITS)
-					. += span_beautiful_nb("[m2] face is grotesquely disfigured, making [m2] unrecognizable.")
+					. += span_beautiful_nb("[capitalize(m2)] face is grotesquely disfigured, making [m2] unrecognizable.")
 
 		if (HAS_TRAIT(src, TRAIT_UNSETTLING_BEAUTY))
 			switch (pronouns)

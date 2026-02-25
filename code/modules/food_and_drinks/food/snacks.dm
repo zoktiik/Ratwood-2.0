@@ -264,6 +264,42 @@ All foods are distributed among various categories. Use common sense.
 			to_chat(eater, span_red("I can't lyve off of this..."))
 			human_eater.add_nausea(50)//Take a guess.
 			return//Seriously. We don't care. Drink some blood, instead.
+
+		// Lithovore - can only eat rocks/gems, normal food provides no nutrition
+		if(HAS_TRAIT(human_eater, TRAIT_LITHOVORE))
+			to_chat(eater, span_warning("This food doesn't satisfy me at all..."))
+			return // No nutrition gained from regular food
+
+		// Carnivore dietary check - gets sick from plant-based foods
+		if(HAS_TRAIT(human_eater, TRAIT_CARNIVORE))
+			if(foodtype & (VEGETABLES | FRUIT | GRAIN))
+				// Track how much plant matter they've consumed
+				if(!human_eater.has_status_effect(/datum/status_effect/debuff/plant_sickness))
+					to_chat(eater, span_warning("This plant matter doesn't sit well in my stomach..."))
+					human_eater.add_nausea(30)
+					human_eater.apply_status_effect(/datum/status_effect/debuff/plant_sickness)
+				else
+					// Already sick, eating more makes it worse
+					to_chat(eater, span_danger("My body rejects this! I feel violently ill!"))
+					human_eater.add_nausea(80)
+					human_eater.adjustToxLoss(5) // Poisoning from too much plant matter
+				return
+
+		// Herbivore dietary check - gets sick from meat
+		if(HAS_TRAIT(human_eater, TRAIT_HERBIVORE))
+			if(foodtype & MEAT)
+				// Track how much meat they've consumed
+				if(!human_eater.has_status_effect(/datum/status_effect/debuff/meat_sickness))
+					to_chat(eater, span_warning("This meat churns in my stomach..."))
+					human_eater.add_nausea(30)
+					human_eater.apply_status_effect(/datum/status_effect/debuff/meat_sickness)
+				else
+					// Already sick, eating more makes it worse
+					to_chat(eater, span_danger("My body rejects this flesh! I feel violently ill!"))
+					human_eater.add_nausea(80)
+					human_eater.adjustToxLoss(5) // Poisoning from too much meat
+				return
+
 		if(human_eater.culinary_preferences)
 			var/favorite_food_type = human_eater.culinary_preferences[CULINARY_FAVOURITE_FOOD]
 			if(favorite_food_type == type)

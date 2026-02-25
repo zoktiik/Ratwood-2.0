@@ -23,6 +23,7 @@
 	advjob_examine = TRUE
 	give_bank_account = 15
 	social_rank = SOCIAL_RANK_PEASANT
+	vice_restrictions = list(/datum/charflaw/noc_scorched, /datum/charflaw/astrata_scorched, /datum/charflaw/silverweakness, /datum/charflaw/pacifism, /datum/charflaw/noeyeall)
 	job_traits = list(TRAIT_OUTLANDER, TRAIT_STEELHEARTED, TRAIT_INQUISITION)
 	job_subclasses = list(
 		/datum/advclass/psydoniantemplar,

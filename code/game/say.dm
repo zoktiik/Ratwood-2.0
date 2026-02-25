@@ -324,7 +324,7 @@ INITIALIZE_IMMEDIATE(/atom/movable/virtualspeaker)
 	return source
 
 // TRAIT_PARTIAL_DEAF: Intercept Hear to jumble messages for hard-of-hearing characters
-// TRAIT_BIG_EARS: Yelling causes stress (only loud speech now triggers sensitivity)
+// TRAIT_BIG_EARS: Yelling within 7 tiles causes stress, adjacent yelling stuns
 /mob/living/carbon/human/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, message_mode, original_message)
 	if(!radio_freq && speaker && speaker != src)
 		var/is_yelling = spans && (SPAN_YELL in spans)
@@ -335,12 +335,12 @@ INITIALIZE_IMMEDIATE(/atom/movable/virtualspeaker)
 		if(HAS_TRAIT(src, TRAIT_BIG_EARS))
 			if(is_yelling && !has_status_effect(/datum/status_effect/bigearsannoy_cd))
 				var/distance = get_dist(src, speaker)
-				if(distance <= 1)
-					// Stunned by nearby yelling
-					to_chat(src, span_userdanger("The deafening yell rings through your sensitive ears!"))
-					AdjustStun(20)
-				add_stress(/datum/stressevent/vice/big_ears)
-				apply_status_effect(/datum/status_effect/bigearsannoy_cd)
+				if(distance <= 7) // Anyone yelling within 7 tiles causes debuff
+					if(distance <= 1) // Adjacent yelling stuns
+						to_chat(src, span_userdanger("The deafening yell rings through your sensitive ears!"))
+						AdjustStun(20)
+					add_stress(/datum/stressevent/vice/big_ears)
+					apply_status_effect(/datum/status_effect/bigearsannoy_cd)
 	return ..()
 
 // Scrambles speech text for hard-of-hearing characters
