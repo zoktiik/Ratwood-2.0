@@ -55,6 +55,9 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Disgraced Noble"=/datum/charflaw/disgraced_noble,
 	"Spurned (+2 TRI)"=/datum/charflaw/spurned,
 	"Astrata-Scorched (+2 TRI)"=/datum/charflaw/astrata_scorched,
+	"Carnivore"=/datum/charflaw/carnivore,
+	"Herbivore"=/datum/charflaw/herbivore,
+	"Lithovore"=/datum/charflaw/lithovore,
 	))
 
 /datum/charflaw
