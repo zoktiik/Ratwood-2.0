@@ -282,6 +282,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_SPURNED = span_warning("The gods have forsaken me. Healing miracles have no effect on me."),
 	TRAIT_ILLITERATE = span_warning("I never learned to read and never will. The written word is forever beyond me."),
 	TRAIT_ASTRATA_SCORCHED = span_warning("Astrata's light burns through me. Silver cuts deep, the sun drains my resilience, and direct sunlight sears my flesh."),
+	TRAIT_NOC_SCORCHED = span_warning("The moon's curse marks me. Under the night sky I become feral, and the beast within hungers for raw flesh."),
+	TRAIT_NO_REFLECTION = span_warning("I cast no reflection in mirrors or water. A damning sign of my cursed nature."),
+	TRAIT_STAKE_VULNERABLE = span_warning("A wooden stake through my heart would be my end."),
 	TRAIT_STEELHEARTED = span_info("I have hardened nerves, and do not waiver from the sight of violence in battle."),
 	TRAIT_OUTLANDER = span_info("Those of the vale see me as not of their land."),
 	TRAIT_OUTLAW = span_info("This land's nervelocks and castificos reject my touch."),
@@ -598,6 +601,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SPURNED			"spurned"
 #define TRAIT_ILLITERATE		"illiterate"
 #define TRAIT_ASTRATA_SCORCHED	"astrata_scorched"
+#define TRAIT_NOC_SCORCHED		"noc_scorched"
+#define TRAIT_NO_REFLECTION		"no_reflection"
+#define TRAIT_STAKE_VULNERABLE	"stake_vulnerable"
 #define TRAIT_NEARSIGHT			"nearsighted"
 #define TRAIT_FAT				"fat"
 #define TRAIT_HUSK				"husk"

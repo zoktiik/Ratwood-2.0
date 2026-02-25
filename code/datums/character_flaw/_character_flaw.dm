@@ -1260,24 +1260,41 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/noc_scorched
 	name = "Noc-Scorched (+2 TRI)"
-	desc = "I was exposed to lycanthropy and bear its scar. Under the open night sky without headgear: I gain night vision and silver weakness, suffer periodic burning (oxygen damage), and involuntarily growl/howl/drool. Silver cannot cure me again. +2 TRI"
+	desc = "I was exposed to lycanthropy and bear its scar. I can digest raw meat and organs naturally. Under the open night sky without headgear: I gain night vision and silver weakness, become bewitched (cannot cast spells), suffer from insomnia, suffer periodic burning (oxygen damage), and involuntarily growl/howl/drool. I must eat raw meat regularly to satisfy my bestial hunger - if I don't feed, I'll enter a feral frenzy. Raw meat heals me. Silver cannot cure me again. +2 TRI"
 	var/in_moonlight = FALSE
 	var/next_emote = 0
 	var/next_burn = 0
+	var/meat_hunger = 500 // Hunger meter: 500 = fed, 250 = hungry, 100 = starving
+	var/next_hunger_check = 0
 
 /datum/charflaw/noc_scorched/on_mob_creation(mob/user)
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
+	// Cannot combine Noc-Scorched with Astrata-Scorched
+	if(HAS_TRAIT(H, TRAIT_ASTRATA_SCORCHED))
+		to_chat(H, span_boldwarning("The curse of the moon and the scorching of the sun are incompatible. You cannot bear both."))
+		return
 	ADD_TRAIT(H, TRAIT_SILVER_CURED, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NOC_SCORCHED, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_ORGAN_EATER, TRAIT_GENERIC)
 	H.adjust_triumphs(2)
+	meat_hunger = 500
+	next_hunger_check = world.time + 5 MINUTES
 
 /datum/charflaw/noc_scorched/on_removal(mob/user)
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
 	REMOVE_TRAIT(H, TRAIT_SILVER_CURED, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_NOC_SCORCHED, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_ORGAN_EATER, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_NOSLEEP, TRAIT_GENERIC)
 	H.remove_status_effect(/datum/status_effect/moon_touched)
+	H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t1)
+	H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t2)
+	H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t3)
 
 /datum/charflaw/noc_scorched/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -1285,6 +1302,36 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	if(H.stat != CONSCIOUS)
 		return
+
+	// Decay meat hunger over time
+	if(world.time >= next_hunger_check)
+		meat_hunger = max(0, meat_hunger - 25) // Lose 25 hunger every 5 minutes
+		next_hunger_check = world.time + 5 MINUTES
+		
+		// Apply hunger debuffs based on hunger level
+		switch(meat_hunger)
+			if(250 to 500)
+				H.apply_status_effect(/datum/status_effect/debuff/meat_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t2)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t3)
+				if(meat_hunger == 250)
+					to_chat(H, span_warning("My bestial hunger grows... I need raw meat."))
+			if(100 to 250)
+				H.apply_status_effect(/datum/status_effect/debuff/meat_hunger_t2)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t3)
+				if(meat_hunger == 100)
+					to_chat(H, span_danger("The beast within DEMANDS flesh! I'm losing control!"))
+			if(0 to 100)
+				H.apply_status_effect(/datum/status_effect/debuff/meat_hunger_t3)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t2)
+		
+		// Frenzy chance when starving
+		if(meat_hunger < 100 && prob(9))
+			if(H.last_frenzy_check + 5 MINUTES < world.time)
+				to_chat(H, span_userdanger("The beast takes over! I cannot control myself!"))
+				H.rollfrenzy()
 
 	// Check moonlight exposure conditions: night, outdoors, and no headgear
 	var/turf/T = get_turf(H)
@@ -1298,6 +1345,9 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			next_burn = world.time + rand(120 SECONDS, 180 SECONDS)
 		// Continuously refresh the moon_touched status effect while exposed
 		H.apply_status_effect(/datum/status_effect/moon_touched)
+		// Apply bewitched (cannot cast spells) and insomnia while under moonlight
+		ADD_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
+		ADD_TRAIT(H, TRAIT_NOSLEEP, TRAIT_GENERIC)
 
 		// Periodic involuntary animal emotes
 		if(world.time >= next_emote)
@@ -1311,7 +1361,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 					to_chat(H, span_danger("An overwhelming urge seizes you - you tilt your head back and howl at the moon!"))
 				if(3)
 					H.visible_message(span_warning("[H] drools involuntarily, eyes wide and feral."), \
-					                  span_warning("Drool runs down your chin as something primal and ancient takes hold..."))
+					span_warning("Drool runs down your chin as something primal and ancient takes hold..."))
 					H.emote("drool", forced = TRUE)
 			next_emote = world.time + rand(60 SECONDS, 180 SECONDS)
 
@@ -1330,6 +1380,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			// Left moonlight - clear effects
 			in_moonlight = FALSE
 			H.remove_status_effect(/datum/status_effect/moon_touched)
+			REMOVE_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
+			REMOVE_TRAIT(H, TRAIT_NOSLEEP, TRAIT_GENERIC)
 
 // Status effects for character flaws
 /datum/status_effect/moon_touched
@@ -1490,21 +1542,24 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	REMOVE_TRAIT(user, TRAIT_ILLITERATE, TRAIT_GENERIC)
 
-//ASTRATA-SCORCHED - Sunlight discomfort, silver weakness, and critical fragility in direct sun
+//ASTRATA-SCORCHED - Sunlight discomfort, silver weakness, blood hunger, and critical fragility in direct sun
 /datum/charflaw/astrata_scorched
 	name = "Astrata-Scorched (+2 TRI)"
-	desc = "You once bore the dark hunger of the sanguine, but were cured. Astrata's light now scorches your once-shadowed flesh. Silver burns you deeply, the sun's gaze strips away your resilience, and the old hunger lingers — blood is still your only true sustenance. Incompatible with Hemophage."
+	desc = "You once bore the dark hunger of the sanguine, but were cured. Astrata's light now scorches your once-shadowed flesh. Silver burns you deeply, the sun's gaze strips away your resilience, you cast no reflection, and the old hunger lingers — blood is your only sustenance. If starved, you'll lose control. You heal in coffins. Stakes can end you. +2 TRI"
 	var/in_sunlight = FALSE
 	var/next_burn = 0
+	var/blood_hunger = 500 // Hunger meter: 500 = fed, 250 = hungry, 100 = starving
+	var/next_hunger_check = 0
 
 /datum/charflaw/astrata_scorched/on_mob_creation(mob/user)
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
-	// Incompatible with hemophage - if somehow applied remove without effect
-	if(HAS_TRAIT(H, TRAIT_HEMOPHAGE))
-		to_chat(H, span_warning("Astrata-Scorched is incompatible with Hemophage. It has been removed without effect."))
+	// Cannot combine Astrata-Scorched with Noc-Scorched
+	if(HAS_TRAIT(H, TRAIT_NOC_SCORCHED))
+		to_chat(H, span_boldwarning("The curse of the moon and the scorching of the sun are incompatible. You cannot bear both."))
 		return
+	
 	ADD_TRAIT(H, TRAIT_ASTRATA_SCORCHED, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
@@ -1513,8 +1568,12 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	ADD_TRAIT(H, TRAIT_DARKVISION, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_VAMP_DREAMS, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_NIGHT_OWL, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_NO_REFLECTION, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_STAKE_VULNERABLE, TRAIT_GENERIC)
 	to_chat(H, span_warning("Astrata's light finds me... and it burns. Silver scalds my flesh, the sun strips me bare, and the old hunger has never truly left me."))
 	H.adjust_triumphs(2)
+	blood_hunger = 500
+	next_hunger_check = world.time + 5 MINUTES
 
 /datum/charflaw/astrata_scorched/on_removal(mob/user)
 	if(!ishuman(user))
@@ -1529,7 +1588,12 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	REMOVE_TRAIT(H, TRAIT_VAMP_DREAMS, TRAIT_GENERIC)
 	REMOVE_TRAIT(H, TRAIT_NIGHT_OWL, TRAIT_GENERIC)
 	REMOVE_TRAIT(H, TRAIT_SPELLCOCKBLOCK, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_NO_REFLECTION, TRAIT_GENERIC)
+	REMOVE_TRAIT(H, TRAIT_STAKE_VULNERABLE, TRAIT_GENERIC)
 	H.remove_status_effect(/datum/status_effect/sun_scorched)
+	H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t1)
+	H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t2)
+	H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t3)
 
 /datum/charflaw/astrata_scorched/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -1537,6 +1601,49 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	if(H.stat != CONSCIOUS)
 		return
+	
+	// Coffin healing (even when not conscious, check separately)
+	var/obj/structure/closet/crate/coffin/coffin = H.loc
+	if(istype(coffin) && (H in coffin.contents))
+		// Heal in coffin during night
+		if(GLOB.tod == "night" || GLOB.tod == "dusk")
+			if(H.getBruteLoss() > 0 || H.getFireLoss() > 0)
+				H.heal_overall_damage(3, 3) // Slower than vampire torpor
+				if(prob(10))
+					to_chat(H, span_notice("The darkness of the coffin soothes your cursed flesh..."))
+			// Also restore some blood hunger while resting in coffin
+			if(blood_hunger < 500)
+				blood_hunger = min(500, blood_hunger + 10)
+
+	// Decay blood hunger over time
+	if(world.time >= next_hunger_check)
+		blood_hunger = max(0, blood_hunger - 25)
+		next_hunger_check = world.time + 5 MINUTES
+		
+		// Apply hunger debuffs based on hunger level
+		switch(blood_hunger)
+			if(250 to 500)
+				H.apply_status_effect(/datum/status_effect/debuff/blood_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t2)
+				H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t3)
+				if(blood_hunger == 250)
+					to_chat(H, span_warning("The thirst returns... I need blood."))
+			if(100 to 250)
+				H.apply_status_effect(/datum/status_effect/debuff/blood_hunger_t2)
+				H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t3)
+				if(blood_hunger == 100)
+					to_chat(H, span_danger("The old hunger BURNS! I must feed!"))
+			if(0 to 100)
+				H.apply_status_effect(/datum/status_effect/debuff/blood_hunger_t3)
+				H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t2)
+		
+		// Frenzy chance when starving
+		if(blood_hunger < 100 && prob(9))
+			if(H.last_frenzy_check + 5 MINUTES < world.time)
+				to_chat(H, span_userdanger("The blood-thirst overwhelms me! I cannot resist!"))
+				H.rollfrenzy()
 
 	// Check sunlight exposure: outdoors during day or dawn, no headgear
 	var/turf/T = get_turf(H)
@@ -1620,3 +1727,72 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
+// ============ HUNGER STATUS EFFECTS ============
+
+// Blood Hunger (Astrata-Scorched)
+/datum/status_effect/debuff/blood_hunger_t1
+	id = "blood_hunger_t1"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_hunger_t1
+	effectedstats = list(STATKEY_STR = -1, STATKEY_SPD = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/blood_hunger_t1
+	name = "Blood Thirst"
+	desc = "I'm getting thirsty... I need blood soon."
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/blood_hunger_t2
+	id = "blood_hunger_t2"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_hunger_t2
+	effectedstats = list(STATKEY_STR = -2, STATKEY_SPD = -2, STATKEY_END = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/blood_hunger_t2
+	name = "Severe Blood Thirst"
+	desc = "The hunger grows unbearable. I NEED blood!"
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/blood_hunger_t3
+	id = "blood_hunger_t3"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_hunger_t3
+	effectedstats = list(STATKEY_STR = -3, STATKEY_SPD = -3, STATKEY_END = -2, STATKEY_WIL = -2)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/blood_hunger_t3
+	name = "Starving for Blood"
+	desc = "I'm losing control! The beast within demands blood!"
+	icon_state = "debuff"
+
+// Meat Hunger (Noc-Scorched)
+/datum/status_effect/debuff/meat_hunger_t1
+	id = "meat_hunger_t1"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/meat_hunger_t1
+	effectedstats = list(STATKEY_END = -1, STATKEY_WIL = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/meat_hunger_t1
+	name = "Bestial Hunger"
+	desc = "The beast stirs... I need raw meat."
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/meat_hunger_t2
+	id = "meat_hunger_t2"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/meat_hunger_t2
+	effectedstats = list(STATKEY_END = -2, STATKEY_WIL = -2, STATKEY_INT = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/meat_hunger_t2
+	name = "Ravenous Hunger"
+	desc = "My thoughts turn feral. I NEED flesh!"
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/meat_hunger_t3
+	id = "meat_hunger_t3"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/meat_hunger_t3
+	effectedstats = list(STATKEY_END = -3, STATKEY_WIL = -3, STATKEY_INT = -2, STATKEY_STR = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/meat_hunger_t3
+	name = "Feral Starvation"
+	desc = "The beast is taking over! I cannot think straight!"
+	icon_state = "debuff"

@@ -175,6 +175,34 @@
 		record_round_statistic(STATS_ORGANS_EATEN)
 		check_culling(eater)
 		SEND_SIGNAL(eater, COMSIG_ORGAN_CONSUMED, src.type)
+	
+	// Noc-Scorched can eat organs to satisfy their bestial hunger
+	if(ishuman(eater) && HAS_TRAIT(eater, TRAIT_NOC_SCORCHED))
+		var/mob/living/carbon/human/H = eater
+		// Find the Noc-Scorched flaw datum
+		var/datum/charflaw/noc_scorched/noc_flaw
+		if(length(H.vices))
+			for(var/datum/charflaw/vice in H.vices)
+				if(istype(vice, /datum/charflaw/noc_scorched))
+					noc_flaw = vice
+					break
+		if(!noc_flaw && istype(H.charflaw, /datum/charflaw/noc_scorched))
+			noc_flaw = H.charflaw
+		
+		if(noc_flaw)
+			// Organs are very nutritious - restore more hunger than regular meat
+			noc_flaw.meat_hunger = min(500, noc_flaw.meat_hunger + 200)
+			to_chat(H, span_green("The rich organ meat deeply satisfies the beast's hunger..."))
+			
+			// Heal the character
+			H.heal_overall_damage(20, 20)
+			
+			// Remove hunger debuffs if fed enough
+			if(noc_flaw.meat_hunger >= 250)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t2)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t3)
+	
 	. = ..()
 
 /obj/item/reagent_containers/food/snacks/organ/Destroy()

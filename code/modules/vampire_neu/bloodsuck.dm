@@ -60,6 +60,29 @@
 			H.adjust_hydration(35)
 			if(H.blood_volume < BLOOD_VOLUME_NORMAL)
 				H.blood_volume = min(H.blood_volume + 35, BLOOD_VOLUME_NORMAL)
+			
+			// Check if drinker has Astrata-Scorched vice
+			if(HAS_TRAIT(H, TRAIT_ASTRATA_SCORCHED))
+				// Find the Astrata-Scorched flaw datum
+				var/datum/charflaw/astrata_scorched/astrata_flaw
+				if(length(H.vices))
+					for(var/datum/charflaw/vice in H.vices)
+						if(istype(vice, /datum/charflaw/astrata_scorched))
+							astrata_flaw = vice
+							break
+				if(!astrata_flaw && istype(H.charflaw, /datum/charflaw/astrata_scorched))
+					astrata_flaw = H.charflaw
+				
+				if(astrata_flaw)
+					// Satisfy blood hunger
+					astrata_flaw.blood_hunger = min(500, astrata_flaw.blood_hunger + 150)
+					to_chat(H, span_green("The blood quenches the burning thirst..."))
+					
+					// Remove hunger debuffs if fed enough
+					if(astrata_flaw.blood_hunger >= 250)
+						H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t1)
+						H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t2)
+						H.remove_status_effect(/datum/status_effect/debuff/blood_hunger_t3)
 		return
 
 	if(victim.mind?.has_antag_datum(/datum/antagonist/werewolf) || (victim.stat != DEAD && victim.mind?.has_antag_datum(/datum/antagonist/zombie)))

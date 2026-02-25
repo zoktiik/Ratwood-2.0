@@ -15,6 +15,38 @@
 	var/fresh_meat = FALSE
 	become_rot_type = /obj/item/reagent_containers/food/snacks/rogue/meat_rotten
 
+/obj/item/reagent_containers/food/snacks/rogue/meat/On_Consume(mob/living/eater)
+	. = ..()
+	if(!ishuman(eater))
+		return
+	var/mob/living/carbon/human/H = eater
+	
+	// Check if eater has Noc-Scorched vice
+	if(HAS_TRAIT(H, TRAIT_NOC_SCORCHED))
+		// Find the Noc-Scorched flaw datum
+		var/datum/charflaw/noc_scorched/noc_flaw
+		if(length(H.vices))
+			for(var/datum/charflaw/vice in H.vices)
+				if(istype(vice, /datum/charflaw/noc_scorched))
+					noc_flaw = vice
+					break
+		if(!noc_flaw && istype(H.charflaw, /datum/charflaw/noc_scorched))
+			noc_flaw = H.charflaw
+		
+		if(noc_flaw)
+			// Satisfy meat hunger
+			noc_flaw.meat_hunger = min(500, noc_flaw.meat_hunger + 150)
+			to_chat(H, span_green("The raw flesh sates the beast within. I feel... calmer."))
+			
+			// Heal the character
+			H.heal_overall_damage(15, 15)
+			
+			// Remove hunger debuffs if fed enough
+			if(noc_flaw.meat_hunger >= 250)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t1)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t2)
+				H.remove_status_effect(/datum/status_effect/debuff/meat_hunger_t3)
+
 /obj/item/reagent_containers/food/snacks/rogue/meat_rotten
 	eat_effect = /datum/status_effect/debuff/rotfood
 	list_reagents = list(/datum/reagent/consumable/nutriment = SNACK_POOR)
