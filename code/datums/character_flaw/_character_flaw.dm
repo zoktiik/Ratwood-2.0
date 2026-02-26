@@ -62,6 +62,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/name
 	var/desc
 	var/ephemeral = FALSE // This flaw is currently disabled and will not process
+	var/needs_life_tick = FALSE // Set to TRUE if this flaw needs to be processed every life tick (performance optimization)
 
 /datum/charflaw/proc/on_mob_creation(mob/user)
 	return
@@ -159,6 +160,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/badsight
 	name = "Bad Eyesight"
 	desc = "I need spectacles to see normally. Without them, my vision is blurred and I suffer reduced perception (-20 PER) and speed (-5 SPD). Years of reading have improved my literacy (+1 Reading skill, +1 TRI)."
+	needs_life_tick = TRUE
 
 /datum/charflaw/badsight/flaw_on_life(mob/user)
 	if(!ishuman(user))
@@ -199,6 +201,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/paranoid
 	name = "Paranoid"
 	desc = "I'm anxious around people of different races (more than 2 nearby causes stress) and around blood (more than 3 blood puddles nearby causes stress)."
+	needs_life_tick = TRUE
 	var/last_check = 0
 
 /datum/charflaw/paranoid/flaw_on_life(mob/user)
@@ -233,6 +236,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/isolationist
 	name = "Isolationist"
 	desc = "I get stressed when more than 3 people are near me. I prefer solitude and small groups."
+	needs_life_tick = TRUE
 	var/last_check = 0
 
 /datum/charflaw/isolationist/flaw_on_life(mob/user)
@@ -259,6 +263,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/clingy
 	name = "Clingy"
 	desc = "I get stressed when I'm alone or only near 1 other person. I need to be around people to feel comfortable."
+	needs_life_tick = TRUE
 	var/last_check = 0
 
 /datum/charflaw/clingy/flaw_on_life(mob/user)
@@ -346,6 +351,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/hunted
 	name = "Hunted"
 	desc = "Something in my past has made me a target. I'm always looking over my shoulder. Being alone or in darkness causes stress."
+	needs_life_tick = TRUE
 	var/logged = FALSE
 	var/last_paranoia_check = 0
 
@@ -420,6 +426,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/nudist
 	name = "Nudist"
 	desc = "I refuse to wear clothes. I'm compelled to remain unclothed and will automatically remove clothing. Others can dress me, but I'll try to remove it and suffer stress while clothed."
+	needs_life_tick = TRUE
 	var/next_removal_attempt = 0
 
 /datum/charflaw/nudist/on_mob_creation(mob/user)
@@ -711,6 +718,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/narcoleptic
 	name = "Narcoleptic"
 	desc = "I randomly fall asleep during the day (every 7-15 minutes when conscious). Sleep lasts 30-50 seconds. Pain, stimulants (coffee, tea) and drugs prevent episodes. I can fall asleep faster when intentionally resting. +1 TRI"
+	needs_life_tick = TRUE
 	var/last_unconsciousness = 0
 	var/next_sleep = 0
 	var/concious_timer = (10 MINUTES)
@@ -865,6 +873,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/marked_by_baotha
 	name = "Marked by Baotha"
 	desc = "I bear Baotha's mark on my groin, granting fertility regardless of normal limitations. The mark causes random surges of arousal and involuntary bodily reactions (shiver/twitch/groan) every few minutes. The mark is visible on my body."
+	needs_life_tick = TRUE
 	var/next_arousal_surge = 0
 	var/next_emote = 0
 
@@ -980,6 +989,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/chronic_migraine
 	name = "Chronic Migraines (+2 TRI)"
 	desc = "I suffer frequent, debilitating headaches every 2-25 minutes. Migraines cause vision blur and damage (2-3 brute). Bright light triggers additional minor headaches. +2 TRI"
+	needs_life_tick = TRUE
 	var/next_migraine = 0
 
 /datum/charflaw/chronic_migraine/on_mob_creation(mob/user)
@@ -1018,6 +1028,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/weak_heart
 	name = "Weak Heart (+3 TRI)"
 	desc = "My heart is fragile. Heart attacks occur at 15 stress instead of 30. I suffer periodic chest pains (oxygen loss) every 2-25 minutes. Running with high stamina causes heart strain. +3 TRI"
+	needs_life_tick = TRUE
 	var/next_chest_pain = 0
 
 /datum/charflaw/weak_heart/on_mob_creation(mob/user)
@@ -1058,6 +1069,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/tremors
 	name = "Tremors (+3 TRI)"
 	desc = "My hands shake uncontrollably every 15-30 minutes, forcing me to drop everything I'm holding for 6 seconds. High stress (6+) causes more frequent tremors. I cannot grip items during episodes. +3 TRI"
+	needs_life_tick = TRUE
 	var/next_tremor_time = 0
 	var/base_tremor_interval = 30 MINUTES
 	var/stress_tremor_interval = 15 MINUTES
@@ -1203,6 +1215,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/chronic_arthritis
 	name = "Chronic Arthritis (+2 TRI)"
 	desc = "My joints ache constantly. Every 2-25 minutes, I suffer pain flares that drain stamina (5 points). Weather can trigger additional pain between flares. +2 TRI"
+	needs_life_tick = TRUE
 	var/next_pain_flare = 0
 
 /datum/charflaw/chronic_arthritis/on_mob_creation(mob/user)
@@ -1235,6 +1248,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/chronic_back_pain
 	name = "Chronic Back Pain (+2 TRI)"
 	desc = "My back hurts constantly. Every 2-25 minutes I suffer pain that drains stamina (3-8 points depending on armor weight). Running triggers additional pain. Heavy armor (8 stamina) worsens pain significantly. +2 TRI"
+	needs_life_tick = TRUE
 	var/next_back_pain = 0
 
 /datum/charflaw/chronic_back_pain/on_mob_creation(mob/user)
@@ -1290,6 +1304,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 /datum/charflaw/old_war_wound
 	name = "Old War Wound (+3 TRI)"
 	desc = "An old injury haunts me. Every 2-25 minutes, the wound flares up causing stamina loss (3-5 points). Low health (<70%) or high stress (10+) triggers more severe flare-ups. I start with 3-8 brute damage. +3 TRI"
+	needs_life_tick = TRUE
 	var/next_wound_pain = 0
 
 /datum/charflaw/old_war_wound/on_mob_creation(mob/user)

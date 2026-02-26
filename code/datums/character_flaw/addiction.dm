@@ -41,6 +41,7 @@
 		remove_status_effect(A.debuff)
 
 /datum/charflaw/addiction
+	needs_life_tick = TRUE
 	var/next_sate = 0
 	var/sated = TRUE
 	var/time = 5 MINUTES
