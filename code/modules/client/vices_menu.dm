@@ -289,7 +289,11 @@
 // Virtue point system helpers
 /datum/preferences/proc/get_max_virtue_points()
 	// Base 17 points for all characters (12 base + 5 bonus)
-	return 17
+	var/points = 17
+	// Virtuous statpack grants +5 additional virtue points
+	if(statpack && statpack.name == "Virtuous")
+		points += 5
+	return points
 
 /datum/preferences/proc/get_spent_virtue_points()
 	var/total = 0
