@@ -82,6 +82,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/statpack/statpack	= new /datum/statpack/wildcard/fated // LETHALSTONE EDIT: the statpack we're giving our char instead of racial bonuses
 	var/datum/virtue/virtue = new /datum/virtue/none // LETHALSTONE EDIT: the virtue we get for not picking a statpack
 	var/datum/virtue/virtuetwo = new /datum/virtue/none
+	// New category-based virtue system
+	var/datum/virtue/origin_virtue = null  // Single origin selection
+	var/list/origin_items = list()  // Up to 2 origin heirloom items
+	var/list/feats = list()  // Variable number based on vice count
 	var/selected_title = "None"
 	var/age = AGE_ADULT						//age of character
 	var/origin = "Default"
@@ -224,12 +228,15 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/nickname = "Please Change Me"
 	var/highlight_color = "#FF0000"
 	var/datum/charflaw/charflaw
-	// Multiple vice selection (up to 5, at least 1 required)
+	// Multiple vice selection (up to 8, at least 1 required)
 	var/datum/charflaw/vice1
 	var/datum/charflaw/vice2
 	var/datum/charflaw/vice3
 	var/datum/charflaw/vice4
 	var/datum/charflaw/vice5
+	var/datum/charflaw/vice6
+	var/datum/charflaw/vice7
+	var/datum/charflaw/vice8
 
 
 	var/setspouse = ""
@@ -534,7 +541,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<b>Voice Pack</b>: <a href='?_src_=prefs;preference=voicepack;task=input'>[voice_pack]</a><BR>"
 			// Only show Baotha mark color if marked by baotha vice is selected
 			var/has_baotha_vice = FALSE
-			for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5))
+			for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5, vice6, vice7, vice8))
 				if(istype(vice, /datum/charflaw/marked_by_baotha))
 					has_baotha_vice = TRUE
 					break
@@ -1125,7 +1132,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 					else
 						name = virtuetwo.name
 				// Check all vices
-				for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5, charflaw))
+				for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5, vice6, vice7, vice8, charflaw))
 					if(vice?.type in job.vice_restrictions)
 						if(name)
 							name += ", "
@@ -1150,7 +1157,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(length(job.vice_restrictions))
 				var/list/restricted_vices = list()
 				// Check all vices
-				for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5, charflaw))
+				for(var/datum/charflaw/vice in list(vice1, vice2, vice3, vice4, vice5, vice6, vice7, vice8, charflaw))
 					if(vice?.type in job.vice_restrictions)
 						restricted_vices += vice.name
 				if(length(restricted_vices))
@@ -3113,7 +3120,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	// Apply multiple vices system
 	character.vices = list()
-	for(var/i = 1 to 5)
+	for(var/i = 1 to 7)
 		var/datum/charflaw/vice = vars["vice[i]"]
 		if(vice)
 			var/datum/charflaw/new_vice = new vice.type()

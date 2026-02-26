@@ -109,6 +109,11 @@
 #define TRAIT_DEATHSIGHT "Veiled Whispers" // Is notified when a player character dies, but not told exactly where or how.
 //Hearthstone/Azure end.
 
+// UNIQUE MECHANICAL VIRTUES
+#define TRAIT_FERAL_CLAWS "Feral Claws" //Can extend/retract natural claws
+#define TRAIT_FERAL_BITE "Feral Bite" //Can bite effectively (without STRONGBITE damage multiplier)
+#define TRAIT_TOXRESIST "Poison Resistant" //50% poison resistance (not full immunity)
+
 // ROGUEspecialTRAITS (description when rmb skills button)
 #define TRAIT_CIVILIZEDBARBARIAN "Expert Pugilist"
 #define TRAIT_COMICSANS "Annoying Face"
@@ -381,6 +386,9 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_TRAINED_SMITH = span_info("I've spent long training, and with some more, I will be able to smith legendary items."),
 	TRAIT_CAUTIOUS_FISHER = span_info("I know my way around the dangers of fishing, and know how to avoid unwanted attention from the depths."),
 	TRAIT_DEATHSIGHT = span_info("I can feel when someone nearby draws the Undermaiden's attention."),
+	TRAIT_FERAL_CLAWS = span_warning("My hands bear sharp claws that I can extend and retract at will."),
+	TRAIT_FERAL_BITE = span_warning("My bite is fiercer than most, though not as devastating as a true predator's."),
+	TRAIT_TOXRESIST = span_info("My body has adapted to resist poisons, though I am not fully immune."),
 	TRAIT_FORGEBLESSED = span_info("Countless long nights spent forging metal have honed my endurance, allowing me to work an anvil far longer than most without tiring."),
 	TRAIT_XYLIX = span_info("I know how to speak in code that only fellow tricksters can understand."),
 	TRAIT_APRICITY = span_info("Astrata's light blesses and rejuvenates me, allowing me to regain my stamina quicker."),

@@ -1,3 +1,6 @@
+/// alist is used in place of list for associative lists in GLOBAL_LIST_INIT
+#define alist list
+
 /// Takes a datum as input, returns its ref string
 #define text_ref(datum) ref(datum)
 

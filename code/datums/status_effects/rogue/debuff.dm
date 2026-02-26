@@ -1082,3 +1082,121 @@
 	if(iscarbon(owner))
 		var/mob/living/carbon/C = owner
 		C.remove_movespeed_modifier(MOVESPEED_ID_DAMAGE_SLOWDOWN)
+
+// ============ SCORCHED STATUS EFFECTS ============
+
+// Moon-Touched (Noc-Scorched virtue)
+/datum/status_effect/moon_touched
+	id = "moon_touched"
+	duration = -1
+	alert_type = /atom/movable/screen/alert/status_effect/moon_touched
+
+/datum/status_effect/moon_touched/on_apply()
+	. = ..()
+	if(!.)
+		return
+	ADD_TRAIT(owner, TRAIT_SILVER_WEAK, "moon_touched")
+	ADD_TRAIT(owner, TRAIT_NOCSIGHT, "moon_touched")
+	return TRUE
+
+/datum/status_effect/moon_touched/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_SILVER_WEAK, "moon_touched")
+	REMOVE_TRAIT(owner, TRAIT_NOCSIGHT, "moon_touched")
+
+/atom/movable/screen/alert/status_effect/moon_touched
+	name = "Moon-Touched"
+	desc = "The moonlight has awakened something primal in me. My night vision sharpens but my body burns and my mind is slipping..."
+	icon_state = "nite_bad"
+
+// Sun-Scorched (Astrata-Scorched virtue)
+/datum/status_effect/sun_scorched
+	id = "sun_scorched"
+	duration = -1
+	alert_type = /atom/movable/screen/alert/status_effect/sun_scorched
+
+/datum/status_effect/sun_scorched/on_apply()
+	. = ..()
+	if(!.)
+		return
+	ADD_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, "sun_scorched")
+	ADD_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, "sun_scorched")
+	return TRUE
+
+/datum/status_effect/sun_scorched/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_CRITICAL_WEAKNESS, "sun_scorched")
+	REMOVE_TRAIT(owner, TRAIT_SPELLCOCKBLOCK, "sun_scorched")
+
+/atom/movable/screen/alert/status_effect/sun_scorched
+	name = "Sun-Scorched"
+	desc = "Astrata's light burns through me. My wounds are grave, silver cuts deep, and the sun strips me of my resilience."
+	icon_state = "sun_bad"
+
+// Blood Hunger (Astrata-Scorched virtue)
+/datum/status_effect/debuff/blood_hunger_t1
+	id = "blood_hunger_t1"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_hunger_t1
+	effectedstats = list(STATKEY_STR = -1, STATKEY_SPD = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/blood_hunger_t1
+	name = "Blood Thirst"
+	desc = "I'm getting thirsty... I need blood soon."
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/blood_hunger_t2
+	id = "blood_hunger_t2"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_hunger_t2
+	effectedstats = list(STATKEY_STR = -2, STATKEY_SPD = -2, STATKEY_END = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/blood_hunger_t2
+	name = "Severe Blood Thirst"
+	desc = "The hunger grows unbearable. I NEED blood!"
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/blood_hunger_t3
+	id = "blood_hunger_t3"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/blood_hunger_t3
+	effectedstats = list(STATKEY_STR = -3, STATKEY_SPD = -3, STATKEY_END = -2, STATKEY_WIL = -2)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/blood_hunger_t3
+	name = "Starving for Blood"
+	desc = "I'm losing control! The beast within demands blood!"
+	icon_state = "debuff"
+
+// Meat Hunger (Noc-Scorched virtue)
+/datum/status_effect/debuff/meat_hunger_t1
+	id = "meat_hunger_t1"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/meat_hunger_t1
+	effectedstats = list(STATKEY_END = -1, STATKEY_WIL = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/meat_hunger_t1
+	name = "Bestial Hunger"
+	desc = "The beast stirs... I need raw meat."
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/meat_hunger_t2
+	id = "meat_hunger_t2"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/meat_hunger_t2
+	effectedstats = list(STATKEY_END = -2, STATKEY_WIL = -2, STATKEY_INT = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/meat_hunger_t2
+	name = "Ravenous Hunger"
+	desc = "My thoughts turn feral. I NEED flesh!"
+	icon_state = "debuff"
+
+/datum/status_effect/debuff/meat_hunger_t3
+	id = "meat_hunger_t3"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/meat_hunger_t3
+	effectedstats = list(STATKEY_END = -3, STATKEY_WIL = -3, STATKEY_INT = -2, STATKEY_STR = -1)
+	duration = 100
+
+/atom/movable/screen/alert/status_effect/debuff/meat_hunger_t3
+	name = "Feral Starvation"
+	desc = "The beast is taking over! I cannot think straight!"
+	icon_state = "debuff"

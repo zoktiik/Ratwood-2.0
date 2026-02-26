@@ -46,6 +46,16 @@
 	stressadd = 3
 	desc = list(span_boldred("Astrata's light sears through me!"),span_boldred("The sun burns me to the marrow!"),span_boldred("Get me out of the light!"))
 
+/datum/stressevent/vice/nudist_clothed
+	timer = 10 SECONDS
+	stressadd = 3
+	desc = list(span_boldred("These clothes are suffocating me!"),span_boldred("I need to be free of these garments!"),span_boldred("I can't breathe in these clothes!"))
+
+/datum/stressevent/vice/hunted
+	timer = 10 SECONDS
+	stressadd = 2
+	desc = list(span_boldred("I feel like I'm being watched..."),span_boldred("They could be anywhere..."),span_boldred("I'm not safe here!"))
+
 /datum/stressevent/miasmagas
 	timer = 10 SECONDS
 	stressadd = 2
