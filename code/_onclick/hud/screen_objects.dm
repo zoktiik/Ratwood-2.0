@@ -643,7 +643,7 @@
 			L.mob_timers["complybutton"] = world.time
 			L.playsound_local(L, 'sound/misc/click.ogg', 100)
 			L.toggle_compliance()
-		else if(modifiers["shift"] && paramslist["left"])
+		else if(modifiers["shift"] && modifiers["left"])
 			to_chat(usr, span_info("* --- *\n\
 			Combat mode button.\n\
 			<b>Left click:</b> toggles combat mode at-will, allowing you to parry or dodge attacks. Usually costs energy (blue stamina) to keep active. Also allows some more destructive interactions with objects.\n\
