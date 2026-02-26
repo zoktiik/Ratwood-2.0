@@ -637,7 +637,7 @@
 			L.playsound_local(L, 'sound/misc/click.ogg', 100)
 			L.submit()
 		else if(modifiers["middle"])
-			if(L.mob_timers["complybutton"]) // I am fed up with trying to triage issues with new middle click code. Here, have hacky workaround. - Zoktiik
+			if(L.mob_timers["complybutton"]) // I am fed up with trying to triage issues that new middle click code has. Here, have hacky workaround. - Zoktiik
 				if(world.time < (L.mob_timers["complybutton"] + 0.5 SECONDS))
 					return
 			L.mob_timers["complybutton"] = world.time
