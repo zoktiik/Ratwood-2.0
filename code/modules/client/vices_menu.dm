@@ -288,8 +288,8 @@
 
 // Virtue point system helpers
 /datum/preferences/proc/get_max_virtue_points()
-	// Base 12 points for all characters
-	return 12
+	// Base 17 points for all characters (12 base + 5 bonus)
+	return 17
 
 /datum/preferences/proc/get_spent_virtue_points()
 	var/total = 0
@@ -2044,18 +2044,20 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				var/list/vices_available = list()
 				
 				// Get all currently selected vices to prevent duplicates
-				var/list/selected_vices = list()
+				// Build list of vices in OTHER slots (not the current slot being modified)
+				var/list/selected_in_other_slots = list()
 				for(var/i = 1 to 8)
+					if(i == slot) // Skip the slot we're currently modifying
+						continue
 					var/datum/charflaw/existing_vice = vars["vice[i]"]
 					if(existing_vice)
-						selected_vices += existing_vice.type
+						selected_in_other_slots += existing_vice.type
 				
 				for(var/vice_name in GLOB.character_flaws)
 					var/datum/charflaw/vice_type = GLOB.character_flaws[vice_name]
 					
-					// Skip if already selected in another slot
-					var/datum/charflaw/current_vice = vars[slot_var]
-					if(vice_type in selected_vices && current_vice?.type != vice_type)
+					// PREVENT DUPLICATE VICES: Skip if this vice is already selected in another slot
+					if(vice_type in selected_in_other_slots)
 						continue
 					
 					// Check for conflicting virtues
@@ -2063,7 +2065,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 						continue
 					
 					// Check for conflicting vices (eye-related)
-					if(check_vice_vice_conflict(vice_type, selected_vices, TRUE, usr))
+					if(check_vice_vice_conflict(vice_type, selected_in_other_slots, TRUE, usr))
 						continue
 					
 					vices_available[vice_name] = vice_type

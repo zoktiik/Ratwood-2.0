@@ -520,16 +520,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["virtue"] >> virtue_type
 	S["virtuetwo"] >> virtuetwo_type
 
-	// Only instantiate if valid type path exists, otherwise use none
-	if (virtue_type && ispath(virtue_type))
-		virtue = new virtue_type()
-	else
-		virtue = new /datum/virtue/none
-
-	if(virtuetwo_type && ispath(virtuetwo_type))
-		virtuetwo = new virtuetwo_type()
-	else
-		virtuetwo = new /datum/virtue/none
+	// RESET OLD VIRTUES - Players will need to re-select with new system
+	// This ensures everyone starts fresh with the updated virtue system
+	virtue = new /datum/virtue/none
+	virtuetwo = new /datum/virtue/none
 
 /datum/preferences/proc/_load_loadout(S)
 	var/loadout_type
