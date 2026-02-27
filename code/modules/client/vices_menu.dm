@@ -698,16 +698,36 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 /datum/preferences/proc/save_preset(preset_slot)
 	if(preset_slot < 1 || preset_slot > 3)
 		return FALSE
+
+	var/list/preset_origin_items = null
+	if(LAZYLEN(origin_items))
+		preset_origin_items = list()
+		for(var/datum/virtue/item_virtue in origin_items)
+			if(item_virtue)
+				preset_origin_items += item_virtue.type
+
+	var/list/preset_feats = null
+	if(LAZYLEN(feats))
+		preset_feats = list()
+		for(var/datum/virtue/feat_virtue in feats)
+			if(feat_virtue)
+				preset_feats += feat_virtue.type
 	
 	var/list/preset = list(
 		"statpack" = statpack?.type,
 		"virtue" = virtue?.type,
 		"virtuetwo" = virtuetwo?.type,
+		"origin_virtue" = origin_virtue?.type,
+		"origin_items" = preset_origin_items,
+		"feats" = preset_feats,
 		"vice1" = vice1?.type,
 		"vice2" = vice2?.type,
 		"vice3" = vice3?.type,
 		"vice4" = vice4?.type,
 		"vice5" = vice5?.type,
+		"vice6" = vice6?.type,
+		"vice7" = vice7?.type,
+		"vice8" = vice8?.type,
 		"loadout" = loadout?.type,
 		"loadout2" = loadout2?.type,
 		"loadout3" = loadout3?.type,
@@ -786,6 +806,46 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		virtuetwo = new virtuetwo_type()
 	else
 		virtuetwo = new /datum/virtue/none()
+
+	var/origin_virtue_type = string_to_typepath(preset["origin_virtue"])
+	if(origin_virtue_type && ispath(origin_virtue_type, /datum/virtue))
+		origin_virtue = GLOB.virtues[origin_virtue_type]
+	else
+		origin_virtue = null
+
+	origin_items = null
+	var/list/preset_origin_items = preset["origin_items"]
+	if(islist(preset_origin_items))
+		for(var/item_entry in preset_origin_items)
+			var/item_type = string_to_typepath(item_entry)
+			if(!item_type)
+				item_type = string_to_typepath(preset_origin_items[item_entry])
+			if(!item_type || !ispath(item_type, /datum/virtue))
+				continue
+			var/datum/virtue/item_virtue = GLOB.virtues[item_type]
+			if(item_virtue)
+				LAZYADD(origin_items, item_virtue)
+	if(LAZYLEN(origin_items) > 2)
+		origin_items.Cut(3)
+	if(!LAZYLEN(origin_items))
+		origin_items = null
+
+	feats = null
+	var/list/preset_feats = preset["feats"]
+	if(islist(preset_feats))
+		for(var/feat_entry in preset_feats)
+			var/feat_type = string_to_typepath(feat_entry)
+			if(!feat_type)
+				feat_type = string_to_typepath(preset_feats[feat_entry])
+			if(!feat_type || !ispath(feat_type, /datum/virtue))
+				continue
+			var/datum/virtue/feat_virtue = GLOB.virtues[feat_type]
+			if(feat_virtue)
+				LAZYADD(feats, feat_virtue)
+	if(LAZYLEN(feats) > get_max_feats())
+		feats.Cut(get_max_feats() + 1)
+	if(!LAZYLEN(feats))
+		feats = null
 	
 	var/vice1_type = string_to_typepath(preset["vice1"])
 	if(vice1_type && ispath(vice1_type, /datum/charflaw))
@@ -816,6 +876,24 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		vice5 = new vice5_type()
 	else
 		vice5 = null
+
+	var/vice6_type = string_to_typepath(preset["vice6"])
+	if(vice6_type && ispath(vice6_type, /datum/charflaw))
+		vice6 = new vice6_type()
+	else
+		vice6 = null
+
+	var/vice7_type = string_to_typepath(preset["vice7"])
+	if(vice7_type && ispath(vice7_type, /datum/charflaw))
+		vice7 = new vice7_type()
+	else
+		vice7 = null
+
+	var/vice8_type = string_to_typepath(preset["vice8"])
+	if(vice8_type && ispath(vice8_type, /datum/charflaw))
+		vice8 = new vice8_type()
+	else
+		vice8 = null
 	
 	// Load loadout types and instantiate them if valid
 	var/loadout_type = string_to_typepath(preset["loadout"])
