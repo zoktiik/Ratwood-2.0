@@ -905,7 +905,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		mark_color = "#[H.client.prefs.baotha_mark_color]"
 	
 	// Create and store the marking overlay
-	H.baotha_mark_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_LAYER)
+	// Use BODY_MARKINGS_LAYER (44) to render above bodyparts, below clothing  
+	H.baotha_mark_overlay = mutable_appearance('icons/roguetown/misc/baotha_marking.dmi', "marking_[H.gender == "male" ? "m" : "f"]", -BODY_MARKINGS_LAYER)
 	H.baotha_mark_overlay.color = mark_color
 	
 	// Trigger body update to apply it
