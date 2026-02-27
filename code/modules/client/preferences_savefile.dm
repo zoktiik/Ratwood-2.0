@@ -867,6 +867,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	_load_virtue(S)
 	_load_origin_virtues(S)
 	_load_flaw(S)
+	enforce_feat_limit()
 
 	_load_culinary_preferences(S)
 

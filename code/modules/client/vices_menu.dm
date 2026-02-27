@@ -347,6 +347,22 @@
 	// 1 base feat + 1 extra per every 2 vices, capped at 4
 	return min(4, 1 + (count_selected_vices() >> 1))
 
+/datum/preferences/proc/enforce_feat_limit(mob/user = null)
+	var/max_feats = get_max_feats()
+	var/current_feats = LAZYLEN(feats)
+	if(current_feats <= max_feats)
+		return FALSE
+
+	var/disabled_count = current_feats - max_feats
+	feats.Cut(max_feats + 1)
+	if(!LAZYLEN(feats))
+		feats = null
+
+	if(user)
+		to_chat(user, span_warning("[disabled_count] feat[disabled_count > 1 ? "s were" : " was"] disabled because you no longer have enough vices."))
+
+	return TRUE
+
 // Virtue point system helpers
 /datum/preferences/proc/get_max_virtue_points()
 	// Base 12 points for all characters	
@@ -1959,6 +1975,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			save_to_history()
 			origin_virtue = null
 			save_character()
+			enforce_feat_limit(usr)
+			save_character()
 			to_chat(usr, span_notice("Cleared origin selection."))
 			open_vices_menu(usr)
 			return
@@ -2361,6 +2379,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if("clear")
 				vars[slot_var] = null
+				enforce_feat_limit(usr)
 				save_character()
 				to_chat(usr, span_notice("Cleared vice slot [slot]."))
 				open_vices_menu(usr)

@@ -3227,7 +3227,11 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	// Apply feats (new virtue system)
 	if(LAZYLEN(feats))
-		for(var/datum/virtue/feat in feats)
+		var/max_feats = get_max_feats()
+		for(var/i = 1 to min(LAZYLEN(feats), max_feats))
+			var/datum/virtue/feat = feats[i]
+			if(!feat)
+				continue
 			var/datum/virtue/char_feat = new feat.type()
 			apply_virtue(character, char_feat)
 
