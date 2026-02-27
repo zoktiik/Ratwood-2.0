@@ -137,10 +137,10 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 	return FALSE
 
 /proc/apply_charflaw_equipment(mob/living/carbon/human/character, client/player)
-	// Apply multiple vices system (vice1-vice5)
+	// Apply multiple vices system (vice1-vice8)
 	var/applied_new_system = FALSE
 	if(player?.prefs)
-		for(var/i = 1 to 5)
+		for(var/i = 1 to 8)
 			var/datum/charflaw/vice = player.prefs.vars["vice[i]"]
 			if(vice)
 				vice.apply_post_equipment(character)

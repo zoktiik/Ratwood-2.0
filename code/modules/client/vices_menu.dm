@@ -288,8 +288,8 @@
 
 // Virtue point system helpers
 /datum/preferences/proc/get_max_virtue_points()
-	// Base 17 points for all characters (12 base + 5 bonus)
-	var/points = 17
+	// Base 12 points for all characters
+	var/points = 12
 	// Virtuous statpack grants +5 additional virtue points
 	if(statpack && statpack.name == "Virtuous")
 		points += 5
@@ -1669,6 +1669,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				return
 		
 		vars[slot_var] = selected
+		save_character()
 		to_chat(usr, span_notice("Selected [selected.name] for slot [slot]."))
 		
 		temp_loadout_selection = null
@@ -1746,6 +1747,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
 					return
 				origin_virtue = selected
+				save_character()
 				to_chat(usr, span_notice("Selected [choice] as your origin. ([selected.virtue_cost] point\s spent)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
 				open_vices_menu(usr)
@@ -1754,6 +1756,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		if(action == "clear_origin")
 			save_to_history()
 			origin_virtue = null
+			save_character()
 			to_chat(usr, span_notice("Cleared origin selection."))
 			open_vices_menu(usr)
 			return
@@ -1801,6 +1804,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				else
 					LAZYADD(origin_items, selected)
 				
+				save_character()
 				to_chat(usr, span_notice("Selected [choice] as heirloom [slot]. ([selected.virtue_cost] point\s)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
 				open_vices_menu(usr)
@@ -1815,6 +1819,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if(slot <= LAZYLEN(origin_items))
 				origin_items.Cut(slot, slot + 1)
+				save_character()
 				to_chat(usr, span_notice("Cleared heirloom slot [slot]."))
 				open_vices_menu(usr)
 			return
@@ -1857,6 +1862,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]! ([selected.virtue_cost] required, [get_remaining_virtue_points()] available)"))
 					return
 				LAZYADD(feats, selected)
+				save_character()
 				to_chat(usr, span_notice("Selected [choice] as a feat. ([selected.virtue_cost] point\s spent)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
 				open_vices_menu(usr)
@@ -1903,6 +1909,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
 					return
 				feats[slot] = selected
+				save_character()
 				to_chat(usr, span_notice("Changed feat slot [slot] to [choice]. ([selected.virtue_cost] point\s)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
 				open_vices_menu(usr)
@@ -1915,6 +1922,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			save_to_history()
 			feats.Cut(slot, slot + 1)
+			save_character()
 			to_chat(usr, span_notice("Removed feat from slot [slot]."))
 			open_vices_menu(usr)
 			return
@@ -1939,6 +1947,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			if(choice)
 				var/datum/virtue/selected = virtues_available[choice]
 				virtue = selected
+				save_character()
 				to_chat(usr, span_notice("Selected [choice] as primary virtue."))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
 				open_vices_menu(usr)
@@ -1989,6 +1998,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			if(choice)
 				var/datum/virtue/selected = virtues_available[choice]
 				virtuetwo = selected
+				save_character()
 				to_chat(usr, span_notice("Selected [choice] as second virtue."))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
 				open_vices_menu(usr)
@@ -2018,6 +2028,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			if(choice)
 				var/datum/statpack/selected = statpacks_available[choice]
 				statpack = selected
+				save_character()
 				to_chat(usr, span_notice("Selected [choice] statpack."))
 				to_chat(usr, "<span class='info'>[selected.description_string()]</span>")
 				
@@ -2026,6 +2037,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					// Keep virtuetwo if we have it
 				else
 					virtuetwo = GLOB.virtues[/datum/virtue/none]
+					save_character()
 				
 				open_vices_menu(usr)
 			return
@@ -2086,6 +2098,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					// Clear legacy charflaw when using new vice system
 					charflaw = null
 
+					// Save to disk so it persists across character slots
+					save_character()
+
 					// Vices are intentionally not hot-applied to a living in-round character.
 					// They are saved to preferences and applied on the next spawn.
 					if(usr && ishuman(usr))
@@ -2105,6 +2120,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				
 				// Clear the vice from preferences
 				vars[slot_var] = null
+				
+				// Save to disk so it persists across character slots
+				save_character()
 
 				// Vices are intentionally not hot-applied to a living in-round character.
 				// They are saved to preferences and applied on the next spawn.
@@ -2137,6 +2155,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				vars["loadout_[slot]_name"] = null
 				vars["loadout_[slot]_desc"] = null
 				vars["loadout_[slot]_hex"] = null
+				save_character()
 				open_vices_menu(usr)
 				return
 			
@@ -2149,6 +2168,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				
 				if(new_name != null) // Allow empty string to clear
 					vars["loadout_[slot]_name"] = new_name
+					save_character()
 					open_vices_menu(usr)
 				return
 			
@@ -2161,6 +2181,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				
 				if(new_desc != null) // Allow empty string to clear
 					vars["loadout_[slot]_desc"] = new_desc
+					save_character()
 					open_vices_menu(usr)
 				return
 			
@@ -2182,6 +2203,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					else
 						// Look up the hex value from colorlist
 						vars["loadout_[slot]_hex"] = colorlist[new_color]
+					save_character()
 					open_vices_menu(usr)
 				return
 	
@@ -2224,6 +2246,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					extra_language = "None"
 				else
 					extra_language = choices[chosen_language]
+				save_character()
 			open_vices_menu(usr)
 			return
 		
@@ -2238,6 +2261,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		switch(action)
 			if("clear")
 				vars[slot_var] = "None"
+				save_character()
 				to_chat(usr, span_notice("Cleared language slot [slot]."))
 				open_vices_menu(usr)
 			if("select", "change")
@@ -2299,6 +2323,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 							to_chat(usr, span_warning("Not enough triumphs! Need [slot_cost], but only have [total_triumphs - spent_points] remaining."))
 							return
 						vars[slot_var] = language_path
+						save_character()
 						to_chat(usr, span_notice("Selected [chosen_language] for language slot [slot] ([slot_cost] Triumphs)."))
 				open_vices_menu(usr)
 

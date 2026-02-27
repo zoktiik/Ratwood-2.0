@@ -3118,9 +3118,9 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	for(var/datum/charflaw/existing_vice in character.vices)
 		existing_vice.on_removal(character)
 
-	// Apply multiple vices system
+	// Apply multiple vices system (supports up to 8 vices)
 	character.vices = list()
-	for(var/i = 1 to 7)
+	for(var/i = 1 to 8)
 		var/datum/charflaw/vice = vars["vice[i]"]
 		if(vice)
 			var/datum/charflaw/new_vice = new vice.type()
@@ -3135,6 +3135,23 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		character.charflaw = new charflaw.type()
 		character.charflaw.on_mob_creation(character)
 		character.vices += character.charflaw
+
+	// Apply origin virtue (new virtue system)
+	if(origin_virtue && origin_virtue.type != /datum/virtue/none)
+		var/datum/virtue/origin = new origin_virtue.type()
+		apply_virtue(character, origin)
+
+	// Apply origin items (heirlooms)
+	if(LAZYLEN(origin_items))
+		for(var/datum/virtue/item in origin_items)
+			var/datum/virtue/origin_item = new item.type()
+			apply_virtue(character, origin_item)
+
+	// Apply feats (new virtue system)
+	if(LAZYLEN(feats))
+		for(var/datum/virtue/feat in feats)
+			var/datum/virtue/char_feat = new feat.type()
+			apply_virtue(character, char_feat)
 
 	character.dna.real_name = character.real_name
 
