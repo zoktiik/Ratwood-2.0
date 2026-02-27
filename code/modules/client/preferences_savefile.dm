@@ -525,6 +525,39 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	virtue = new /datum/virtue/none
 	virtuetwo = new /datum/virtue/none
 
+/datum/preferences/proc/_load_origin_virtues(S)
+	origin_virtue = null
+	origin_items = null
+	feats = null
+
+	var/origin_virtue_type
+	S["origin_virtue"] >> origin_virtue_type
+	origin_virtue_type = string_to_typepath(origin_virtue_type)
+	if(origin_virtue_type && ispath(origin_virtue_type, /datum/virtue))
+		origin_virtue = GLOB.virtues[origin_virtue_type]
+
+	var/list/stored_origin_items
+	S["origin_items"] >> stored_origin_items
+	if(islist(stored_origin_items))
+		for(var/item_entry in stored_origin_items)
+			var/item_type = string_to_typepath(item_entry)
+			if(!item_type || !ispath(item_type, /datum/virtue))
+				continue
+			var/datum/virtue/item_virtue = GLOB.virtues[item_type]
+			if(item_virtue)
+				LAZYADD(origin_items, item_virtue)
+
+	var/list/stored_feats
+	S["feats"] >> stored_feats
+	if(islist(stored_feats))
+		for(var/feat_entry in stored_feats)
+			var/feat_type = string_to_typepath(feat_entry)
+			if(!feat_type || !ispath(feat_type, /datum/virtue))
+				continue
+			var/datum/virtue/feat_virtue = GLOB.virtues[feat_type]
+			if(feat_virtue)
+				LAZYADD(feats, feat_virtue)
+
 /datum/preferences/proc/_load_loadout(S)
 	var/loadout_type
 	S["loadout"] >> loadout_type
@@ -775,6 +808,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	_load_species(S)
 
 	_load_virtue(S)
+	_load_origin_virtues(S)
 	_load_flaw(S)
 
 	_load_culinary_preferences(S)
@@ -1096,6 +1130,25 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!virtue2_typepath)
 		virtue2_typepath = /datum/virtue/none
 	WRITE_FILE(S["virtuetwo"], virtue2_typepath)
+	WRITE_FILE(S["origin_virtue"], preferences_typepath_or_null(origin_virtue))
+
+	var/list/origin_item_types = null
+	if(LAZYLEN(origin_items))
+		origin_item_types = list()
+		for(var/datum/virtue/item_virtue in origin_items)
+			var/item_typepath = preferences_typepath_or_null(item_virtue)
+			if(item_typepath)
+				origin_item_types += item_typepath
+	WRITE_FILE(S["origin_items"], origin_item_types)
+
+	var/list/feat_types = null
+	if(LAZYLEN(feats))
+		feat_types = list()
+		for(var/datum/virtue/feat_virtue in feats)
+			var/feat_typepath = preferences_typepath_or_null(feat_virtue)
+			if(feat_typepath)
+				feat_types += feat_typepath
+	WRITE_FILE(S["feats"], feat_types)
 	WRITE_FILE(S["race_bonus"], race_bonus)
 	WRITE_FILE(S["combat_music"], preferences_typepath_or_null(combat_music))
 	WRITE_FILE(S["body_size"] , features["body_size"])

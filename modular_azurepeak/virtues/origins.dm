@@ -75,7 +75,10 @@
 	category = "origin"
 	virtue_cost = 4
 	added_traits = list(TRAIT_SMITHING_EXPERT)
-	added_skills = list(list(/datum/skill/labor/mining, 3, 6))
+	added_skills = list(list(/datum/skill/labor/mining, 3, 6),
+						list(/datum/skill/craft/smelting, 2, 2),
+						list(/datum/skill/craft/crafting, 2, 2)
+	)
 
 
 // Broader origin experiences - provide diverse skill sets without specialization
@@ -87,19 +90,19 @@
 	category = "origin"
 	virtue_cost = 2
 	added_skills = list(
-		list(/datum/skill/misc/tracking, 1, 2),
-		list(/datum/skill/labor/butchering, 1, 2),
-		list(/datum/skill/craft/tanning, 1, 2),
-		list(/datum/skill/craft/traps, 1, 2),
-		list(/datum/skill/combat/knives, 1, 2),
-		list(/datum/skill/combat/slings, 1, 2),
-		list(/datum/skill/craft/crafting, 1, 2),
-		list(/datum/skill/craft/cooking, 1, 2),
-		list(/datum/skill/labor/lumberjacking, 1, 2),
-		list(/datum/skill/misc/climbing, 1, 2),
-		list(/datum/skill/misc/swimming, 1, 2),
-		list(/datum/skill/misc/sneaking, 1, 2),
-		list(/datum/skill/misc/medicine, 1, 1)
+		list(/datum/skill/misc/tracking, 2, 2),
+		list(/datum/skill/labor/butchering, 2, 2),
+		list(/datum/skill/craft/tanning, 2, 2),
+		list(/datum/skill/craft/traps, 2, 2),
+		list(/datum/skill/combat/knives, 2, 2),
+		list(/datum/skill/combat/slings, 2, 2),
+		list(/datum/skill/craft/crafting, 2, 2),
+		list(/datum/skill/craft/cooking, 2, 2),
+		list(/datum/skill/labor/lumberjacking, 2, 2),
+		list(/datum/skill/misc/climbing, 2, 2),
+		list(/datum/skill/misc/swimming, 2, 2),
+		list(/datum/skill/misc/sneaking, 2, 2),
+		list(/datum/skill/misc/medicine, 2, 2)
 	)
 
 /datum/virtue/utility/homesteader_novice
@@ -108,18 +111,18 @@
 	category = "origin"
 	virtue_cost = 2
 	added_skills = list(
-		list(/datum/skill/labor/farming, 1, 2),
-		list(/datum/skill/craft/cooking, 1, 2),
-		list(/datum/skill/labor/lumberjacking, 1, 2),
-		list(/datum/skill/misc/lockpicking, 1, 2),
-		list(/datum/skill/misc/climbing, 1, 2),
-		list(/datum/skill/misc/athletics, 1, 2),
-		list(/datum/skill/labor/fishing, 1, 2),
-		list(/datum/skill/craft/masonry, 1, 2),
-		list(/datum/skill/craft/carpentry, 1, 2),
-		list(/datum/skill/craft/crafting, 1, 2),
-		list(/datum/skill/combat/maces, 1, 2),
-		list(/datum/skill/combat/axes, 1, 2)
+		list(/datum/skill/labor/farming, 2, 2),
+		list(/datum/skill/craft/cooking, 2, 2),
+		list(/datum/skill/labor/lumberjacking, 2, 2),
+		list(/datum/skill/misc/lockpicking, 2, 2),
+		list(/datum/skill/misc/climbing, 2, 2),
+		list(/datum/skill/misc/athletics, 2, 2),
+		list(/datum/skill/labor/fishing, 2, 2),
+		list(/datum/skill/craft/masonry, 2, 2),
+		list(/datum/skill/craft/carpentry, 2, 2),
+		list(/datum/skill/craft/crafting, 2, 2),
+		list(/datum/skill/combat/maces, 2, 2),
+		list(/datum/skill/combat/axes, 2, 2)
 	)
 
 /datum/virtue/utility/artisan_novice
@@ -128,15 +131,15 @@
 	category = "origin"
 	virtue_cost = 2
 	added_skills = list(
-		list(/datum/skill/craft/crafting, 1, 2),
-		list(/datum/skill/craft/blacksmithing, 1, 2),
-		list(/datum/skill/craft/sewing, 1, 2),
-		list(/datum/skill/craft/smelting, 1, 2),
-		list(/datum/skill/craft/weaponsmithing, 1, 2),
-		list(/datum/skill/craft/armorsmithing, 1, 2),
-		list(/datum/skill/combat/maces, 1, 2),
-		list(/datum/skill/craft/ceramics, 1, 2),
-		list(/datum/skill/craft/engineering, 1, 2)
+		list(/datum/skill/craft/crafting, 2, 2),
+		list(/datum/skill/craft/blacksmithing, 2, 2),
+		list(/datum/skill/craft/sewing, 2, 2),
+		list(/datum/skill/craft/smelting, 2, 2),
+		list(/datum/skill/craft/weaponsmithing, 2, 2),
+		list(/datum/skill/craft/armorsmithing, 2, 2),
+		list(/datum/skill/combat/maces, 2, 2),
+		list(/datum/skill/craft/ceramics, 2, 2),
+		list(/datum/skill/craft/engineering, 2, 2)
 	)
 
 /datum/virtue/utility/healer_novice
@@ -145,15 +148,30 @@
 	category = "origin"
 	virtue_cost = 2
 	added_skills = list(
-		list(/datum/skill/misc/medicine, 1, 2),
-		list(/datum/skill/craft/alchemy, 1, 2),
-		list(/datum/skill/misc/reading, 1, 2),
-		list(/datum/skill/craft/crafting, 1, 2),
-		list(/datum/skill/craft/sewing, 1, 2),
-		list(/datum/skill/craft/cooking, 1, 2),
-		list(/datum/skill/combat/knives, 1, 2)
+		list(/datum/skill/misc/medicine, 2, 2),
+		list(/datum/skill/craft/alchemy, 2, 2),
+		list(/datum/skill/misc/reading, 2, 2),
+		list(/datum/skill/craft/crafting, 2, 2),
+		list(/datum/skill/craft/sewing, 2, 2),
+		list(/datum/skill/craft/cooking, 2, 2),
+		list(/datum/skill/combat/knives, 2, 2),,
+		list(/datum/skill/labor/farming, 2, 2)
 	)
 
+/datum/virtue/utility/vagabond_novice
+	name = "Back-Alley Vagabond"
+	desc = "I grew up on gutters and back roads, surviving by quick hands, quicker feet, and knowing when to vanish from sight."
+	category = "origin"
+	virtue_cost = 2
+	added_skills = list(
+		list(/datum/skill/misc/stealing, 2, 2),
+		list(/datum/skill/misc/lockpicking, 2, 2),
+		list(/datum/skill/misc/sneaking, 2, 2),
+		list(/datum/skill/misc/climbing, 2, 2),
+		list(/datum/skill/misc/athletics, 2, 2),
+		list(/datum/skill/combat/knives, 2, 2),
+		list(/datum/skill/combat/unarmed, 2, 2)
+	)
 
 
 

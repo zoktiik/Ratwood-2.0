@@ -719,9 +719,6 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 		mind.active = 0					//we wish to transfer the key manually
 		mind.transfer_to(H)					//won't transfer key since the mind is not active
 
-	// Apply origin virtues, items, and feats AFTER mind transfer (requires character.mind)
-	client.prefs.apply_origin_virtues_and_feats(H)
-
 	H.name = real_name
 
 	. = H
@@ -731,6 +728,9 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 
 	if(transfer_after)
 		transfer_character()
+
+	// Apply origin virtues, items, and feats after key transfer so interactive virtue prompts can display.
+	client.prefs.apply_origin_virtues_and_feats(H)
 	GLOB.chosen_names += H.real_name
 
 

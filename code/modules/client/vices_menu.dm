@@ -404,6 +404,59 @@
 			return LAZYLEN(feats) < get_max_feats()
 	return FALSE
 
+/datum/preferences/proc/get_selected_stashed_item_types(datum/virtue/exclude_virtue = null)
+	var/list/item_types = list()
+	var/list/selected_virtues = list()
+
+	if(origin_virtue && origin_virtue != exclude_virtue)
+		selected_virtues += origin_virtue
+
+	if(LAZYLEN(origin_items))
+		for(var/datum/virtue/V in origin_items)
+			if(V && V != exclude_virtue)
+				selected_virtues += V
+
+	if(LAZYLEN(feats))
+		for(var/datum/virtue/V in feats)
+			if(V && V != exclude_virtue)
+				selected_virtues += V
+
+	if(virtue && virtue != exclude_virtue)
+		selected_virtues += virtue
+
+	if(virtuetwo && virtuetwo != exclude_virtue)
+		selected_virtues += virtuetwo
+
+	for(var/datum/virtue/V in selected_virtues)
+		if(!LAZYLEN(V.added_stashed_items))
+			continue
+		for(var/item_name in V.added_stashed_items)
+			var/item_type = V.added_stashed_items[item_name]
+			if(item_type)
+				item_types[item_type] = TRUE
+
+	return item_types
+
+/datum/preferences/proc/has_stashed_item_conflict(datum/virtue/candidate, datum/virtue/exclude_virtue = null, show_message = FALSE, mob/user = null)
+	if(!candidate || !LAZYLEN(candidate.added_stashed_items))
+		return FALSE
+
+	var/list/existing_item_types = get_selected_stashed_item_types(exclude_virtue)
+	var/list/conflicts = list()
+
+	for(var/item_name in candidate.added_stashed_items)
+		var/item_type = candidate.added_stashed_items[item_name]
+		if(item_type in existing_item_types)
+			conflicts += item_name
+
+	if(!LAZYLEN(conflicts))
+		return FALSE
+
+	if(show_message && user)
+		to_chat(user, span_warning("This selection conflicts with an already selected stash item: [conflicts.Join(", ")]."))
+
+	return TRUE
+
 /datum/preferences/proc/add_virtue_to_category(datum/virtue/V)
 	if(!V || !V.category)
 		return FALSE
@@ -1792,6 +1845,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				var/datum/virtue/V = GLOB.virtues[path]
 				if(V.category != "origin")
 					continue
+				if(has_stashed_item_conflict(V, null, TRUE, usr))
+					continue
 				// Check if we can afford this virtue
 				if(!can_afford_virtue(V))
 					continue
@@ -1807,6 +1862,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if(choice)
 				var/datum/virtue/selected = origin_available[choice]
+				if(has_stashed_item_conflict(selected, null, TRUE, usr))
+					open_vices_menu(usr)
+					return
 				// Final check before adding
 				if(!can_afford_virtue(selected))
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
@@ -1847,6 +1905,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Skip if already selected in another slot
 				if(V in origin_items)
 					continue
+				if(has_stashed_item_conflict(V, current_item, TRUE, usr))
+					continue
 				// Check if we can afford this virtue (including refunded points if changing)
 				if(V.virtue_cost && (get_remaining_virtue_points() + refunded_points) < V.virtue_cost)
 					continue
@@ -1862,6 +1922,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if(choice)
 				var/datum/virtue/selected = items_available[choice]
+				if(has_stashed_item_conflict(selected, current_item, TRUE, usr))
+					open_vices_menu(usr)
+					return
 				
 				// Final check before adding/changing
 				if(selected.virtue_cost && (get_remaining_virtue_points() + refunded_points) < selected.virtue_cost)
@@ -1914,6 +1977,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Skip if already selected
 				if(V in feats)
 					continue
+				if(has_stashed_item_conflict(V, null, TRUE, usr))
+					continue
 				// Check conflicts with virtue and vices
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
@@ -1932,6 +1997,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
+				if(has_stashed_item_conflict(selected, null, TRUE, usr))
+					open_vices_menu(usr)
+					return
 				// Final check before adding
 				if(!can_afford_virtue(selected))
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]! ([selected.virtue_cost] required, [get_remaining_virtue_points()] available)"))
@@ -1966,6 +2034,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Skip if already selected in another slot
 				if(V in feats)
 					continue
+				if(has_stashed_item_conflict(V, current_feat, TRUE, usr))
+					continue
 				// Check conflicts
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
@@ -1984,6 +2054,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
+				if(has_stashed_item_conflict(selected, current_feat, TRUE, usr))
+					open_vices_menu(usr)
+					return
 				// Final check before changing
 				if(selected.virtue_cost && (get_remaining_virtue_points() + refunded_points) < selected.virtue_cost)
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
@@ -2068,6 +2141,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Skip if already in feats
 				if(V in feats)
 					continue
+				if(has_stashed_item_conflict(V, virtuetwo, TRUE, usr))
+					continue
 				// Check for conflicting vices
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
@@ -2086,6 +2161,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			if(choice)
 				var/datum/virtue/selected = virtues_available[choice]
+				if(has_stashed_item_conflict(selected, virtuetwo, TRUE, usr))
+					open_vices_menu(usr)
+					return
 				virtuetwo = selected
 				save_character()
 				to_chat(usr, span_notice("Selected [choice] as second virtue."))

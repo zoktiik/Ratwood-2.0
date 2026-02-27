@@ -1205,13 +1205,13 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 	if(H.IsSleeping())
 		if(world.time >= next_scream)
-			next_scream = world.time + rand(2 MINUTES, 25 MINUTES)
+			next_scream = world.time + rand(2 MINUTES, 5 MINUTES)
 			// Check if character has Baotha's mark - if so, wet lewd nightmares
 			if(H.has_flaw(/datum/charflaw/marked_by_baotha))
-				var/list/lewd_nightmare_emotes = list("moan", "twitch", "shiver", "groan")
+				var/list/lewd_nightmare_emotes = list("nightmare_moan","nightmare_groan")
 				H.emote(pick(lewd_nightmare_emotes))
 			else
-				H.emote("strain")
+				H.emote("nightmare_scream")
 
 /datum/charflaw/chronic_arthritis
 	name = "Chronic Arthritis (+2 TRI)"
