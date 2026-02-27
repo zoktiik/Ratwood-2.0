@@ -3136,22 +3136,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		character.charflaw.on_mob_creation(character)
 		character.vices += character.charflaw
 
-	// Apply origin virtue (new virtue system)
-	if(origin_virtue && origin_virtue.type != /datum/virtue/none)
-		var/datum/virtue/origin = new origin_virtue.type()
-		apply_virtue(character, origin)
-
-	// Apply origin items (heirlooms)
-	if(LAZYLEN(origin_items))
-		for(var/datum/virtue/item in origin_items)
-			var/datum/virtue/origin_item = new item.type()
-			apply_virtue(character, origin_item)
-
-	// Apply feats (new virtue system)
-	if(LAZYLEN(feats))
-		for(var/datum/virtue/feat in feats)
-			var/datum/virtue/char_feat = new feat.type()
-			apply_virtue(character, char_feat)
+	// Note: origin_virtue, origin_items, and feats are applied AFTER mind transfer
+	// See apply_origin_virtues_and_feats() which is called after character creation
 
 	character.dna.real_name = character.real_name
 
@@ -3221,6 +3207,29 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 	if(culinary_preferences)
 		apply_culinary_preferences(character)
+
+// Apply origin virtues, items, and feats AFTER character has a mind
+// This is called after copy_to() and mind transfer in new_player.dm
+/datum/preferences/proc/apply_origin_virtues_and_feats(mob/living/carbon/human/character)
+	if(!character || !character.mind)
+		return
+
+	// Apply origin virtue (new virtue system)
+	if(origin_virtue && origin_virtue.type != /datum/virtue/none)
+		var/datum/virtue/origin = new origin_virtue.type()
+		apply_virtue(character, origin)
+
+	// Apply origin items (heirlooms)
+	if(LAZYLEN(origin_items))
+		for(var/datum/virtue/item in origin_items)
+			var/datum/virtue/origin_item = new item.type()
+			apply_virtue(character, origin_item)
+
+	// Apply feats (new virtue system)
+	if(LAZYLEN(feats))
+		for(var/datum/virtue/feat in feats)
+			var/datum/virtue/char_feat = new feat.type()
+			apply_virtue(character, char_feat)
 
 /datum/preferences/proc/get_default_name(name_id)
 	switch(name_id)

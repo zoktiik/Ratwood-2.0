@@ -288,7 +288,7 @@
 
 // Virtue point system helpers
 /datum/preferences/proc/get_max_virtue_points()
-	// Base 12 points for all characters
+	// Base 12 points for all characters	
 	var/points = 12
 	// Virtuous statpack grants +5 additional virtue points
 	if(statpack && statpack.name == "Virtuous")
@@ -1734,7 +1734,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check if we can afford this virtue
 				if(!can_afford_virtue(V))
 					continue
-				origin_available[V.name] = V
+				// Display name with cost
+				var/display_name = V.name
+				if(V.virtue_cost)
+					display_name = "[V.name] ([V.virtue_cost] point\s)"
+				origin_available[display_name] = V
 			
 			origin_available = sort_list(origin_available)
 			var/remaining_points = get_remaining_virtue_points()
@@ -1784,7 +1788,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check if we can afford this virtue (including refunded points if changing)
 				if(V.virtue_cost && (get_remaining_virtue_points() + refunded_points) < V.virtue_cost)
 					continue
-				items_available[V.name] = V
+				// Display name with cost
+				var/display_name = V.name
+				if(V.virtue_cost)
+					display_name = "[V.name] ([V.virtue_cost] point\s)"
+				items_available[display_name] = V
 			
 			items_available = sort_list(items_available)
 			var/available_points = get_remaining_virtue_points() + refunded_points
@@ -1849,7 +1857,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check if we can afford this virtue
 				if(!can_afford_virtue(V))
 					continue
-				feats_available[V.name] = V
+				// Display name with cost
+				var/display_name = V.name
+				if(V.virtue_cost)
+					display_name = "[V.name] ([V.virtue_cost] point\s)"
+				feats_available[display_name] = V
 			
 			feats_available = sort_list(feats_available)
 			var/remaining_points = get_remaining_virtue_points()
@@ -1896,7 +1908,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check if we can afford this virtue (including refunded points from current selection)
 				if(V.virtue_cost && (get_remaining_virtue_points() + refunded_points) < V.virtue_cost)
 					continue
-				feats_available[V.name] = V
+				// Display name with cost
+				var/display_name = V.name
+				if(V.virtue_cost)
+					display_name = "[V.name] ([V.virtue_cost] point\s)"
+				feats_available[display_name] = V
 			
 			feats_available = sort_list(feats_available)
 			var/available_points = get_remaining_virtue_points() + refunded_points
@@ -1939,7 +1955,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				if(virtuetwo && V.type == virtuetwo.type)
 					continue
 				// Basic filtering can be added here if needed
-				virtues_available[V.name] = V
+				// Display name with cost
+				var/display_name = V.name
+				if(V.virtue_cost)
+					display_name = "[V.name] ([V.virtue_cost] point\s)"
+				virtues_available[display_name] = V
 			
 			virtues_available = sort_list(virtues_available)
 			var/choice = tgui_input_list(usr, "Choose your primary virtue:", "Virtue Selection", virtues_available)
@@ -1990,7 +2010,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				if(virtue && check_virtue_virtue_conflict(V.type, virtue.type, TRUE, usr))
 					continue
 				// Virtuous statpack allows ALL virtues including packs!
-				virtues_available[V.name] = V
+				// Display name with cost
+				var/display_name = V.name
+				if(V.virtue_cost)
+					display_name = "[V.name] ([V.virtue_cost] point\s)"
+				virtues_available[display_name] = V
 			
 			virtues_available = sort_list(virtues_available)
 			var/choice = tgui_input_list(usr, "Choose your second virtue (any category including packs!):", "Second Virtue Selection", virtues_available)

@@ -91,7 +91,7 @@
 		list(/datum/skill/labor/butchering, 1, 2),
 		list(/datum/skill/craft/tanning, 1, 2),
 		list(/datum/skill/craft/traps, 1, 2),
-		list(/datum/skill/combat/staves, 1, 2),
+		list(/datum/skill/combat/knives, 1, 2),
 		list(/datum/skill/combat/slings, 1, 2),
 		list(/datum/skill/craft/crafting, 1, 2),
 		list(/datum/skill/craft/cooking, 1, 2),
@@ -134,7 +134,7 @@
 		list(/datum/skill/craft/smelting, 1, 2),
 		list(/datum/skill/craft/weaponsmithing, 1, 2),
 		list(/datum/skill/craft/armorsmithing, 1, 2),
-		list(/datum/skill/combat/knives, 1, 2),
+		list(/datum/skill/combat/maces, 1, 2),
 		list(/datum/skill/craft/ceramics, 1, 2),
 		list(/datum/skill/craft/engineering, 1, 2)
 	)
