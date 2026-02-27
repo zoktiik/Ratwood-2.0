@@ -517,21 +517,49 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 /datum/preferences/proc/_load_virtue(S)
 	var/virtue_type
 	var/virtuetwo_type
+	var/savefile_version
+	S["version"] >> savefile_version
+	if(!isnum(savefile_version))
+		savefile_version = 0
+
+	// Virtue system rework migration:
+	// pre-v37 savefiles can contain legacy virtue formats, so force a clean reset once.
+	if(savefile_version < 37)
+		virtue = GLOB.virtues[/datum/virtue/none]
+		virtuetwo = GLOB.virtues[/datum/virtue/none]
+		return
+
 	S["virtue"] >> virtue_type
 	S["virtuetwo"] >> virtuetwo_type
 
-	// RESET OLD VIRTUES - Players will need to re-select with new system
-	// This ensures everyone starts fresh with the updated virtue system
-	virtue = new /datum/virtue/none
-	virtuetwo = new /datum/virtue/none
+	if(istype(virtue_type, /datum/virtue))
+		var/datum/virtue/virtue_datum = virtue_type
+		virtue_type = virtue_datum.type
+	virtue_type = string_to_typepath(virtue_type)
+	if(virtue_type && ispath(virtue_type, /datum/virtue) && GLOB.virtues[virtue_type])
+		virtue = GLOB.virtues[virtue_type]
+	else
+		virtue = GLOB.virtues[/datum/virtue/none]
+
+	if(istype(virtuetwo_type, /datum/virtue))
+		var/datum/virtue/virtuetwo_datum = virtuetwo_type
+		virtuetwo_type = virtuetwo_datum.type
+	virtuetwo_type = string_to_typepath(virtuetwo_type)
+	if(virtuetwo_type && ispath(virtuetwo_type, /datum/virtue) && GLOB.virtues[virtuetwo_type])
+		virtuetwo = GLOB.virtues[virtuetwo_type]
+	else
+		virtuetwo = GLOB.virtues[/datum/virtue/none]
 
 /datum/preferences/proc/_load_origin_virtues(S)
 	origin_virtue = null
-	origin_items = null
-	feats = null
+	origin_items = list()
+	feats = list()
 
 	var/origin_virtue_type
 	S["origin_virtue"] >> origin_virtue_type
+	if(istype(origin_virtue_type, /datum/virtue))
+		var/datum/virtue/origin_virtue_datum = origin_virtue_type
+		origin_virtue_type = origin_virtue_datum.type
 	origin_virtue_type = string_to_typepath(origin_virtue_type)
 	if(origin_virtue_type && ispath(origin_virtue_type, /datum/virtue))
 		origin_virtue = GLOB.virtues[origin_virtue_type]
@@ -540,7 +568,19 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["origin_items"] >> stored_origin_items
 	if(islist(stored_origin_items))
 		for(var/item_entry in stored_origin_items)
-			var/item_type = string_to_typepath(item_entry)
+			var/item_type = null
+			if(istype(item_entry, /datum/virtue))
+				var/datum/virtue/item_datum = item_entry
+				item_type = item_datum.type
+			else
+				item_type = string_to_typepath(item_entry)
+			if(!item_type)
+				var/legacy_item_entry = stored_origin_items[item_entry]
+				if(istype(legacy_item_entry, /datum/virtue))
+					var/datum/virtue/legacy_item_datum = legacy_item_entry
+					item_type = legacy_item_datum.type
+				else
+					item_type = string_to_typepath(legacy_item_entry)
 			if(!item_type || !ispath(item_type, /datum/virtue))
 				continue
 			var/datum/virtue/item_virtue = GLOB.virtues[item_type]
@@ -551,12 +591,29 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["feats"] >> stored_feats
 	if(islist(stored_feats))
 		for(var/feat_entry in stored_feats)
-			var/feat_type = string_to_typepath(feat_entry)
+			var/feat_type = null
+			if(istype(feat_entry, /datum/virtue))
+				var/datum/virtue/feat_datum = feat_entry
+				feat_type = feat_datum.type
+			else
+				feat_type = string_to_typepath(feat_entry)
+			if(!feat_type)
+				var/legacy_feat_entry = stored_feats[feat_entry]
+				if(istype(legacy_feat_entry, /datum/virtue))
+					var/datum/virtue/legacy_feat_datum = legacy_feat_entry
+					feat_type = legacy_feat_datum.type
+				else
+					feat_type = string_to_typepath(legacy_feat_entry)
 			if(!feat_type || !ispath(feat_type, /datum/virtue))
 				continue
 			var/datum/virtue/feat_virtue = GLOB.virtues[feat_type]
 			if(feat_virtue)
 				LAZYADD(feats, feat_virtue)
+
+	if(!LAZYLEN(origin_items))
+		origin_items = null
+	if(!LAZYLEN(feats))
+		feats = null
 
 /datum/preferences/proc/_load_loadout(S)
 	var/loadout_type
@@ -1130,7 +1187,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	if(!virtue2_typepath)
 		virtue2_typepath = /datum/virtue/none
 	WRITE_FILE(S["virtuetwo"], virtue2_typepath)
-	WRITE_FILE(S["origin_virtue"], preferences_typepath_or_null(origin_virtue))
+	var/origin_typepath = preferences_typepath_or_null(origin_virtue)
+	WRITE_FILE(S["origin_virtue"], origin_typepath)
 
 	var/list/origin_item_types = null
 	if(LAZYLEN(origin_items))
