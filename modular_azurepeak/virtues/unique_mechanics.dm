@@ -9,7 +9,7 @@
 
 // Weaker version of werewolf claws
 /obj/effect/proc_holder/spell/self/claws/feral
-	name = "Feral Claws"
+	name = "feral claws"
 	desc = "Extend or retract my natural claws."
 	overlay_state = "claws"
 	antimagic_allowed = TRUE
@@ -56,7 +56,7 @@
 
 // Weaker feral claw weapon (compared to werewolf)
 /obj/item/rogueweapon/feral_claw
-	name = "Feral Claw"
+	name = "feral claws"
 	desc = "Sharp natural claws."
 	item_state = null
 	lefthand_file = null

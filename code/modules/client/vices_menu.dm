@@ -267,6 +267,67 @@
 				to_chat(user, span_warning("Unintelligible vice conflicts with Mute vice - you can't have both speech impediments!"))
 			return TRUE
 
+	// === DIET-RELATED CONFLICTS ===
+	// Carnivore conflicts with: Herbivore, Hemophage, Lithovore
+	if(vice_type == /datum/charflaw/carnivore)
+		if(/datum/charflaw/herbivore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Carnivore vice conflicts with Herbivore vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/hemophage in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Carnivore vice conflicts with Hemophage vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/lithovore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Carnivore vice conflicts with Lithovore vice - you can't have multiple diet types!"))
+			return TRUE
+
+	// Herbivore conflicts with: Carnivore, Hemophage, Lithovore
+	if(vice_type == /datum/charflaw/herbivore)
+		if(/datum/charflaw/carnivore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Herbivore vice conflicts with Carnivore vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/hemophage in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Herbivore vice conflicts with Hemophage vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/lithovore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Herbivore vice conflicts with Lithovore vice - you can't have multiple diet types!"))
+			return TRUE
+
+	// Hemophage conflicts with: Carnivore, Herbivore, Lithovore
+	if(vice_type == /datum/charflaw/hemophage)
+		if(/datum/charflaw/carnivore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Hemophage vice conflicts with Carnivore vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/herbivore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Hemophage vice conflicts with Herbivore vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/lithovore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Hemophage vice conflicts with Lithovore vice - you can't have multiple diet types!"))
+			return TRUE
+
+	// Lithovore conflicts with: Carnivore, Herbivore, Hemophage
+	if(vice_type == /datum/charflaw/lithovore)
+		if(/datum/charflaw/carnivore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Lithovore vice conflicts with Carnivore vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/herbivore in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Lithovore vice conflicts with Herbivore vice - you can't have multiple diet types!"))
+			return TRUE
+		if(/datum/charflaw/hemophage in selected_vices)
+			if(show_message && user)
+				to_chat(user, span_warning("Lithovore vice conflicts with Hemophage vice - you can't have multiple diet types!"))
+			return TRUE
+
 	// === ASTRATA-SCORCHED CONFLICTS ===
 	// NOTE: Astrata-Scorched is now a virtue, not a vice
 	// The conflict check is handled in the virtue's apply_to_human proc
@@ -1229,7 +1290,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	html += "</a>"
 	
 	if(origin_virtue)
-		html += "<a class='Btn btn-clear' href='byond://?src=\ref[src];virtue_action=clear_origin'>Clear</a>"
+		html += "<a class='btn btn-clear' href='byond://?src=\ref[src];virtue_action=clear_origin'>Clear</a>"
 	
 	html += {"
 			</div>
@@ -1749,12 +1810,13 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Final check before adding
 				if(!can_afford_virtue(selected))
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
+					open_vices_menu(usr)
 					return
 				origin_virtue = selected
 				save_character()
 				to_chat(usr, span_notice("Selected [choice] as your origin. ([selected.virtue_cost] point\s spent)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 		
 		if(action == "clear_origin")
@@ -1804,6 +1866,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Final check before adding/changing
 				if(selected.virtue_cost && (get_remaining_virtue_points() + refunded_points) < selected.virtue_cost)
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
+					open_vices_menu(usr)
 					return
 				
 				// Replace if changing, or add if new
@@ -1815,7 +1878,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				save_character()
 				to_chat(usr, span_notice("Selected [choice] as heirloom [slot]. ([selected.virtue_cost] point\s)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 		
 		if(action == "clear_item")
@@ -1872,12 +1935,13 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Final check before adding
 				if(!can_afford_virtue(selected))
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]! ([selected.virtue_cost] required, [get_remaining_virtue_points()] available)"))
+					open_vices_menu(usr)
 					return
 				LAZYADD(feats, selected)
 				save_character()
 				to_chat(usr, span_notice("Selected [choice] as a feat. ([selected.virtue_cost] point\s spent)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 		
 		if(action == "change_feat")
@@ -1923,12 +1987,13 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Final check before changing
 				if(selected.virtue_cost && (get_remaining_virtue_points() + refunded_points) < selected.virtue_cost)
 					to_chat(usr, span_warning("You don't have enough virtue points for [choice]!"))
+					open_vices_menu(usr)
 					return
 				feats[slot] = selected
 				save_character()
 				to_chat(usr, span_notice("Changed feat slot [slot] to [choice]. ([selected.virtue_cost] point\s)"))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 		
 		if(action == "clear_feat")
@@ -1970,7 +2035,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				save_character()
 				to_chat(usr, span_notice("Selected [choice] as primary virtue."))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 		
 		if(action == "change_secondary")
@@ -2025,7 +2090,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				save_character()
 				to_chat(usr, span_notice("Selected [choice] as second virtue."))
 				to_chat(usr, "<span class='info'>[selected.desc]</span>")
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 	
 	if(href_list["statpack_action"])
@@ -2063,7 +2128,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					virtuetwo = GLOB.virtues[/datum/virtue/none]
 					save_character()
 				
-				open_vices_menu(usr)
+			open_vices_menu(usr)
 			return
 	
 	if(href_list["vice_action"])
@@ -2135,32 +2200,17 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					to_chat(usr, span_notice("Selected [choice] for vice slot [slot]."))
 					if(new_vice.desc)
 						to_chat(usr, "<span class='info'>[new_vice.desc]</span>")
-					open_vices_menu(usr)
-			
-			if("clear")
-				if(slot == 1)
-					to_chat(usr, span_warning("Vice slot 1 is required and cannot be cleared!"))
-					return
-				
-				// Clear the vice from preferences
-				vars[slot_var] = null
-				
-				// Save to disk so it persists across character slots
-				save_character()
-
-				// Vices are intentionally not hot-applied to a living in-round character.
-				// They are saved to preferences and applied on the next spawn.
-				if(usr && ishuman(usr))
-					var/mob/living/carbon/human/H = usr
-					if(H.real_name == real_name)
-						to_chat(usr, span_notice("Vice changes saved. They will apply next time you spawn."))
 				
 				open_vices_menu(usr)
+			
+			if("clear")
+				vars[slot_var] = null
+				save_character()
+				to_chat(usr, span_notice("Cleared vice slot [slot]."))
+				open_vices_menu(usr)
+		return
 	
 	if(href_list["loadout_action"])
-		// Save state before any loadout change
-		save_to_history()
-		
 		var/action = href_list["loadout_action"]
 		var/slot = text2num(href_list["slot"])
 		
