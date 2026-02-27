@@ -729,8 +729,8 @@ GLOBAL_LIST_INIT(roleplay_readme, world.file2list("strings/rt/rp_prompt.txt"))
 	if(transfer_after)
 		transfer_character()
 
-	// Apply origin virtues, items, and feats after key transfer so interactive virtue prompts can display.
-	client.prefs.apply_origin_virtues_and_feats(H)
+	// Note: origin virtues, items, and feats are now applied in apply_character_post_equipment()
+	// to ensure they are applied AFTER job/advclass skills are set
 	GLOB.chosen_names += H.real_name
 
 
