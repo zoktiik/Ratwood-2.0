@@ -139,7 +139,6 @@
 	icon_state = "wrappings"
 	item_state = "wrappings"
 	sewrepair = TRUE
-	nudist_safe = TRUE //Simple cloth wrappings, not real clothing
 
 /obj/item/clothing/wrists/roguetown/nocwrappings
 	name = "moon wrappings"

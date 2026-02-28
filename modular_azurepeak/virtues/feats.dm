@@ -24,7 +24,7 @@
 	name = "Arcyne Potential"
 	desc = "I am talented in the Arcyne arts, expanding my capacity for magic. I have become more intelligent from its studies. Other effects depends on what training I chose to focus on at a later age."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	custom_text = "Classes that has a combat trait (Medium / Heavy Armor Training, Dodge Expert or Critical Resistance) get only prestidigitation. Everyone else get +3 spellpoints and T1 Arcyne Potential if they don't have any Arcyne."
 	added_skills = list(list(/datum/skill/magic/arcane, 1, 6))
 
@@ -42,7 +42,7 @@
 	name = "Devotee"
 	desc = "Though not officially of the Church, my relationship with my chosen Patron is strong enough to grant me the most minor of their blessings. I've also kept a psycross of my deity."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	custom_text = "You gain access to T0 miracles of your patron. As a non-combat role you also receive a minor passive devotion gain. If you already have access to Miracles, you get slightly increased passive devotion gain."
 
 	added_skills = list(list(/datum/skill/magic/holy, 1, 6))
@@ -112,7 +112,7 @@
 	name = "Nobility"
 	desc = "By birth, blade or brain, I am noble known to the royalty of these lands, and have all the benefits associated with it. I've cleverly stashed away a healthy amount of coinage, alongside a familial heirloom."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 10
 	added_traits = list(TRAIT_NOBLE)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))
 	added_stashed_items = list("Heirloom Amulet" = /obj/item/clothing/neck/roguetown/ornateamulet/noble,
@@ -125,7 +125,7 @@
 	name = "Socialite"
 	desc = "I thrive in social settings, easily reading the emotions of others and charming those around me. My presence is always felt at any gathering."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 5
 	custom_text = "Incompatible with Ugly virtue. Grants empathic insight."
 	added_traits = list(TRAIT_BEAUTIFUL, TRAIT_GOODLOVER, TRAIT_EMPATH)
 	added_stashed_items = list(
@@ -161,7 +161,7 @@
 	name = "Resident"
 	desc = "I'm a resident of the vale. I have an account in the city's treasury and a home in the city."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 2
 	added_traits = list(TRAIT_RESIDENT)
 
 /datum/virtue/utility/resident/apply_to_human(mob/living/carbon/human/recipient)
@@ -215,7 +215,7 @@
 	name = "Failed Squire"
 	desc = "I was once a squire in training, but failed to achieve knighthood. Though my dreams of glory were dashed, I retained my knowledge of equipment maintenance and repair, including how to polish arms and armor."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	added_traits = list(TRAIT_SQUIRE_REPAIR)
 	added_stashed_items = list(
 		"Hammer" = /obj/item/rogueweapon/hammer/iron,
@@ -231,7 +231,7 @@
 	name = "Intellectual"
 	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal closeby. I can tell people's exact prowess."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	custom_text = "Maximizes Assess benefits with a bonus of the target's Stats. Allows the choice of 3 languages to learn upon joining. +1 INT."
 	added_traits = list(TRAIT_INTELLECTUAL)
 	added_skills = list(list(/datum/skill/misc/reading, 3, 6))
@@ -301,7 +301,7 @@
 	name = "Feral Appetite"
 	desc = "Raw, toxic or spoiled food doesn't bother my superior digestive system."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 2
 	added_traits = list(TRAIT_NASTY_EATER)
 
 /datum/virtue/utility/feral_appetite/handle_traits(mob/living/carbon/human/recipient)
@@ -329,7 +329,7 @@
 	name = "Performer"
 	desc = "Music, artistry and the act of showmanship carried me through life. I've hidden a favorite instrument of mine, know how to please anyone I touch, and how to crack the eggs of hecklers."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 2
 	custom_text = "Comes with a stashed instrument of your choice. You choose the instrument after spawning in."
 	added_traits = list(TRAIT_NUTCRACKER, TRAIT_GOODLOVER)
 	added_skills = list(list(/datum/skill/misc/music, 4, 6)) //Allows them uplaod custom music
@@ -381,7 +381,7 @@
 	name = "Keen Ears"
 	desc = "Cowering from authorities, loved ones or by a generous gift of the gods, you've adapted a keen sense of hearing, and can identify the speakers even when they are out of sight, their whispers ringing louder."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	added_traits = list(TRAIT_KEENEARS)
 	custom_text = "You can identify known people who speak even when they are out of sight. You can hear people speaking normally above and below you, regardless of obstacles in the way. You can hear whispers from one tile further."
 
@@ -389,7 +389,7 @@
 	name = "Sleuth"
 	desc = "You realised long ago that the ability to find a man is as helpful to aid the law as it is to evade it."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 5
 	added_skills = list(list(/datum/skill/misc/tracking, 3, 6))
 	added_traits = list(TRAIT_SLEUTH)
 	custom_text = "- Upon right clicking a track, you will Mark the person who made them <i>(Expert skill required, not exclusive to this Virtue)</i>.\n- Further tracks found will be automatically highlighted as theirs, along with the person themselves, if they are not sneaking or invisible at the time.\n- Reduces the cooldown for tracking, allows track examining right away, and movement no longer cancels tracking."
@@ -408,14 +408,14 @@
 	name = "Defiled Keyholder"
 	desc = "The 'Holy' See has their blood-stained grounds, and so do we. Underneath their noses, we pray to the true gods - I know the location of the local heretic conclave. Secrecy is paramount. If found out, I will surely be killed."
 	category = "feats"
-	virtue_cost = 0
+	virtue_cost = 3
 	added_traits = list(TRAIT_ZURCH)
 
 /datum/virtue/utility/mountable
 	name = "Mountable"
 	desc = "You have trained or been trained into a suitable mount. People may ride you as they would a saiga."
 	category = "feats"
-	virtue_cost = 0
+	virtue_cost = 2
 	added_traits = list(TRAIT_PONYGIRL_RIDEABLE)
 
 /datum/virtue/utility/tolerant
@@ -431,7 +431,7 @@
 	name = "Dust Runner"
 	desc = "I run dust for the Thieves' Guild, and an associate has left a delivery in my stash nearby for me to pick up."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	added_stashed_items = list("Satchel #1" = /obj/item/storage/backpack/rogue/satchel/mule,
 							"Satchel #2" = /obj/item/storage/backpack/rogue/satchel/mule,
 							"Dagger" = /obj/item/rogueweapon/huntingknife/idagger
@@ -442,7 +442,7 @@
 	name = "Larcenous"
 	desc = "Whether it was asked of you, or by a calling for the rush deep within your hollow heart, you seek things that don't belong you. You know how to work a lock, and have stashed a ring of them, for just the occasion."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	added_stashed_items = list("Lockpick Ring" = /obj/item/lockpickring/mundane)
 	added_skills = list(list(/datum/skill/misc/lockpicking, 3, 6))
 
@@ -493,7 +493,7 @@
 	name = "Rich and Shrewd"
 	desc = "Through a stroke of luck or shrewd planning, I've come into a considerable amount of mammon. I can tell the value of those I speak to, and what they offer. I've also stowed away some coinage for a rainy dae."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	added_traits = list(TRAIT_SEEPRICES)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))	//So the spell would work
 	custom_text = "Grants Secular Appraise -- a spell that allows you to tell how much wealth someone has on them, and in their Nervelock."
@@ -506,7 +506,7 @@
 	name = "Arsonist"
 	desc = "I like to watch the world burn, and I've stowed away two powerful firebombs to help me achieve that fact."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 6
 	added_skills = list(list(/datum/skill/craft/alchemy, 1, 6))
 	added_traits = list(TRAIT_ALCHEMY_EXPERT) // Kaboom
 	added_stashed_items = list("Firebomb #1" = /obj/item/bomb,

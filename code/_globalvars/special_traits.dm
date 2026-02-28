@@ -36,7 +36,6 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 		player = character.client
 	apply_charflaw_equipment(character, player)
 	apply_prefs_special(character, player)
-	apply_prefs_virtue(character, player)
 	apply_prefs_race_bonus(character, player)
 	// Apply new origin virtue system AFTER job equipment to prevent skills from being overridden
 	if(player.prefs)

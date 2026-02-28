@@ -28,7 +28,7 @@
 /datum/virtue/pack/enchanter
 	name = "Enchanting Performer"
 	desc = "I am a master of the stage and salon alike - beautiful, talented, and able to become anyone through voice and charm. My performances captivate audiences, and my social graces open every door."
-	virtue_cost = 2
+	virtue_cost = 10
 	granted_virtues = list(
 		/datum/virtue/utility/socialite,
 		/datum/virtue/utility/performer,
@@ -44,7 +44,7 @@
 /datum/virtue/pack/travelingscholar
 	name = "Traveling Scholar"
 	desc = "My travels across distant lands have made me wealthy in both coin and wisdom. I speak many tongues, understand the value of all things, and ride with practiced ease. The world is my library, and every road teaches me something new."
-	virtue_cost = 2
+	virtue_cost = 10
 	granted_virtues = list(
 		/datum/virtue/utility/linguist,
 		/datum/virtue/items/rich,
@@ -59,7 +59,7 @@
 /datum/virtue/pack/scrappysurvivor
 	name = "Feral Survivor"
 	desc = "I've lived through hard times in the wilds - poverty, famine, or exile taught me to survive like an animal. My skin has grown thick from exposure to the elements, I know the basics of homesteading, and most importantly, I can stomach anything. Spoiled rations? Raw meat? Doesn't matter - I'll eat it and keep going."
-	virtue_cost = 2
+	virtue_cost = 10
 	granted_virtues = list(
 		/datum/virtue/combat/tough_hide,
 		/datum/virtue/utility/homesteader,
@@ -74,7 +74,7 @@
 /datum/virtue/pack/sturdygiant
 	name = "Sturdy Giant"
 	desc = "I am both large and hardy — my size and thick skin make me difficult to wound."
-	virtue_cost = 2
+	virtue_cost = 5
 	granted_virtues = list(
 		/datum/virtue/combat/tough_hide,
 		/datum/virtue/size/giant
@@ -87,7 +87,7 @@
 /datum/virtue/pack/highsociety
 	name = "High Society"
 	desc = "I was born into privilege and raised in the finest circles. Noble blood runs through my veins, I read the emotions of others with ease, and my charm opens every door. Wealth, beauty, and status are my birthright."
-	virtue_cost = 2
+	virtue_cost = 10
 	granted_virtues = list(
 		/datum/virtue/utility/noble,
 		/datum/virtue/utility/socialite
@@ -100,7 +100,7 @@
 /datum/virtue/pack/housekeeper
 	name = "Trusted Housekeeper"
 	desc = "I've served the households of this city for years - cooking, cleaning, and managing provisions. I know every street, have a home here, and my skills in the kitchen are unmatched. The city trusts me, and I know how to make do."
-	virtue_cost = 2
+	virtue_cost = 10
 	granted_virtues = list(
 		/datum/virtue/utility/resident,
 		/datum/virtue/utility/granary,
@@ -115,7 +115,7 @@
 /datum/virtue/pack/brokensoul
 	name = "Broken Soul"
 	desc = "Life has been cruel to me. My appearance drives others away, I've learned to endure what most cannot, and I've felt nothing for so long I can barely remember what emotions were like. I am a walking testament to survival through suffering."
-	virtue_cost = 2
+	virtue_cost = 10
 	granted_virtues = list(
 		/datum/virtue/utility/ugly,
 		/datum/virtue/utility/tolerant,

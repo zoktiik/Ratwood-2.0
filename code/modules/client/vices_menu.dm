@@ -474,6 +474,10 @@
 	// Legacy vice
 	charflaw = null
 	
+	save_character()
+
+/// Reset all loadout items and languages to default state
+/datum/preferences/proc/reset_loadout_and_languages()
 	// Clear languages
 	extra_language = "None"
 	extra_language_1 = "None"
@@ -502,6 +506,30 @@
 	loadout_8_name = null
 	loadout_9_name = null
 	loadout_10_name = null
+	
+	// Clear loadout descriptions
+	loadout_1_desc = null
+	loadout_2_desc = null
+	loadout_3_desc = null
+	loadout_4_desc = null
+	loadout_5_desc = null
+	loadout_6_desc = null
+	loadout_7_desc = null
+	loadout_8_desc = null
+	loadout_9_desc = null
+	loadout_10_desc = null
+	
+	// Clear loadout colors
+	loadout_1_hex = null
+	loadout_2_hex = null
+	loadout_3_hex = null
+	loadout_4_hex = null
+	loadout_5_hex = null
+	loadout_6_hex = null
+	loadout_7_hex = null
+	loadout_8_hex = null
+	loadout_9_hex = null
+	loadout_10_hex = null
 	
 	save_character()
 
@@ -1491,7 +1519,8 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				<p>Configure all your character features</p>
 				<div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
 					<a class='btn' href='byond://?src=\ref[src];undo_action=undo' style='font-size: 0.85em;'>⟲ Undo Last Change ([customization_history.len] available)</a>
-					<a class='btn btn-clear' href='byond://?src=\ref[src];virtue_action=reset_all' style='font-size: 0.85em;'>⚠ Reset All Virtues/Vices</a>
+					<a class='btn btn-clear' href='byond://?src=\ref[src];virtue_action=reset_virtues_vices' style='font-size: 0.85em;'>⚠ Reset Virtues/Vices</a>
+					<a class='btn btn-clear' href='byond://?src=\ref[src];loadout_action=reset_loadout_languages' style='font-size: 0.85em;'>⚠ Reset Loadout/Languages</a>
 				</div>
 			</div>
 			
@@ -1525,7 +1554,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	</div>
 		<div class="statpack-section">
 			<h2>Upbringing: Origins</h2>
-			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select ONE origin background. This represents your early training andexperience.</p>
+			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select ONE origin background. This represents your early training and experience. If you select a origin you will be unable to choose any feats that allows you to have more skills.	</p>
 			<div class="statpack-current">"}
 	
 	// Display origin virtue
@@ -1647,7 +1676,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	html += {"
 		
 		<h2 style='color: [theme["text"]]; padding: 0 20px; margin: 20px 0 10px 0; border-bottom: 1px solid [theme["border"]]; padding-bottom: 10px;'>Vice Selection</h2>
-		<p style='color: [theme["label"]]; padding: 0 20px; margin: 0 0 15px 0; font-size: 0.9em;'>Select up to 8 vices (at least 1 required). Each selected vice grants +1 point and unlocks more feat selections.</p>			<div class="vices-grid">
+		<p style='color: [theme["label"]]; padding: 0 20px; margin: 0 0 15px 0; font-size: 0.9em;'>Select up to 8 vices (at least 1 required).</p>			<div class="vices-grid">
 	"}
 	
 	// Generate 8 vice slots
@@ -2109,12 +2138,12 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			open_vices_menu(usr)
 			return
 		
-		if(action == "reset_all")
-			if(tgalert(usr, "This will reset ALL virtues, vices, loadouts and languages to their default states. This cannot be undone. Are you sure?", "Reset Confirmation", "Yes", "No") != "Yes")
+		if(action == "reset_virtues_vices")
+			if(tgalert(usr, "This will reset ALL virtues and vices to their default states. This cannot be undone. Are you sure?", "Reset Virtues/Vices", "Yes", "No") != "Yes")
 				return
 			save_to_history()
 			reset_virtues_and_vices()
-			to_chat(usr, span_boldwarning("All virtues, vices, loadouts and languages have been reset to default."))
+			to_chat(usr, span_boldwarning("All virtues and vices have been reset to default."))
 			open_vices_menu(usr)
 			return
 		
@@ -2579,6 +2608,16 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 	
 	if(href_list["loadout_action"])
 		var/action = href_list["loadout_action"]
+		
+		if(action == "reset_loadout_languages")
+			if(tgalert(usr, "This will reset ALL loadout items and languages to their default states. This cannot be undone. Are you sure?", "Reset Loadout/Languages", "Yes", "No") != "Yes")
+				return
+			save_to_history()
+			reset_loadout_and_languages()
+			to_chat(usr, span_boldwarning("All loadout items and languages have been reset to default."))
+			open_vices_menu(usr)
+			return
+		
 		var/slot = text2num(href_list["slot"])
 		
 		if(!slot || slot < 1 || slot > 10)
