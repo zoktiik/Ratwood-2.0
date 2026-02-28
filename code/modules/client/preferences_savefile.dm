@@ -614,6 +614,9 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		origin_items = null
 	if(!LAZYLEN(feats))
 		feats = null
+	
+	// Sanitize virtue lists to remove any null or invalid entries
+	sanitize_virtue_lists()
 
 /datum/preferences/proc/_load_loadout(S)
 	var/loadout_type

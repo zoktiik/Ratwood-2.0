@@ -5,7 +5,7 @@
 	name = "Giant"
 	desc = "I've always been larger, stronger and hardier than the average person. I tend to lumber around a lot, and my immense size can break down frail, wooden doors."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 5
 	added_traits = list(TRAIT_BIGGUY, TRAIT_DEATHBYSNUSNU)
 	custom_text = "Increases your sprite size."
 
@@ -24,7 +24,7 @@
 	name = "Arcyne Potential"
 	desc = "I am talented in the Arcyne arts, expanding my capacity for magic. I have become more intelligent from its studies. Other effects depends on what training I chose to focus on at a later age."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 5
 	custom_text = "Classes that has a combat trait (Medium / Heavy Armor Training, Dodge Expert or Critical Resistance) get only prestidigitation. Everyone else get +3 spellpoints and T1 Arcyne Potential if they don't have any Arcyne."
 	added_skills = list(list(/datum/skill/magic/arcane, 1, 6))
 
@@ -42,7 +42,7 @@
 	name = "Devotee"
 	desc = "Though not officially of the Church, my relationship with my chosen Patron is strong enough to grant me the most minor of their blessings. I've also kept a psycross of my deity."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 5
 	custom_text = "You gain access to T0 miracles of your patron. As a non-combat role you also receive a minor passive devotion gain. If you already have access to Miracles, you get slightly increased passive devotion gain."
 
 	added_skills = list(list(/datum/skill/magic/holy, 1, 6))
@@ -92,14 +92,14 @@
 	name = "Acrobatic"
 	desc = "I have powerful legs, allowing me to land precisely where I want to, even with a running start."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 5
 	added_traits = list(TRAIT_LEAPER)
 
 /datum/virtue/movement/equestrian
 	name = "Equestrian"
 	desc = "My mount understands me. We've worked together as one on our difficult journey. I can navigate through doors and other small gaps without getting thrown off my saddle."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 5
 	added_skills = list(list(/datum/skill/misc/riding, 1, 6))
 	added_traits = list(TRAIT_EQUESTRIAN)
 	added_stashed_items = list("Saddle" = /obj/item/natural/saddle)
@@ -146,14 +146,14 @@
 	name = "Deadened"
 	desc = "Some terrible incident colours my past, and now, I feel nothing."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 5
 	added_traits = list(TRAIT_NOMOOD)
 
 /datum/virtue/utility/light_steps
 	name = "Light Steps"
 	desc = "Years of skulking about have left my steps quiet, and my hunched gait quicker."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 5
 	added_traits = list(TRAIT_LIGHT_STEP)
 	added_skills = list(list(/datum/skill/misc/sneaking, 3, 6))
 
@@ -215,7 +215,7 @@
 	name = "Failed Squire"
 	desc = "I was once a squire in training, but failed to achieve knighthood. Though my dreams of glory were dashed, I retained my knowledge of equipment maintenance and repair, including how to polish arms and armor."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	added_traits = list(TRAIT_SQUIRE_REPAIR)
 	added_stashed_items = list(
 		"Hammer" = /obj/item/rogueweapon/hammer/iron,
@@ -231,7 +231,7 @@
 	name = "Intellectual"
 	desc = "I've spent my life surrounded by various books or sophisticated foreigners, be it through travel or other fortunes beset on my life. I've picked up several tongues and wits, and keep a journal closeby. I can tell people's exact prowess."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	custom_text = "Maximizes Assess benefits with a bonus of the target's Stats. Allows the choice of 3 languages to learn upon joining. +1 INT."
 	added_traits = list(TRAIT_INTELLECTUAL)
 	added_skills = list(list(/datum/skill/misc/reading, 3, 6))
@@ -288,7 +288,7 @@
 	name = "Deathless"
 	desc = "Some fell magick has rendered me inwardly unliving - I do not hunger, and I do not breathe."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 10
 	added_traits = list(TRAIT_NOHUNGER, TRAIT_NOBREATH)
 
 /datum/virtue/utility/deathless/handle_traits(mob/living/carbon/human/recipient)
@@ -314,7 +314,7 @@
 	name = "Night-eyed"
 	desc = "I have eyes able to see through cloying darkness. Incompatible with the vice Colorblind."
 	category = "feats"
-	virtue_cost = 4
+	virtue_cost = 5
 	added_traits = list(TRAIT_DARKVISION)
 	custom_text = "Adds a button to toggle colorblindness to aid seeing in the dark. Taking this with the Colorblind vice will permanently colorblind you."
 
@@ -370,7 +370,7 @@
 	name = "Second Voice"
 	desc = "From performance, deception, or by a need to change yourself in uncanny ways, you've acquired a second, perfect voice. You may switch between them at any point."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 2
 	custom_text = "Grants access to a new 'Memory' tab. It will have the options for setting and changing your voice."
 
 /datum/virtue/utility/secondvoice/apply_to_human(mob/living/carbon/human/recipient)
@@ -381,7 +381,7 @@
 	name = "Keen Ears"
 	desc = "Cowering from authorities, loved ones or by a generous gift of the gods, you've adapted a keen sense of hearing, and can identify the speakers even when they are out of sight, their whispers ringing louder."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 4
 	added_traits = list(TRAIT_KEENEARS)
 	custom_text = "You can identify known people who speak even when they are out of sight. You can hear people speaking normally above and below you, regardless of obstacles in the way. You can hear whispers from one tile further."
 
@@ -389,7 +389,7 @@
 	name = "Sleuth"
 	desc = "You realised long ago that the ability to find a man is as helpful to aid the law as it is to evade it."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 3
 	added_skills = list(list(/datum/skill/misc/tracking, 3, 6))
 	added_traits = list(TRAIT_SLEUTH)
 	custom_text = "- Upon right clicking a track, you will Mark the person who made them <i>(Expert skill required, not exclusive to this Virtue)</i>.\n- Further tracks found will be automatically highlighted as theirs, along with the person themselves, if they are not sneaking or invisible at the time.\n- Reduces the cooldown for tracking, allows track examining right away, and movement no longer cancels tracking."
@@ -401,7 +401,7 @@
 	name = "Woodwalker"
 	desc = "After years of training in the wilds, I've learned to traverse the woods confidently, without breaking any twigs. I can even step lightly on leaves without falling, and I can gather twice as many things from bushes."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 10
 	added_traits = list(TRAIT_WOODWALKER, TRAIT_OUTDOORSMAN)
 
 /datum/virtue/heretic/zchurch_keyholder
@@ -431,7 +431,7 @@
 	name = "Dust Runner"
 	desc = "I run dust for the Thieves' Guild, and an associate has left a delivery in my stash nearby for me to pick up."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 4
 	added_stashed_items = list("Satchel #1" = /obj/item/storage/backpack/rogue/satchel/mule,
 							"Satchel #2" = /obj/item/storage/backpack/rogue/satchel/mule,
 							"Dagger" = /obj/item/rogueweapon/huntingknife/idagger
@@ -442,7 +442,7 @@
 	name = "Larcenous"
 	desc = "Whether it was asked of you, or by a calling for the rush deep within your hollow heart, you seek things that don't belong you. You know how to work a lock, and have stashed a ring of them, for just the occasion."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 4
 	added_stashed_items = list("Lockpick Ring" = /obj/item/lockpickring/mundane)
 	added_skills = list(list(/datum/skill/misc/lockpicking, 3, 6))
 
@@ -450,7 +450,7 @@
 	name = "Cunning Provisioner"
 	desc = "You've worked in or around the docks enough to steal away a sack of supplies that no one would surely miss, just in case. You've picked up on some cooking and fishing tips in your spare time, as well."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 6
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
 	added_stashed_items = list("Bag of Food" = /obj/item/storage/roguebag/food)
 	added_skills = list(list(/datum/skill/craft/cooking, 3, 6),
@@ -460,7 +460,7 @@
 	name = "Forester"
 	desc = "The forest is your home, or at least, it used to be. You always long to return and roam free once again, and you have not forgotten your knowledge on how to be self sufficient."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 6
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
 	added_stashed_items = list("Trusty hoe" = /obj/item/rogueweapon/hoe)
 	added_skills = list(list(/datum/skill/craft/cooking, 2, 2),
@@ -474,7 +474,7 @@
 	name = "Pilgrim"
 	desc= "As they say, 'hearth is where the heart is'. You are intimately familiar with the labors of lyfe, and have stowed away everything necessary to start anew: a hunting dagger, your trusty hoe, and a sack of assorted supplies."
 	category = "feats"
-	virtue_cost = 1
+	virtue_cost = 6
 	added_traits = list(TRAIT_HOMESTEAD_EXPERT)
 	added_stashed_items = list(
 		"Hoe" = /obj/item/rogueweapon/hoe,
@@ -493,7 +493,7 @@
 	name = "Rich and Shrewd"
 	desc = "Through a stroke of luck or shrewd planning, I've come into a considerable amount of mammon. I can tell the value of those I speak to, and what they offer. I've also stowed away some coinage for a rainy dae."
 	category = "feats"
-	virtue_cost = 2
+	virtue_cost = 4
 	added_traits = list(TRAIT_SEEPRICES)
 	added_skills = list(list(/datum/skill/misc/reading, 1, 6))	//So the spell would work
 	custom_text = "Grants Secular Appraise -- a spell that allows you to tell how much wealth someone has on them, and in their Nervelock."
@@ -759,32 +759,110 @@
 			H.remove_stress(/datum/stressevent/vice/astrata_scorched)
 */
 
-/datum/virtue/unique/death_whisper
-	name = "Death's Whisper"
-	desc = "I can feel when death claims someone nearby or their souls. The Undermaiden's presence whispers to me, though I cannot see how."
-	virtue_cost = 2
-	added_traits = list(TRAIT_DEATHSIGHT, TRAIT_SOUL_EXAMINE)
-
 /datum/virtue/unique/venomous_nature
 	name = "Venomous Nature"
 	desc = "My body produces a natural venom. When I bite and chew on someone, I inject them with poison. I am partially resistant to toxins myself."
-	virtue_cost = 2
+	virtue_cost = 5
 	added_traits = list(TRAIT_VENOMOUS, TRAIT_TOXRESIST)
 
 /datum/virtue/unique/waterborn
 	name = "Waterborn"
 	desc = "I was born of the deeps. I can breathe underwater and swim with far less fatigue than others."
-	virtue_cost = 2
+	virtue_cost = 5
 	added_traits = list(TRAIT_WATERBREATHING, TRAIT_ABYSSOR_SWIM)
 
 /datum/virtue/unique/feral_instincts
 	name = "Feral Instincts"
 	desc = "I was born with bestial traits - sharp claws and fangs. I can extend and retract my claws at will, and my bite is more effective than most. My effectiveness depends on my unarmed combat skill."
-	virtue_cost = 4
-	added_traits = list(TRAIT_FERAL_CLAWS, TRAIT_FERAL_BITE)
+	virtue_cost = 5
+	added_traits = list(TRAIT_FERAL_BITE)
 
 /datum/virtue/unique/feral_instincts/apply_to_human(mob/living/carbon/human/recipient)
 	. = ..()
 	// Grant the claw spell ability
-	var/obj/effect/proc_holder/spell/self/claws/feral/claw_ability = new(recipient)
+	var/obj/effect/proc_holder/spell/self/feral_claws/claw_ability = new(recipient)
 	recipient.mind.AddSpell(claw_ability)
+
+// Crafter Feats - Apprenticeships that grant crafting expertise
+
+/datum/virtue/utility/blacksmith/trait
+	name = "Blacksmith's Apprentice"
+	desc = "In my youth, I worked under a skilled blacksmith, honing my skills with an anvil."
+	category = "feats"
+	virtue_cost = 6
+	added_traits = list(TRAIT_SMITHING_EXPERT)
+	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
+						list(/datum/skill/craft/weaponsmithing, 2, 2),
+						list(/datum/skill/craft/armorsmithing, 2, 2),
+						list(/datum/skill/craft/blacksmithing, 2, 2),
+						list(/datum/skill/craft/smelting, 2, 2))
+
+/datum/virtue/utility/tailor/trait
+	name = "Tailor's Apprentice"
+	desc = "In my youth, I worked under a skilled tailor, studying fabric and design."
+	category = "feats"
+	virtue_cost = 6
+	added_traits = list(TRAIT_SEWING_EXPERT)
+	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
+						list(/datum/skill/labor/butchering, 2, 2),
+						list(/datum/skill/craft/sewing, 2, 2),
+						list(/datum/skill/craft/tanning, 2, 2))
+	added_stashed_items = list(
+		"Needle" = /obj/item/needle,
+		"Scissors" = /obj/item/rogueweapon/huntingknife/scissors)
+
+/datum/virtue/utility/physician/trait
+	name = "Physician's Apprentice"
+	desc = "In my youth, I worked under a skilled physician, studying medicine and alchemy."
+	category = "feats"
+	virtue_cost = 6
+	added_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT)
+	added_stashed_items = list("Medicine Pouch" = /obj/item/storage/belt/rogue/pouch/medicine)
+	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
+						list(/datum/skill/craft/alchemy, 2, 2),
+						list(/datum/skill/misc/medicine, 2, 2))
+
+/datum/virtue/utility/physician/apply_to_human(mob/living/carbon/human/recipient)
+	if(!recipient.mind?.has_spell(/obj/effect/proc_holder/spell/invoked/diagnose/secular))
+		recipient.mind?.AddSpell(new /obj/effect/proc_holder/spell/invoked/diagnose/secular)
+
+/datum/virtue/utility/hunter/trait
+	name = "Hunter's Apprentice"
+	desc = "In my youth, I trained under a skilled hunter, learning how to butcher animals and work with leather/hide."
+	category = "feats"
+	virtue_cost = 6
+	added_traits = list(TRAIT_SURVIVAL_EXPERT)
+	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
+						list(/datum/skill/craft/traps, 2, 2),
+						list(/datum/skill/labor/butchering, 2, 2),
+						list(/datum/skill/craft/sewing, 2, 2),
+						list(/datum/skill/craft/tanning, 2, 2),
+						list(/datum/skill/misc/tracking, 2, 2))
+
+/datum/virtue/utility/artificer/trait
+	name = "Artificer's Apprentice"
+	desc = "In my youth, I worked under a skilled artificer, studying construction and engineering."
+	category = "feats"
+	virtue_cost = 6
+	added_traits = list(TRAIT_SMITHING_EXPERT)
+	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
+						list(/datum/skill/craft/carpentry, 2, 2),
+						list(/datum/skill/craft/masonry, 2, 2),
+						list(/datum/skill/craft/engineering, 2, 2),
+						list(/datum/skill/craft/smelting, 2, 2),
+						list(/datum/skill/craft/ceramics, 2, 2))
+	added_stashed_items = list(
+		"Hammer" = /obj/item/rogueweapon/hammer/wood,
+		"Chisel" = /obj/item/rogueweapon/chisel,
+		"Hand Saw" = /obj/item/rogueweapon/handsaw)
+
+/datum/virtue/utility/mining/trait
+	name = "Miner's Apprentice"
+	desc = "The dark shafts, the damp smells of ichor and the laboring hours are no stranger to me. I keep my pickaxe and lamptern close, and have been taught how to mine well."
+	category = "feats"
+	virtue_cost = 6
+	added_traits = list(TRAIT_SMITHING_EXPERT)
+	added_stashed_items = list(
+		"Steel Pickaxe" = /obj/item/rogueweapon/pick/steel,
+		"Lamptern" = /obj/item/flashlight/flare/torch/lantern)
+	added_skills = list(list(/datum/skill/labor/mining, 3, 6))

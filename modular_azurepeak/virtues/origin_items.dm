@@ -8,7 +8,7 @@
 	category = "origin_items"
 	virtue_cost = 2
 	added_stashed_items = list(
-		"Needle" = /obj/item/needle,
+		"Thorn Needle" = /obj/item/needle/thorn,
 		"Scissors" = /obj/item/rogueweapon/huntingknife/scissors
 	)
 
@@ -25,7 +25,7 @@
 	category = "origin_items"
 	virtue_cost = 2
 	added_stashed_items = list(
-		"Hammer" = /obj/item/rogueweapon/hammer/wood,
+		"Wooden Hammer" = /obj/item/rogueweapon/hammer/wood,
 		"Chisel" = /obj/item/rogueweapon/chisel,
 		"Hand Saw" = /obj/item/rogueweapon/handsaw
 	)
@@ -36,7 +36,7 @@
 	category = "origin_items"
 	virtue_cost = 2
 	added_stashed_items = list(
-		"Steel Pickaxe" = /obj/item/rogueweapon/pick/steel,
+		"Iron Pickaxe" = /obj/item/rogueweapon/pick,
 		"Lamptern" = /obj/item/flashlight/flare/torch/lantern
 	)
 
@@ -47,22 +47,11 @@
 	virtue_cost = 2
 	added_stashed_items = list("Lockpick Ring" = /obj/item/lockpickring/mundane)
 
-/datum/virtue/origin_items/farmers_hoe
-	name = "Farmer's Kit"
-	desc = "I've kept my farming tools and some seeds to start fresh."
-	category = "origin_items"
-	virtue_cost = 2
-	added_stashed_items = list(
-		"Trusty Hoe" = /obj/item/rogueweapon/hoe,
-		"Wheat Seeds" = /obj/item/seeds/wheat,
-		"Waterskin" = /obj/item/reagent_containers/glass/bottle/rogue/water
-	)
-
 /datum/virtue/origin_items/hunting_knife
 	name = "Hunter's Kit"
 	desc = "My hunting knife, rope for trapping, and a waterskin for long treks."
 	category = "origin_items"
-	virtue_cost = 2
+	virtue_cost = 3
 	added_stashed_items = list(
 		"Hunting Knife" = /obj/item/rogueweapon/huntingknife,
 		"Rope" = /obj/item/rope,
@@ -71,27 +60,16 @@
 
 /datum/virtue/origin_items/coinpurse
 	name = "Weighty Coinpurse"
-	desc = "Through luck or thrift, I've managed to save a considerable sum."
+	desc = "Through luck or thrift, I've managed to save a mild sum."
 	category = "origin_items"
 	virtue_cost = 3
-	added_stashed_items = list("Weighty Coinpurse" = /obj/item/storage/belt/rogue/pouch/coins/virtuepouch)
-
-/datum/virtue/origin_items/family_heirloom
-	name = "Noble's Regalia"
-	desc = "Precious family heirlooms: an ornate amulet, signet ring, and fine gloves."
-	category = "origin_items"
-	virtue_cost = 3
-	added_stashed_items = list(
-		"Heirloom Amulet" = /obj/item/clothing/neck/roguetown/ornateamulet/noble,
-		"Signet Ring" = /obj/item/clothing/ring/signet,
-		"Fine Gloves" = /obj/item/clothing/gloves/roguetown/eastgloves2
-	)
+	added_stashed_items = list("Weighty Coinpurse" = /obj/item/storage/belt/rogue/pouch/coins/mid)
 
 /datum/virtue/origin_items/firebombs
 	name = "Volatile Mixtures"
 	desc = "I've stashed away two dangerous firebombs."
 	category = "origin_items"
-	virtue_cost = 2
+	virtue_cost = 3
 	added_stashed_items = list(
 		"Firebomb #1" = /obj/item/bomb,
 		"Firebomb #2" = /obj/item/bomb
@@ -101,7 +79,7 @@
 	name = "Squire's Tools"
 	desc = "My hammer and polishing tools from my failed knighthood training."
 	category = "origin_items"
-	virtue_cost = 3
+	virtue_cost = 5
 	added_stashed_items = list(
 		"Hammer" = /obj/item/rogueweapon/hammer/iron,
 		"Polishing Cream" = /obj/item/polishing_cream,
@@ -135,7 +113,7 @@
 	name = "Rider's Equipment"
 	desc = "My riding equipment: a saddle, rope for tethering, and provisions."
 	category = "origin_items"
-	virtue_cost = 2
+	virtue_cost = 3
 	added_stashed_items = list(
 		"Saddle" = /obj/item/natural/saddle,
 		"Rope" = /obj/item/rope,
@@ -146,7 +124,7 @@
 	name = "Thief's Arsenal"
 	desc = "Satchels for contraband and a concealed dagger."
 	category = "origin_items"
-	virtue_cost = 2
+	virtue_cost = 5
 	added_stashed_items = list(
 		"Satchel #1" = /obj/item/storage/backpack/rogue/satchel/mule,
 		"Satchel #2" = /obj/item/storage/backpack/rogue/satchel/mule,
@@ -158,7 +136,7 @@
 	name = "Pilgrim's Bundle"
 	desc = "Everything needed to start anew: a hoe, food, and a knife."
 	category = "origin_items"
-	virtue_cost = 2
+	virtue_cost = 3
 	added_stashed_items = list(
 		"Hoe" = /obj/item/rogueweapon/hoe,
 		"Bag of Food" = /obj/item/storage/roguebag/food,

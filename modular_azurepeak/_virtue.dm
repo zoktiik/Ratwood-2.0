@@ -23,6 +23,11 @@ GLOBAL_LIST_EMPTY(virtues)
 	var/virtue_cost = 0
 	/// A custom addendum that explains what the virtue does outside of the traits / skill adjustments.
 	var/custom_text
+	/// List of feat type paths that this origin blocks from being selected. Supports both specific types and general parent paths.
+	/// Example: list(/datum/virtue/utility/blacksmith) blocks only that feat, list(/datum/virtue/combat) blocks all combat feats
+	var/list/blocked_feats = list()
+	/// List of origin item type paths that this origin blocks from being selected. Supports both specific types and general parent paths.
+	var/list/blocked_items = list()
 
 /datum/virtue/New()
 	. = ..()

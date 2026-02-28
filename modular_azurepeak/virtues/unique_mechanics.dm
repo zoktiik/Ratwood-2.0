@@ -8,51 +8,46 @@
 // ============================================
 
 // Weaker version of werewolf claws
-/obj/effect/proc_holder/spell/self/claws/feral
-	name = "feral claws"
-	desc = "Extend or retract my natural claws."
+
+/obj/item/rogueweapon/wolf_claw/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, TRAIT_GENERIC)
+	ADD_TRAIT(src, TRAIT_NOEMBED, TRAIT_GENERIC)
+
+// WOLF SPELLS //
+/obj/effect/proc_holder/spell/self/feral_claws
+	name = "Feral Claws"
+	desc = "!"
 	overlay_state = "claws"
 	antimagic_allowed = TRUE
-	recharge_time = 20 // 2 seconds
+	recharge_time = 20 //2 seconds
 	ignore_cockblock = TRUE
+	var/extended = FALSE
 
-/obj/effect/proc_holder/spell/self/claws/feral/cast(list/targets, mob/user)
-	. = ..()
-	var/list/current_hands = list(FALSE, FALSE)
-	current_hands[LEFT_HANDS] = user.get_item_for_held_index(LEFT_HANDS)
-	current_hands[RIGHT_HANDS] = user.get_item_for_held_index(RIGHT_HANDS)
-	var/extending_claws = FALSE
-	
-	if(!(current_hands[LEFT_HANDS] || !user.has_hand_for_held_index(LEFT_HANDS)) || !(current_hands[RIGHT_HANDS] || !user.has_hand_for_held_index(RIGHT_HANDS)))
-		extending_claws = TRUE
-	
-	for(var/hand_index = 1, hand_index < 3, hand_index++)
-		var/current_item = current_hands[hand_index]
-		if(extending_claws)
-			if(current_hands[hand_index])
-				continue
-			if(!user.has_hand_for_held_index(hand_index))
-				continue
-			var/new_claw
-			if(hand_index == LEFT_HANDS)
-				new_claw = new /obj/item/rogueweapon/feral_claw/left(user)
-				user.put_in_l_hand(new_claw)
-				extended_claw_record[LEFT_HANDS] = new_claw
-			else
-				new_claw = new /obj/item/rogueweapon/feral_claw/right(user)
-				user.put_in_r_hand(new_claw)
-				extended_claw_record[RIGHT_HANDS] = new_claw
-			RegisterSignal(new_claw, COMSIG_QDELETING, PROC_REF(clear_claw_entry))
-			continue
-		
-		var/claw_entry = extended_claw_record[hand_index]
-		if(istype(current_item, claw_type))
-			if(!claw_entry)
-				log_runtime("[user] had a feral claw that wasn't being tracked: [current_item]")
-			user.temporarilyRemoveItemFromInventory(I = current_item, force = TRUE)
-			qdel(current_item)
-		extended_claw_record[hand_index] = FALSE		
-	return TRUE
+/obj/effect/proc_holder/spell/self/feral_claws/cast(mob/user = usr)
+	..()
+	var/obj/item/rogueweapon/feral_claw/left/l
+	var/obj/item/rogueweapon/feral_claw/right/r
+
+	l = user.get_active_held_item()
+	r = user.get_inactive_held_item()
+	if(extended)
+		if(istype(l, /obj/item/rogueweapon/feral_claw))
+			user.dropItemToGround(l, TRUE)
+			qdel(l)
+		if(istype(r, /obj/item/rogueweapon/feral_claw))
+			user.dropItemToGround(r, TRUE)
+			qdel(r)
+		//user.visible_message("Your claws retract.", "You feel your claws retracting.", "You hear a sound of claws retracting.")
+		extended = FALSE
+	else
+		l = new(user,1)
+		r = new(user,2)
+		user.put_in_hands(l, TRUE, FALSE, TRUE)
+		user.put_in_hands(r, TRUE, FALSE, TRUE)
+		//user.visible_message("Your claws extend.", "You feel your claws extending.", "You hear a sound of claws extending.")
+		extended = TRUE
+
 
 // Weaker feral claw weapon (compared to werewolf)
 /obj/item/rogueweapon/feral_claw

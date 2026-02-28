@@ -7,7 +7,7 @@
 	name = "Guarded"
 	desc = "I have long kept my true capabilities and vices a secret. Sometimes being deceptively weak can save one's lyfe."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 10
 	custom_text = "Obfuscates information about you from all sorts of effects, including patron abilities & passives, Assess and other virtues."
 	added_traits = list(TRAIT_DECEIVING_MEEKNESS)
 
@@ -32,21 +32,21 @@
 	name = "Dual Wielder"
 	desc = "Whether it was by the Naledi scholars, Etruscan privateers or even the Kazengan senseis. I've been graced with the knowledge of how to wield two weapons at once."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	added_traits = list(TRAIT_DUALWIELDER)
 
 /datum/virtue/combat/sharp
 	name = "Sentinel of Wits"
 	desc = "Whether it's by having an annoying sibling that kept prodding me with a stick, or years of study and observation, I've become adept at both parrying and dodging stronger opponents, by learning their moves and studying them."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	added_traits = list(TRAIT_SENTINELOFWITS)
 
 /datum/virtue/combat/combat_aware
 	name = "Combat Aware"
 	desc = "The opponent's flick of their wrist. The sound of maille snapping. The desperate breath as the opponent's stamina wanes. All of this is made more clear to you through intuition or experience."
 	category = "feats"
-	virtue_cost = 5
+	virtue_cost = 10
 	custom_text = "Shows a lot more combat information via floating text. Has a toggle."
 	added_traits = list(TRAIT_COMBAT_AWARE)
 
@@ -57,7 +57,7 @@
 	name = "Natural Armor"
 	desc = "Whether by natural means or other means, my skin is strong enough to resist being pierced and cut."
 	category = "feats"
-	virtue_cost = 3
+	virtue_cost = 5
 	custom_text = "This will replace your SHIRT slot with a regenerating, unremoveable armor."
 
 /datum/virtue/combat/tough_hide/apply_to_human(mob/living/carbon/human/recipient)

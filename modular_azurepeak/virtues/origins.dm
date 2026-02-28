@@ -1,11 +1,19 @@
-// Origins virtues - represent your formative years and early training
-// These unlock crafter traits and provide foundational skills
+
 /datum/virtue/utility/blacksmith
 	name = "Forged in Fire"
 	desc = "In my youth, I worked under a skilled blacksmith, learning the ways of the forge and anvil."
 	category = "origin"
-	virtue_cost = 4
-	added_traits = list(TRAIT_SMITHING_EXPERT)
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
 						list(/datum/skill/craft/weaponsmithing, 2, 2),
 						list(/datum/skill/craft/armorsmithing, 2, 2),
@@ -17,8 +25,17 @@
 	name = "Needlework and Thread"
 	desc = "In my youth, I worked under a skilled tailor, learning to work with fabric and leather."
 	category = "origin"
-	virtue_cost = 4
-	added_traits = list(TRAIT_SEWING_EXPERT)
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
 						list(/datum/skill/labor/butchering, 2, 2),
 						list(/datum/skill/craft/sewing, 2, 2),
@@ -29,8 +46,17 @@
 	name = "Healer's Education"
 	desc = "In my youth, I studied under a skilled physician, learning the arts of medicine and alchemy."
 	category = "origin"
-	virtue_cost = 4
-	added_traits = list(TRAIT_MEDICINE_EXPERT, TRAIT_ALCHEMY_EXPERT)
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
 						list(/datum/skill/craft/alchemy, 2, 2),
 						list(/datum/skill/misc/medicine, 2, 2)
@@ -45,8 +71,17 @@
 	name = "Tracker's Tutelage"
 	desc = "In my youth, I trained under a skilled hunter, learning to track game and work with hides."
 	category = "origin"
-	virtue_cost = 4
-	added_traits = list(TRAIT_SURVIVAL_EXPERT)
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
 						list(/datum/skill/craft/traps, 2, 2),
 						list(/datum/skill/labor/butchering, 2, 2),
@@ -59,8 +94,17 @@
 	name = "Builder's Foundation"
 	desc = "In my youth, I worked under a skilled artificer, learning construction and engineering."
 	category = "origin"
-	virtue_cost = 4
-	added_traits = list(TRAIT_SMITHING_EXPERT)
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(list(/datum/skill/craft/crafting, 2, 2),
 						list(/datum/skill/craft/carpentry, 2, 2),
 						list(/datum/skill/craft/masonry, 2, 2),
@@ -73,22 +117,38 @@
 	name = "Deep Delver"
 	desc = "In my youth, I worked the dark shafts and learned the miner's craft in the depths."
 	category = "origin"
-	virtue_cost = 4
-	added_traits = list(TRAIT_SMITHING_EXPERT)
-	added_skills = list(list(/datum/skill/labor/mining, 3, 6),
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
+	added_skills = list(list(/datum/skill/labor/mining, 2, 2),
 						list(/datum/skill/craft/smelting, 2, 2),
 						list(/datum/skill/craft/crafting, 2, 2)
 	)
 
 
-// Broader origin experiences - provide diverse skill sets without specialization
-// Max skill level is Apprentice (level 2)
-
 /datum/virtue/utility/survivalist_novice
 	name = "Wilderness Child"
 	desc = "I grew up in the wilds, learning to survive off the land through hunting, tracking, fishing, and trapping."
 	category = "origin"
-	virtue_cost = 2
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(
 		list(/datum/skill/misc/tracking, 2, 2),
 		list(/datum/skill/labor/butchering, 2, 2),
@@ -98,10 +158,6 @@
 		list(/datum/skill/combat/slings, 2, 2),
 		list(/datum/skill/craft/crafting, 2, 2),
 		list(/datum/skill/craft/cooking, 2, 2),
-		list(/datum/skill/labor/lumberjacking, 2, 2),
-		list(/datum/skill/misc/climbing, 2, 2),
-		list(/datum/skill/misc/swimming, 2, 2),
-		list(/datum/skill/misc/sneaking, 2, 2),
 		list(/datum/skill/misc/medicine, 2, 2)
 	)
 
@@ -109,27 +165,43 @@
 	name = "Farmstead Youth"
 	desc = "I grew up on a homestead, learning farming, cooking, woodcutting, and the daily labors of self-sufficiency."
 	category = "origin"
-	virtue_cost = 2
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(
 		list(/datum/skill/labor/farming, 2, 2),
 		list(/datum/skill/craft/cooking, 2, 2),
 		list(/datum/skill/labor/lumberjacking, 2, 2),
-		list(/datum/skill/misc/lockpicking, 2, 2),
-		list(/datum/skill/misc/climbing, 2, 2),
 		list(/datum/skill/misc/athletics, 2, 2),
 		list(/datum/skill/labor/fishing, 2, 2),
 		list(/datum/skill/craft/masonry, 2, 2),
 		list(/datum/skill/craft/carpentry, 2, 2),
-		list(/datum/skill/craft/crafting, 2, 2),
-		list(/datum/skill/combat/maces, 2, 2),
-		list(/datum/skill/combat/axes, 2, 2)
+		list(/datum/skill/craft/crafting, 2, 2)
 	)
 
 /datum/virtue/utility/artisan_novice
 	name = "Workshop Upbringing"
 	desc = "I grew up in a workshop, learning the fundamentals of working with metal, fabric, and clay."
 	category = "origin"
-	virtue_cost = 2
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(
 		list(/datum/skill/craft/crafting, 2, 2),
 		list(/datum/skill/craft/blacksmithing, 2, 2),
@@ -146,7 +218,17 @@
 	name = "Infirmary Raised"
 	desc = "I grew up around healers, learning the basics of medicine, alchemy, and tending to the sick."
 	category = "origin"
-	virtue_cost = 2
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(
 		list(/datum/skill/misc/medicine, 2, 2),
 		list(/datum/skill/craft/alchemy, 2, 2),
@@ -154,7 +236,7 @@
 		list(/datum/skill/craft/crafting, 2, 2),
 		list(/datum/skill/craft/sewing, 2, 2),
 		list(/datum/skill/craft/cooking, 2, 2),
-		list(/datum/skill/combat/knives, 2, 2),,
+		list(/datum/skill/combat/knives, 2, 2),
 		list(/datum/skill/labor/farming, 2, 2)
 	)
 
@@ -162,7 +244,17 @@
 	name = "Back-Alley Vagabond"
 	desc = "I grew up on gutters and back roads, surviving by quick hands, quicker feet, and knowing when to vanish from sight."
 	category = "origin"
-	virtue_cost = 2
+	virtue_cost = 3
+	blocked_feats = list(/datum/virtue/utility/artificer/trait,
+		/datum/virtue/utility/blacksmith/trait,
+		/datum/virtue/utility/tailor/trait,
+		/datum/virtue/utility/physician/trait,
+		/datum/virtue/utility/hunter/trait,
+		/datum/virtue/utility/mining/trait,
+		/datum/virtue/utility/homesteader,
+		/datum/virtue/utility/forester,
+		/datum/virtue/utility/granary
+	)
 	added_skills = list(
 		list(/datum/skill/misc/stealing, 2, 2),
 		list(/datum/skill/misc/lockpicking, 2, 2),

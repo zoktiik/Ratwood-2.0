@@ -376,25 +376,29 @@
 	var/total = 0
 	
 	// Count origin virtue
-	if(origin_virtue && origin_virtue.virtue_cost)
+	if(origin_virtue && istype(origin_virtue, /datum/virtue) && origin_virtue.virtue_cost)
 		total += origin_virtue.virtue_cost
 	
-	// Count origin items
+	// Count origin items (with null filtering)
 	if(LAZYLEN(origin_items))
 		for(var/datum/virtue/V in origin_items)
-			if(V && V.virtue_cost)
+			if(!V || !istype(V, /datum/virtue))
+				continue
+			if(V.virtue_cost)
 				total += V.virtue_cost
 	
-	// Count feats
+	// Count feats (with null filtering)
 	if(LAZYLEN(feats))
 		for(var/datum/virtue/V in feats)
-			if(V && V.virtue_cost)
+			if(!V || !istype(V, /datum/virtue))
+				continue
+			if(V.virtue_cost)
 				total += V.virtue_cost
 	
 	// Count legacy virtues for backwards compatibility
-	if(virtue && virtue.virtue_cost)
+	if(virtue && istype(virtue, /datum/virtue) && virtue.virtue_cost)
 		total += virtue.virtue_cost
-	if(virtuetwo && virtuetwo.virtue_cost)
+	if(virtuetwo && istype(virtuetwo, /datum/virtue) && virtuetwo.virtue_cost)
 		total += virtuetwo.virtue_cost
 	
 	return total
@@ -419,6 +423,86 @@
 			// Can select up to max_feats based on vices
 			return LAZYLEN(feats) < get_max_feats()
 	return FALSE
+
+/// Sanitize virtue lists by removing null or invalid entries
+/datum/preferences/proc/sanitize_virtue_lists()
+	var/changed = FALSE
+	
+	// Clean origin_items
+	if(LAZYLEN(origin_items))
+		var/list/cleaned_items = list()
+		for(var/datum/virtue/V in origin_items)
+			if(V && istype(V, /datum/virtue))
+				cleaned_items += V
+			else
+				changed = TRUE
+		origin_items = cleaned_items.len ? cleaned_items : null
+	
+	// Clean feats
+	if(LAZYLEN(feats))
+		var/list/cleaned_feats = list()
+		for(var/datum/virtue/V in feats)
+			if(V && istype(V, /datum/virtue))
+				cleaned_feats += V
+			else
+				changed = TRUE
+		feats = cleaned_feats.len ? cleaned_feats : null
+	
+	// Validate origin_virtue
+	if(origin_virtue && !istype(origin_virtue, /datum/virtue))
+		origin_virtue = null
+		changed = TRUE
+	
+	return changed
+
+/// Reset all virtues and vices to default state
+/datum/preferences/proc/reset_virtues_and_vices()
+	// Clear new virtue system
+	origin_virtue = null
+	origin_items = null
+	feats = null
+	
+	// Reset legacy virtues
+	virtue = GLOB.virtues[/datum/virtue/none]
+	virtuetwo = GLOB.virtues[/datum/virtue/none]
+	
+	// Clear all vices
+	for(var/i = 1 to 8)
+		vars["vice[i]"] = null
+	
+	// Legacy vice
+	charflaw = null
+	
+	// Clear languages
+	extra_language = "None"
+	extra_language_1 = "None"
+	extra_language_2 = "None"
+	
+	// Clear loadout items
+	loadout = null
+	loadout2 = null
+	loadout3 = null
+	loadout4 = null
+	loadout5 = null
+	loadout6 = null
+	loadout7 = null
+	loadout8 = null
+	loadout9 = null
+	loadout10 = null
+	
+	// Clear loadout names
+	loadout_1_name = null
+	loadout_2_name = null
+	loadout_3_name = null
+	loadout_4_name = null
+	loadout_5_name = null
+	loadout_6_name = null
+	loadout_7_name = null
+	loadout_8_name = null
+	loadout_9_name = null
+	loadout_10_name = null
+	
+	save_character()
 
 /datum/preferences/proc/get_selected_stashed_item_types(datum/virtue/exclude_virtue = null)
 	var/list/item_types = list()
@@ -472,6 +556,31 @@
 		to_chat(user, span_warning("This selection conflicts with an already selected stash item: [conflicts.Join(", ")]."))
 
 	return TRUE
+
+/datum/preferences/proc/is_blocked_by_origin(datum/virtue/candidate, show_message = FALSE, mob/user = null)
+	// Check if the candidate virtue/item is blocked by the selected origin
+	if(!candidate || !origin_virtue)
+		return FALSE
+	
+	// Check if this feat is blocked by the origin
+	if(candidate.category == "feats" && LAZYLEN(origin_virtue.blocked_feats))
+		for(var/blocked_path in origin_virtue.blocked_feats)
+			// Support both exact type matching and general path matching
+			if(candidate.type == blocked_path || ispath(candidate.type, blocked_path))
+				if(show_message && user)
+					to_chat(user, span_warning("[candidate.name] is incompatible with your [origin_virtue.name] origin!"))
+				return TRUE
+	
+	// Check if this item is blocked by the origin
+	if(candidate.category == "origin_items" && LAZYLEN(origin_virtue.blocked_items))
+		for(var/blocked_path in origin_virtue.blocked_items)
+			// Support both exact type matching and general path matching
+			if(candidate.type == blocked_path || ispath(candidate.type, blocked_path))
+				if(show_message && user)
+					to_chat(user, span_warning("[candidate.name] is incompatible with your [origin_virtue.name] origin!"))
+				return TRUE
+	
+	return FALSE
 
 /datum/preferences/proc/add_virtue_to_category(datum/virtue/V)
 	if(!V || !V.category)
@@ -1380,8 +1489,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			<div class="header">
 				<h1>Character Customization</h1>
 				<p>Configure all your character features</p>
-				<div style="margin-top: 10px;">
+				<div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
 					<a class='btn' href='byond://?src=\ref[src];undo_action=undo' style='font-size: 0.85em;'>⟲ Undo Last Change ([customization_history.len] available)</a>
+					<a class='btn btn-clear' href='byond://?src=\ref[src];virtue_action=reset_all' style='font-size: 0.85em;'>⚠ Reset All Virtues/Vices</a>
 				</div>
 			</div>
 			
@@ -1981,6 +2091,15 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			open_vices_menu(usr)
 			return
 		
+		if(action == "reset_all")
+			if(tgalert(usr, "This will reset ALL virtues, vices, loadouts and languages to their default states. This cannot be undone. Are you sure?", "Reset Confirmation", "Yes", "No") != "Yes")
+				return
+			save_to_history()
+			reset_virtues_and_vices()
+			to_chat(usr, span_boldwarning("All virtues, vices, loadouts and languages have been reset to default."))
+			open_vices_menu(usr)
+			return
+		
 		// Origin items selection
 		if(action == "select_item" || action == "change_item")
 			var/slot = text2num(href_list["slot"])
@@ -2003,6 +2122,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				if(has_stashed_item_conflict(V, current_item, TRUE, usr))
 					continue
+				// Check if blocked by origin
+				if(is_blocked_by_origin(V))
+					continue
 				// Check if we can afford this virtue (including refunded points if changing)
 				if(V.virtue_cost && (get_remaining_virtue_points() + refunded_points) < V.virtue_cost)
 					continue
@@ -2019,6 +2141,10 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			if(choice)
 				var/datum/virtue/selected = items_available[choice]
 				if(has_stashed_item_conflict(selected, current_item, TRUE, usr))
+					open_vices_menu(usr)
+					return
+				// Check if blocked by origin
+				if(is_blocked_by_origin(selected, TRUE, usr))
 					open_vices_menu(usr)
 					return
 				
@@ -2075,6 +2201,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				if(has_stashed_item_conflict(V, null, TRUE, usr))
 					continue
+				// Check if blocked by origin
+				if(is_blocked_by_origin(V))
+					continue
 				// Check conflicts with virtue and vices
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
@@ -2094,6 +2223,10 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
 				if(has_stashed_item_conflict(selected, null, TRUE, usr))
+					open_vices_menu(usr)
+					return
+				// Check if blocked by origin
+				if(is_blocked_by_origin(selected, TRUE, usr))
 					open_vices_menu(usr)
 					return
 				// Final check before adding
@@ -2132,6 +2265,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				if(has_stashed_item_conflict(V, current_feat, TRUE, usr))
 					continue
+				// Check if blocked by origin
+				if(is_blocked_by_origin(V))
+					continue
 				// Check conflicts
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
@@ -2151,6 +2287,10 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
 				if(has_stashed_item_conflict(selected, current_feat, TRUE, usr))
+					open_vices_menu(usr)
+					return
+				// Check if blocked by origin
+				if(is_blocked_by_origin(selected, TRUE, usr))
 					open_vices_menu(usr)
 					return
 				// Final check before changing
