@@ -133,34 +133,6 @@
 						list(/datum/skill/craft/crafting, 2, 2)
 	)
 
-
-/datum/virtue/utility/survivalist_novice
-	name = "Wilderness Child"
-	desc = "I grew up in the wilds, learning to survive off the land through hunting, tracking, fishing, and trapping."
-	category = "origin"
-	virtue_cost = 3
-	blocked_feats = list(/datum/virtue/utility/artificer/trait,
-		/datum/virtue/utility/blacksmith/trait,
-		/datum/virtue/utility/tailor/trait,
-		/datum/virtue/utility/physician/trait,
-		/datum/virtue/utility/hunter/trait,
-		/datum/virtue/utility/mining/trait,
-		/datum/virtue/utility/homesteader,
-		/datum/virtue/utility/forester,
-		/datum/virtue/utility/granary
-	)
-	added_skills = list(
-		list(/datum/skill/misc/tracking, 2, 2),
-		list(/datum/skill/labor/butchering, 2, 2),
-		list(/datum/skill/craft/tanning, 2, 2),
-		list(/datum/skill/craft/traps, 2, 2),
-		list(/datum/skill/combat/knives, 2, 2),
-		list(/datum/skill/combat/slings, 2, 2),
-		list(/datum/skill/craft/crafting, 2, 2),
-		list(/datum/skill/craft/cooking, 2, 2),
-		list(/datum/skill/misc/medicine, 2, 2)
-	)
-
 /datum/virtue/utility/homesteader_novice
 	name = "Farmstead Youth"
 	desc = "I grew up on a homestead, learning farming, cooking, woodcutting, and the daily labors of self-sufficiency."
@@ -179,11 +151,7 @@
 	added_skills = list(
 		list(/datum/skill/labor/farming, 2, 2),
 		list(/datum/skill/craft/cooking, 2, 2),
-		list(/datum/skill/labor/lumberjacking, 2, 2),
-		list(/datum/skill/misc/athletics, 2, 2),
 		list(/datum/skill/labor/fishing, 2, 2),
-		list(/datum/skill/craft/masonry, 2, 2),
-		list(/datum/skill/craft/carpentry, 2, 2),
 		list(/datum/skill/craft/crafting, 2, 2)
 	)
 
@@ -206,17 +174,13 @@
 		list(/datum/skill/craft/crafting, 2, 2),
 		list(/datum/skill/craft/blacksmithing, 2, 2),
 		list(/datum/skill/craft/sewing, 2, 2),
-		list(/datum/skill/craft/smelting, 2, 2),
-		list(/datum/skill/craft/weaponsmithing, 2, 2),
-		list(/datum/skill/craft/armorsmithing, 2, 2),
-		list(/datum/skill/combat/maces, 2, 2),
 		list(/datum/skill/craft/ceramics, 2, 2),
 		list(/datum/skill/craft/engineering, 2, 2)
 	)
 
 /datum/virtue/utility/healer_novice
 	name = "Infirmary Raised"
-	desc = "I grew up around healers, learning the basics of medicine, alchemy, and tending to the sick."
+	desc = "I grew up around healers, learning the basics of medicine, and tending to the sick."
 	category = "origin"
 	virtue_cost = 3
 	blocked_feats = list(/datum/virtue/utility/artificer/trait,
@@ -231,13 +195,9 @@
 	)
 	added_skills = list(
 		list(/datum/skill/misc/medicine, 2, 2),
-		list(/datum/skill/craft/alchemy, 2, 2),
-		list(/datum/skill/misc/reading, 2, 2),
 		list(/datum/skill/craft/crafting, 2, 2),
 		list(/datum/skill/craft/sewing, 2, 2),
 		list(/datum/skill/craft/cooking, 2, 2),
-		list(/datum/skill/combat/knives, 2, 2),
-		list(/datum/skill/labor/farming, 2, 2)
 	)
 
 /datum/virtue/utility/vagabond_novice
@@ -259,10 +219,7 @@
 		list(/datum/skill/misc/stealing, 2, 2),
 		list(/datum/skill/misc/lockpicking, 2, 2),
 		list(/datum/skill/misc/sneaking, 2, 2),
-		list(/datum/skill/misc/climbing, 2, 2),
-		list(/datum/skill/misc/athletics, 2, 2),
-		list(/datum/skill/combat/knives, 2, 2),
-		list(/datum/skill/combat/unarmed, 2, 2)
+		list(/datum/skill/misc/climbing, 2, 2)
 	)
 
 

@@ -139,6 +139,7 @@
 	icon_state = "wrappings"
 	item_state = "wrappings"
 	sewrepair = TRUE
+	nudist_safe = TRUE //Simple cloth wrappings, not real clothing
 
 /obj/item/clothing/wrists/roguetown/nocwrappings
 	name = "moon wrappings"
@@ -146,6 +147,7 @@
 	icon_state = "nocwrappings"
 	item_state = "nocwrappings"
 	sewrepair = TRUE
+	nudist_safe = TRUE //Simple cloth wrappings, not real clothing
 
 /obj/item/clothing/wrists/roguetown/allwrappings
 	name = "wrappings"
@@ -154,6 +156,7 @@
 	icon_state = "nocwrappings" //Greyscale. Accessable in the loadout.
 	item_state = "nocwrappings"
 	sewrepair = TRUE
+	nudist_safe = TRUE //Simple cloth wrappings, not real clothing
 
 /obj/item/clothing/wrists/roguetown/bracers/cloth
 	name = "cloth bracers"

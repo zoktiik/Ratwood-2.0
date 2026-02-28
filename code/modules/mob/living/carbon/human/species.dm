@@ -700,7 +700,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_armor)
 				return FALSE
 			if(is_nudist_self)
-				return FALSE
+				if(!istype(I, /obj/item/clothing))
+					return FALSE
+				var/obj/item/clothing/C = I
+				if(!C.nudist_safe)
+					return FALSE
 			if(I.blocking_behavior & BULKYBLOCKS)
 				if(H.cloak)
 					return FALSE
@@ -721,7 +725,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.gloves)
 				return FALSE
 			if(is_nudist_self)
-				return FALSE
+				if(!istype(I, /obj/item/clothing))
+					return FALSE
+				var/obj/item/clothing/C = I
+				if(!C.nudist_safe)
+					return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_GLOVES) )
 				return FALSE
 			if(num_arms < 1)
@@ -730,7 +738,13 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(SLOT_SHOES)
 			if(H.shoes)
 				return FALSE
-			if(is_nudist_self || is_inhumen || is_lamia || is_harpy)
+			if(is_nudist_self)
+				if(!istype(I, /obj/item/clothing))
+					return FALSE
+				var/obj/item/clothing/C = I
+				if(!C.nudist_safe)
+					return FALSE
+			if(is_inhumen || is_lamia || is_harpy)
 				return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_SHOES) )
 				return FALSE
@@ -777,7 +791,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_pants)
 				return FALSE
 			if(is_nudist_self)
-				return FALSE
+				if(!istype(I, /obj/item/clothing))
+					return FALSE
+				var/obj/item/clothing/C = I
+				if(!C.nudist_safe)
+					return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_PANTS) )
 				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)
@@ -785,7 +803,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_shirt)
 				return FALSE
 			if(is_nudist_self)
-				return FALSE
+				if(!istype(I, /obj/item/clothing))
+					return FALSE
+				var/obj/item/clothing/C = I
+				if(!C.nudist_safe)
+					return FALSE
 			if(I.blocking_behavior & BULKYBLOCKS)
 				if(H.cloak)
 					return FALSE
@@ -830,7 +852,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_wrists)
 				return FALSE
 			if(is_nudist)
-				return FALSE
+				if(!istype(I, /obj/item/clothing))
+					return FALSE
+				var/obj/item/clothing/C = I
+				if(!C.nudist_safe)
+					return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_WRISTS) )
 				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)

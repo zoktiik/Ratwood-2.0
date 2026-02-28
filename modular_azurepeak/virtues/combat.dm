@@ -65,23 +65,17 @@
 	if(!recipient)
 		return
 
-	var/was_nudist = HAS_TRAIT(recipient, TRAIT_NUDIST)
-	if(was_nudist)
-		REMOVE_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
-
 	// Remove whatever shirt they spawned with
 	var/obj/item/clothing/shirt = recipient.wear_shirt
 	if(shirt)
 		qdel(shirt)
 
-	// Equip the skin armor
+	// Equip the skin armor (now nudist-safe, no workarounds needed)
 	recipient.equip_to_slot_or_del(
 		new /obj/item/clothing/suit/roguetown/armor/regenerating/skin/weak(recipient),
 		SLOT_SHIRT,
 		TRUE
 	)
-	if(was_nudist)
-		ADD_TRAIT(recipient, TRAIT_NUDIST, TRAIT_GENERIC)
 	
 	if(alert(recipient, "Would you like to change the name or description of your skin?", "TOUGH HIDE", "MAKE IT SO", "I RESCIND") == "MAKE IT SO") // Query user
 		addtimer(CALLBACK(src, .proc/customize_skin, recipient), 5 SECONDS)

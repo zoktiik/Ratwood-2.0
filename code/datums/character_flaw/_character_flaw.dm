@@ -444,30 +444,39 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(H.stat != CONSCIOUS)
 		return
 	
-	// Check if wearing restricted clothing
+	// Check if wearing restricted clothing (ignore nudist-safe items)
 	var/is_clothed = FALSE
-	if(H.wear_armor || H.wear_shirt || H.wear_pants)
+	if(H.wear_armor && (!istype(H.wear_armor, /obj/item/clothing) || !H.wear_armor.nudist_safe))
 		is_clothed = TRUE
+	if(H.wear_shirt && (!istype(H.wear_shirt, /obj/item/clothing) || !H.wear_shirt.nudist_safe))
+		is_clothed = TRUE
+	if(H.wear_pants && (!istype(H.wear_pants, /obj/item/clothing) || !H.wear_pants.nudist_safe))
+		is_clothed = TRUE
+	
+	if(is_clothed)
 		H.add_stress(/datum/stressevent/vice/nudist_clothed)
 	else
 		H.remove_stress(/datum/stressevent/vice/nudist_clothed)
 	
 	// Try to remove clothing periodically
 	if(is_clothed && world.time >= next_removal_attempt)
-		// Remove armor first, then shirt, then pants
+		// Remove armor first, then shirt, then pants (skip nudist-safe items)
 		var/obj/item/removed = null
 		if(H.wear_armor)
-			removed = H.wear_armor
-			if(H.dropItemToGround(removed))
-				to_chat(H, span_warning("I can't stand wearing [removed]! I need to be free!"))
+			if(!istype(H.wear_armor, /obj/item/clothing) || !H.wear_armor.nudist_safe)
+				removed = H.wear_armor
+				if(H.dropItemToGround(removed))
+					to_chat(H, span_warning("I can't stand wearing [removed]! I need to be free!"))
 		else if(H.wear_shirt)
-			removed = H.wear_shirt
-			if(H.dropItemToGround(removed))
-				to_chat(H, span_warning("This [removed] is suffocating me! Off it goes!"))
+			if(!istype(H.wear_shirt, /obj/item/clothing) || !H.wear_shirt.nudist_safe)
+				removed = H.wear_shirt
+				if(H.dropItemToGround(removed))
+					to_chat(H, span_warning("This [removed] is suffocating me! Off it goes!"))
 		else if(H.wear_pants)
-			removed = H.wear_pants
-			if(H.dropItemToGround(removed))
-				to_chat(H, span_warning("These [removed] are unbearable! Freedom!"))
+			if(!istype(H.wear_pants, /obj/item/clothing) || !H.wear_pants.nudist_safe)
+				removed = H.wear_pants
+				if(H.dropItemToGround(removed))
+					to_chat(H, span_warning("These [removed] are unbearable! Freedom!"))
 		
 		if(removed)
 			H.visible_message(span_notice("[H] frantically removes [removed]."))

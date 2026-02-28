@@ -1,6 +1,6 @@
 // Origin Items - items passed down or acquired during your youth
 // These provide only items, no skills or traits
-// Max selection: 2 heirlooms
+// Max selection: 1 heirloom
 
 /datum/virtue/origin_items/tailors_kit
 	name = "Tailor's Kit"

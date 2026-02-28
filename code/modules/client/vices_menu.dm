@@ -344,8 +344,9 @@
 	return count
 
 /datum/preferences/proc/get_max_feats()
-	// 1 base feat + 1 extra per every 2 vices, capped at 4
-	return min(4, 1 + (count_selected_vices() >> 1))
+	// No longer limited by slots - feats are only limited by virtue points
+	// Keeping this for backward compatibility with presets
+	return 999
 
 /datum/preferences/proc/enforce_feat_limit(mob/user = null)
 	var/max_feats = get_max_feats()
@@ -365,8 +366,8 @@
 
 // Virtue point system helpers
 /datum/preferences/proc/get_max_virtue_points()
-	// Base 12 points for all characters	
-	var/points = 12
+	// Base 15 points for all characters	
+	var/points = 15
 	// Virtuous statpack grants +5 additional virtue points
 	if(statpack && statpack.name == "Virtuous")
 		points += 5
@@ -417,11 +418,11 @@
 			// Can only select 1 origin virtue
 			return !origin_virtue
 		if("origin_items")
-			// Can select up to 2 origin items
-			return LAZYLEN(origin_items) < 2
+			// Can select 1 origin item (heirloom)
+			return LAZYLEN(origin_items) < 1
 		if("feats")
-			// Can select up to max_feats based on vices
-			return LAZYLEN(feats) < get_max_feats()
+			// No slot limit - only limited by virtue points
+			return TRUE
 	return FALSE
 
 /// Sanitize virtue lists by removing null or invalid entries
@@ -593,13 +594,12 @@
 			origin_virtue = V
 			return TRUE
 		if("origin_items")
-			if(LAZYLEN(origin_items) >= 2)
-				return FALSE  // Already have 2 items
+			if(LAZYLEN(origin_items) >= 1)
+				return FALSE  // Already have 1 heirloom
 			LAZYADD(origin_items, V)
 			return TRUE
 		if("feats")
-			if(LAZYLEN(feats) >= get_max_feats())
-				return FALSE  // At feat limit
+			// No slot limit - only limited by virtue points
 			LAZYADD(feats, V)
 			return TRUE
 	return FALSE
@@ -1554,12 +1554,12 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		</div>
 		
 		<div class="statpack-section">
-			<h2>Upbringing: Origin Heirlooms</h2>
-			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select up to TWO origin heirlooms. These are items from your past.</p>"}
+			<h2>Upbringing: Origin Heirloom</h2>
+			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select ONE origin heirloom. This is an item from your past.</p>"}
 	
 	// Display origin items
 	var/item_count = LAZYLEN(origin_items)
-	for(var/i = 1 to 2)
+	for(var/i = 1 to 1)
 		html += "<div class='statpack-current' style='margin-top: 8px;'>"
 		
 		if(i <= item_count)
@@ -1584,12 +1584,11 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		<div class="statpack-section">
 			<h2>Upbringing: Feats</h2>"}
 	
-	var/max_feats = get_max_feats()
 	var/remaining_points = get_remaining_virtue_points()
 	var/max_points = get_max_virtue_points()
 	var/spent_points = get_spent_virtue_points()
 	
-	html += "<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select up to <strong>[max_feats]</strong> feats (1 base + 1 per 2 vices, max 4). These are extraordinary abilities.</p>"
+	html += "<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select as many feats as you can afford. These are extraordinary abilities limited only by your virtue points.</p>"
 	html += "<p style='font-size: 0.85em; margin: 6px 0; padding: 6px; background: rgba(0,0,0,0.2); border-left: 3px solid [remaining_points > 0 ? theme["accent"] : "#dc3545"]; color: [remaining_points > 0 ? theme["text"] : "#dc3545"];'>"
 	html += "<strong>Virtue Points:</strong> [spent_points]/[max_points] spent | <strong>[remaining_points]</strong> remaining"
 	html += "<br><span style='font-size: 0.9em;'>The points vary from most impactful virtues 7 - 5 points to least impactful ones 1 - 0 points.</span></p>"
@@ -1607,13 +1606,17 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			html += "</div>"
 			html += "</div>"
 	
-	// Show add button if we can add more feats
-	if(feat_count < max_feats)
+	// Show add button if we have points remaining
+	if(remaining_points > 0)
 		html += "<div class='actions' style='margin-top: 8px;'>"
-		html += "<a class='btn btn-select' href='byond://?src=\ref[src];virtue_action=add_feat' style='padding: 6px 12px;'>+ Add Feat ([feat_count]/[max_feats])</a>"
+		html += "<a class='btn btn-select' href='byond://?src=\ref[src];virtue_action=add_feat' style='padding: 6px 12px;'>+ Add Feat ([remaining_points] points remaining)</a>"
+		html += "</div>"
+	else if(feat_count == 0)
+		html += "<div class='actions' style='margin-top: 8px;'>"
+		html += "<a class='btn btn-select' href='byond://?src=\ref[src];virtue_action=add_feat' style='padding: 6px 12px;'>+ Add Feat (browse free options)</a>"
 		html += "</div>"
 	else
-		html += "<p style='font-size: 0.7em; margin-top: 8px; color: [theme["label"]]; font-style: italic;'>Maximum feats selected. Select more vices to unlock additional feat slots.</p>"
+		html += "<p style='font-size: 0.7em; margin-top: 8px; color: [theme["label"]]; font-style: italic;'>No remaining points. Remove feats or select vices to gain more points.</p>"
 	
 	html += {"
 		</div>"}
@@ -2049,6 +2052,21 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				var/datum/virtue/V = GLOB.virtues[path]
 				if(V.category != "origin")
 					continue
+				// Skip if already selected as other virtues
+				if(virtue && V.type == virtue.type)
+					continue
+				if(virtuetwo && V.type == virtuetwo.type)
+					continue
+				if(V in origin_items)
+					continue
+				// Check if already in feats
+				var/already_in_feats = FALSE
+				for(var/datum/virtue/feat in feats)
+					if(feat && V.type == feat.type)
+						already_in_feats = TRUE
+						break
+				if(already_in_feats)
+					continue
 				if(has_stashed_item_conflict(V, null, TRUE, usr))
 					continue
 				// Check if we can afford this virtue
@@ -2103,7 +2121,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		// Origin items selection
 		if(action == "select_item" || action == "change_item")
 			var/slot = text2num(href_list["slot"])
-			if(!slot || slot < 1 || slot > 2)
+			if(!slot || slot < 1 || slot > 1)
 				return
 			
 			save_to_history()
@@ -2119,6 +2137,21 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				// Skip if already selected in another slot
 				if(V in origin_items)
+					continue
+				// Skip if already selected as other virtues
+				if(virtue && V.type == virtue.type)
+					continue
+				if(virtuetwo && V.type == virtuetwo.type)
+					continue
+				if(origin_virtue && V.type == origin_virtue.type)
+					continue
+				// Check if already in feats
+				var/already_in_feats = FALSE
+				for(var/datum/virtue/feat in feats)
+					if(feat && V.type == feat.type)
+						already_in_feats = TRUE
+						break
+				if(already_in_feats)
 					continue
 				if(has_stashed_item_conflict(V, current_item, TRUE, usr))
 					continue
@@ -2168,7 +2201,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		
 		if(action == "clear_item")
 			var/slot = text2num(href_list["slot"])
-			if(!slot || slot < 1 || slot > 2)
+			if(!slot || slot < 1 || slot > 1)
 				return
 			
 			save_to_history()
@@ -2182,10 +2215,6 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		
 		// Feats selection
 		if(action == "add_feat")
-			if(LAZYLEN(feats) >= get_max_feats())
-				to_chat(usr, span_warning("You've reached the maximum number of feats!"))
-				return
-			
 			save_to_history()
 			
 			var/list/feats_available = list()
@@ -2198,6 +2227,15 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				// Skip if already selected
 				if(V in feats)
+					continue
+				// Skip if already selected as other virtues
+				if(virtue && V.type == virtue.type)
+					continue
+				if(virtuetwo && V.type == virtuetwo.type)
+					continue
+				if(origin_virtue && V.type == origin_virtue.type)
+					continue
+				if(V in origin_items)
 					continue
 				if(has_stashed_item_conflict(V, null, TRUE, usr))
 					continue
@@ -2218,7 +2256,7 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			
 			feats_available = sort_list(feats_available)
 			var/remaining_points = get_remaining_virtue_points()
-			var/choice = tgui_input_list(usr, "Choose a feat ([LAZYLEN(feats)+1]/[get_max_feats()]) | [remaining_points] virtue points remaining:", "Feat Selection", feats_available)
+			var/choice = tgui_input_list(usr, "Choose a feat | [remaining_points] virtue points remaining:", "Feat Selection", feats_available)
 			
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
@@ -2262,6 +2300,15 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				// Skip if already selected in another slot
 				if(V in feats)
+					continue
+				// Skip if already selected as other virtues
+				if(virtue && V.type == virtue.type)
+					continue
+				if(virtuetwo && V.type == virtuetwo.type)
+					continue
+				if(origin_virtue && V.type == origin_virtue.type)
+					continue
+				if(V in origin_items)
 					continue
 				if(has_stashed_item_conflict(V, current_feat, TRUE, usr))
 					continue
@@ -2374,8 +2421,13 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Skip if already in origin_items
 				if(V in origin_items)
 					continue
-				// Skip if already in feats
-				if(V in feats)
+				// Skip if already in feats (check by type)
+				var/already_in_feats = FALSE
+				for(var/datum/virtue/feat in feats)
+					if(feat && V.type == feat.type)
+						already_in_feats = TRUE
+						break
+				if(already_in_feats)
 					continue
 				if(has_stashed_item_conflict(V, virtuetwo, TRUE, usr))
 					continue
