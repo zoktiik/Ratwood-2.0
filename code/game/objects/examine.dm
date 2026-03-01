@@ -26,9 +26,9 @@
 	
 	if(nudist_approved)
 		if(HAS_TRAIT(user, TRAIT_NUDE_SLEEPER))
-			. += span_notice(span_info("I can tolerate having this on when I sleep."))
+			. += span_smallnotice("I can tolerate having this on when I sleep.")
 		else if(HAS_TRAIT(user, TRAIT_NUDIST))
-			. += span_notice(span_info("I can tolerate wearing this."))
+			. += span_smallnotice("I can tolerate wearing this.")
 
 	for(var/datum/examine_effect/E in examine_effects)
 		E.trigger(user)
