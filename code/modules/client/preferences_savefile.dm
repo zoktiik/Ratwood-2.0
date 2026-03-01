@@ -495,6 +495,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	vice7 = (vice7_type && ispath(vice7_type)) ? new vice7_type() : null
 	vice8 = (vice8_type && ispath(vice8_type)) ? new vice8_type() : null
 
+	// Load faction selections for Averse and Paranoid
+	S["averse_chosen_faction"] >> averse_chosen_faction
+	S["paranoid_chosen_faction"] >> paranoid_chosen_faction
+
 /datum/preferences/proc/_load_culinary_preferences(S)
 	var/list/loaded_culinary_preferences
 	S["culinary_preferences"] >> loaded_culinary_preferences
@@ -614,6 +618,18 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		origin_items = null
 	if(!LAZYLEN(feats))
 		feats = null
+
+	// Load custom origin skills (Build Your Own Origin system)
+	S["custom_origin_skills"] >> custom_origin_skills
+	S["custom_origin_levels"] >> custom_origin_levels
+	S["custom_origin_points_spent"] >> custom_origin_points_spent
+	// Initialize to empty lists if not loaded (for backwards compatibility)
+	if(!custom_origin_skills)
+		custom_origin_skills = list()
+	if(!custom_origin_levels)
+		custom_origin_levels = list()
+	if(!isnum(custom_origin_points_spent))
+		custom_origin_points_spent = 0
 	
 	// Sanitize virtue lists to remove any null or invalid entries
 	sanitize_virtue_lists()
@@ -1121,6 +1137,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["vice6"], preferences_typepath_or_null(vice6))
 	WRITE_FILE(S["vice7"], preferences_typepath_or_null(vice7))
 	WRITE_FILE(S["vice8"], preferences_typepath_or_null(vice8))
+	WRITE_FILE(S["averse_chosen_faction"], averse_chosen_faction)
+	WRITE_FILE(S["paranoid_chosen_faction"], paranoid_chosen_faction)
 	WRITE_FILE(S["feature_mcolor"]		, features["mcolor"])
 	WRITE_FILE(S["feature_mcolor2"]		, features["mcolor2"])
 	WRITE_FILE(S["feature_mcolor3"]		, features["mcolor3"])
@@ -1211,6 +1229,10 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			if(feat_typepath)
 				feat_types += feat_typepath
 	WRITE_FILE(S["feats"], feat_types)
+	// Save custom origin skills (Build Your Own Origin system)
+	WRITE_FILE(S["custom_origin_skills"], custom_origin_skills)
+	WRITE_FILE(S["custom_origin_levels"], custom_origin_levels)
+	WRITE_FILE(S["custom_origin_points_spent"], custom_origin_points_spent)
 	WRITE_FILE(S["race_bonus"], race_bonus)
 	WRITE_FILE(S["combat_music"], preferences_typepath_or_null(combat_music))
 	WRITE_FILE(S["body_size"] , features["body_size"])

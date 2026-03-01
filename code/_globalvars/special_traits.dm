@@ -106,7 +106,7 @@ GLOBAL_LIST_INIT(special_traits, build_special_traits())
 			apply_virtue(character, virtue_type)
 		else
 			to_chat(character, "Incorrect Virtue parameters! (Heretic virtue on a non-heretic) It will not be applied.")
-	if(virtuetwo_type && virtuous)
+	if(virtuetwo_type && virtuetwo_type.type != /datum/virtue/none && virtuous)
 		if(virtue_check(virtuetwo_type, heretic))
 			apply_virtue(character, virtuetwo_type)
 		else

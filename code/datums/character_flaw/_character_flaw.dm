@@ -5,16 +5,21 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Alcoholic"=/datum/charflaw/addiction/alcoholic,
 	"Annoying Face"=/datum/charflaw/annoying_face,
 	"Asundered Mind (+1 TRI)"=/datum/charflaw/mind_broken,
+	"Averse"=/datum/charflaw/averse,
 	"Bad Sight (+1 TRI)"=/datum/charflaw/badsight,
 	"Blindness (+1 TRI)"=/datum/charflaw/noeyeall,
+	"Caffiend"=/datum/charflaw/addiction/caffiend,
+	"Clamorous"=/datum/charflaw/addiction/clamorous,
 	"Clingy"=/datum/charflaw/clingy,
 	"Colorblind (+1 TRI)"=/datum/charflaw/colorblind,
 	"Critical Weakness (+1 TRI)"=/datum/charflaw/critweakness,
 	"Cyclops (L) (+1 TRI)"=/datum/charflaw/noeyel,
 	"Cyclops (R) (+1 TRI)"=/datum/charflaw/noeyer,
 	"Devout Follower"=/datum/charflaw/addiction/godfearing,
+	"Finicky"=/datum/charflaw/finicky,
 	"Greedy"=/datum/charflaw/greedy,
 	"Hunted (+1 TRI)"=/datum/charflaw/hunted,
+	"Indebted"=/datum/charflaw/indebted,
 	"Isolationist"=/datum/charflaw/isolationist,
 	"Junkie"=/datum/charflaw/addiction/junkie,
 	"Marked by Baotha" =/datum/charflaw/marked_by_baotha,
@@ -29,7 +34,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Nudist"=/datum/charflaw/nudist,
 	"Nymphomaniac"=/datum/charflaw/addiction/lovefiend,
 	"Pacifism"=/datum/charflaw/pacifism,
-	"Paranoid"=/datum/charflaw/paranoid,
+	"Paranoid"=/datum/charflaw/addiction/paranoid,
 	"Random or No Flaw"=/datum/charflaw/randflaw,
 	"Sadist"=/datum/charflaw/addiction/sadist,
 	"Scarred"=/datum/charflaw/scarred,
@@ -42,20 +47,34 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Wood Arm (L) (+1 TRI)"=/datum/charflaw/limbloss/arm_l,
 	"Wood Arm (R) (+1 TRI)"=/datum/charflaw/limbloss/arm_r,
 	"Hemophage (+1 TRI)"=/datum/charflaw/hemophage,
-	"Chronic Migraines (+2 TRI)"=/datum/charflaw/chronic_migraine,
-	"Weak Heart (+3 TRI)"=/datum/charflaw/weak_heart,
-	"Tremors (+3 TRI)"=/datum/charflaw/tremors,
+	"Chronic Migraines (+1 TRI)"=/datum/charflaw/chronic_migraine,
+	"Weak Heart (+1 TRI)"=/datum/charflaw/weak_heart,
+	"Tremors (+2 TRI)"=/datum/charflaw/tremors,
 	"Nightmares (+1 TRI)"=/datum/charflaw/nightmares,
 	"Chronic Arthritis (+2 TRI)"=/datum/charflaw/chronic_arthritis,
 	"Chronic Back Pain (+2 TRI)"=/datum/charflaw/chronic_back_pain,
-	"Old War Wound (+3 TRI)"=/datum/charflaw/old_war_wound,
+	"Old War Wound (+1 TRI)"=/datum/charflaw/old_war_wound,
 	"Hard of Hearing (+2 TRI)"=/datum/charflaw/hard_of_hearing,
-	"Big Ears (+1 TRI)"=/datum/charflaw/big_ears,
+	"Big Ears"=/datum/charflaw/big_ears,
 	"Disgraced Noble"=/datum/charflaw/disgraced_noble,
 	"Spurned (+2 TRI)"=/datum/charflaw/spurned,
+	"Thrillseeker"=/datum/charflaw/addiction/thrillseeker,
 	"Carnivore"=/datum/charflaw/carnivore,
 	"Herbivore"=/datum/charflaw/herbivore,
 	"Lithovore"=/datum/charflaw/lithovore,
+	"Voyeur"=/datum/charflaw/addiction/voyeur,
+	))
+
+GLOBAL_LIST_INIT(averse_factions, list(
+	"Noblemen" = NOBLEMEN,
+	"Garrison" = GARRISON,
+	"Churchmen" = CHURCHMEN,
+	"Courtiers" = COURTIERS,
+	"Yeomen" = YEOMEN,
+	"Peasants" = PEASANTS,
+	"Wanderers" = WANDERERS,
+	"Inquisition" = INQUISITION,
+	"Guildsmen" = GUILDSMEN,
 	))
 
 /datum/charflaw
@@ -198,40 +217,76 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	H.adjust_skillrank(/datum/skill/misc/reading, 1, TRUE)
 	H.adjust_triumphs(1)
 
-/datum/charflaw/paranoid
-	name = "Paranoid"
-	desc = "I'm anxious around people of different races (more than 2 nearby causes stress) and around blood (more than 3 blood puddles nearby causes stress)."
+/datum/charflaw/averse
+	name = "Averse"
+	desc = "I loathe a particular group. Being around 2 or more of them causes me stress."
 	needs_life_tick = TRUE
+	var/check_interval = 15 SECONDS
 	var/last_check = 0
 
-/datum/charflaw/paranoid/flaw_on_life(mob/user)
-	if(world.time < last_check + 10 SECONDS)
+/datum/charflaw/averse/flaw_on_life(mob/living/carbon/human/user)
+	if(world.time < last_check + check_interval)
 		return
-	if(!user)
+	if(!user || !ishuman(user))
 		return
 	last_check = world.time
-	var/cnt = 0
-	for(var/mob/living/carbon/human/L in hearers(7, user))
-		if(L == src)
+
+	var/datum/preferences/prefs = user?.client?.prefs
+	if(!prefs?.averse_chosen_faction)
+		return
+
+	var/loathed_flag = prefs.averse_chosen_faction
+	var/list/loathed_nearby = list()
+
+	for(var/mob/living/carbon/human/H in get_hearers_in_LOS(7, user))
+		if(H == user || H.stat == DEAD)
 			continue
-		if(L.stat)
+		if(!H.mind?.assigned_role)
 			continue
-		if(L.dna?.species)
-			if(ishuman(user))
-				var/mob/living/carbon/human/H = user
-				if(L.dna.species.id != H.dna.species.id)
-					cnt++
-		if(cnt > 2)
-			break
-	if(cnt > 2)
-		user.add_stress(/datum/stressevent/paracrowd)
-	cnt = 0
-	for(var/obj/effect/decal/cleanable/blood/B in view(7, user))
-		cnt++
-		if(cnt > 3)
-			break
-	if(cnt > 6)
-		user.add_stress(/datum/stressevent/parablood)
+		var/datum/job/job = SSjob.GetJob(H.mind.assigned_role)
+		if(job && (job.department_flag & loathed_flag))
+			loathed_nearby += H
+
+	if(length(loathed_nearby) >= 2)
+		user.add_stress(/datum/stressevent/averse)
+
+/datum/charflaw/indebted
+	name = "Indebted"
+	desc = "I owe a debt to the realm. Every 30 minutes, 30 mammons plus 20% of my current wealth is deducted. If I can't pay, a bounty is placed on my head."
+	needs_life_tick = TRUE
+	var/debt_interval = 30 MINUTES
+	var/minimum_debt = 30
+	var/relative_debt = 0.2
+	var/next_debt_time = 0
+
+/datum/charflaw/indebted/flaw_on_life(mob/living/carbon/human/user)
+	if(!user?.ckey || !SStreasury)
+		return
+	if(world.time < next_debt_time)
+		return
+
+	next_debt_time = world.time + debt_interval
+	
+	var/datum/bank_account/account = SStreasury.bank_accounts[user.ckey]
+	if(!account)
+		return
+
+	var/total_debt = minimum_debt + round(account.account_balance * relative_debt)
+	
+	if(account.adjust_money(-total_debt, "Debt Collection"))
+		to_chat(user, span_warning("A debt of [total_debt] mammons has been collected from my account."))
+		user.add_stress(/datum/stressevent/debt)
+	else
+		to_chat(user, span_boldwarning("I failed to pay my debt of [total_debt] mammons! A bounty has been placed on my head!"))
+		// Add bounty using the global proc
+		var/race = user.dna.species
+		var/gender = user.gender
+		var/list/d_list = user.get_mob_descriptors()
+		var/descriptor_height = build_coalesce_description_nofluff(d_list, user, list(MOB_DESCRIPTOR_SLOT_HEIGHT), "%DESC1%")
+		var/descriptor_body = build_coalesce_description_nofluff(d_list, user, list(MOB_DESCRIPTOR_SLOT_BODY), "%DESC1%")
+		var/descriptor_voice = build_coalesce_description_nofluff(d_list, user, list(MOB_DESCRIPTOR_SLOT_VOICE), "%DESC1%")
+		add_bounty(user.real_name, race, gender, descriptor_height, descriptor_body, descriptor_voice, total_debt, FALSE, "Failure to pay debts", "The Treasury of Rotwood")
+		user.add_stress(/datum/stressevent/debt)
 
 /datum/charflaw/isolationist
 	name = "Isolationist"
@@ -286,6 +341,41 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/P = user
 	if(cnt < 1)
 		P.add_stress(/datum/stressevent/nopeople)
+
+/datum/charflaw/finicky
+	name = "Finicky"
+	desc = "I don't like crowds. I don't like being alone, neither. There's a middle, isn't there?"
+	needs_life_tick = TRUE
+	var/interval = 1 MINUTES
+	var/is_active = FALSE
+	var/next_check = 0
+
+/datum/charflaw/finicky/flaw_on_life(mob/user)
+	. = ..()
+	if(!user)
+		return
+	if(is_active)
+		if(world.time > next_check)
+			next_check = world.time + interval
+			var/cnt = 0
+			for(var/mob/living/carbon/human/L in get_hearers_in_view(6, user, RECURSIVE_CONTENTS_CLIENT_MOBS))
+				if(L == user)
+					continue
+				if(L.stat)
+					continue
+				if(L.dna.species)
+					cnt++
+				if(cnt > 3)
+					break
+			var/mob/living/carbon/P = user
+			if(cnt > 3)
+				P.add_stress(/datum/stressevent/crowd)
+			if(cnt == 0)
+				P.add_stress(/datum/stressevent/nocrowd)
+
+/datum/charflaw/finicky/apply_post_equipment(mob/user)
+	if(user.mind)
+		is_active = TRUE
 
 /datum/charflaw/noeyer
 	name = "Cyclops (R)"
@@ -350,7 +440,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/hunted
 	name = "Hunted"
-	desc = "Something in my past has made me a target. I'm always looking over my shoulder. Being alone or in darkness causes stress."
+	desc = "Something in my past has made me a target. I'm always looking over my shoulder. Being alone or in darkness causes stress. Someone will hunt me down eventually, and I need to be prepared for that inevitability. +1 TRI"
 	needs_life_tick = TRUE
 	var/logged = FALSE
 	var/last_paranoia_check = 0
@@ -997,8 +1087,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	H.update_transform()
 
 /datum/charflaw/chronic_migraine
-	name = "Chronic Migraines (+2 TRI)"
-	desc = "I suffer frequent, debilitating headaches every 2-25 minutes. Migraines cause vision blur and damage (2-3 brute). Bright light triggers additional minor headaches. +2 TRI"
+	name = "Chronic Migraines (+1 TRI)"
+	desc = "I suffer frequent, debilitating headaches every 2-25 minutes. Migraines cause vision blur and damage (2-3 brute). Bright light triggers additional minor headaches. +1 TRI"
 	needs_life_tick = TRUE
 	var/next_migraine = 0
 
@@ -1007,7 +1097,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	var/mob/living/carbon/human/H = user
 	to_chat(H, span_warning("You feel the familiar pressure building behind your eyes."))
-	H.adjust_triumphs(2)
+	H.adjust_triumphs(1)
 	next_migraine = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/chronic_migraine/flaw_on_life(mob/user)
@@ -1036,8 +1126,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			to_chat(H, span_warning("The bright light makes your head throb!"))
 
 /datum/charflaw/weak_heart
-	name = "Weak Heart (+3 TRI)"
-	desc = "My heart is fragile. Heart attacks occur at 15 stress instead of 30. I suffer periodic chest pains (oxygen loss) every 2-25 minutes. Running with high stamina causes heart strain. +3 TRI"
+	name = "Weak Heart (+1 TRI)"
+	desc = "My heart is fragile. Heart attacks occur at 15 stress instead of 30. I suffer periodic chest pains (oxygen loss) every 2-25 minutes. Running with high stamina causes heart strain. +1 TRI"
 	needs_life_tick = TRUE
 	var/next_chest_pain = 0
 
@@ -1045,7 +1135,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(!ishuman(user))
 		return
 	ADD_TRAIT(user, TRAIT_WEAK_HEART, "[type]")
-	user.adjust_triumphs(3)
+	user.adjust_triumphs(1)
 	next_chest_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/weak_heart/on_removal(mob/user)
@@ -1077,8 +1167,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		to_chat(H, span_warning("Your heart pounds heavily as you exert yourself!"))
 
 /datum/charflaw/tremors
-	name = "Tremors (+3 TRI)"
-	desc = "My hands shake uncontrollably every 15-30 minutes, forcing me to drop everything I'm holding for 6 seconds. High stress (6+) causes more frequent tremors. I cannot grip items during episodes. +3 TRI"
+	name = "Tremors (+1 TRI)"
+	desc = "My hands shake uncontrollably every 15-30 minutes, forcing me to drop everything I'm holding for 6 seconds. High stress (6+) causes more frequent tremors. I cannot grip items during episodes. +1 TRI"
 	needs_life_tick = TRUE
 	var/next_tremor_time = 0
 	var/base_tremor_interval = 30 MINUTES
@@ -1090,7 +1180,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	ADD_TRAIT(H, TRAIT_TREMORS, "[type]")
 	schedule_next_tremor(H)
-	H.adjust_triumphs(3)
+	H.adjust_triumphs(1)
 
 /datum/charflaw/tremors/on_removal(mob/user)
 	if(!ishuman(user))
@@ -1256,8 +1346,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			to_chat(H, span_warning("The weather makes your arthritis act up."))
 
 /datum/charflaw/chronic_back_pain
-	name = "Chronic Back Pain (+2 TRI)"
-	desc = "My back hurts constantly. Every 2-25 minutes I suffer pain that drains stamina (3-8 points depending on armor weight). Running triggers additional pain. Heavy armor (8 stamina) worsens pain significantly. +2 TRI"
+	name = "Chronic Back Pain (+1 TRI)"
+	desc = "My back hurts constantly. Every 2-25 minutes I suffer pain that drains stamina (3-8 points depending on armor weight). Running triggers additional pain. Heavy armor (8 stamina) worsens pain significantly. +1 TRI"
 	needs_life_tick = TRUE
 	var/next_back_pain = 0
 
@@ -1266,7 +1356,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		return
 	var/mob/living/carbon/human/H = user
 	to_chat(H, span_warning("Your lower back aches with familiar, persistent pain."))
-	H.adjust_triumphs(2)
+	H.adjust_triumphs(1)
 	next_back_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/chronic_back_pain/flaw_on_life(mob/user)
@@ -1312,8 +1402,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		next_back_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/old_war_wound
-	name = "Old War Wound (+3 TRI)"
-	desc = "An old injury haunts me. Every 2-25 minutes, the wound flares up causing stamina loss (3-5 points). Low health (<70%) or high stress (10+) triggers more severe flare-ups. I start with 3-8 brute damage. +3 TRI"
+	name = "Old War Wound (+1 TRI)"
+	desc = "An old injury haunts me. Every 2-25 minutes, the wound flares up causing stamina loss (3-5 points). Low health (<70%) or high stress (10+) triggers more severe flare-ups. I start with 3-8 brute damage. +1 TRI"
 	needs_life_tick = TRUE
 	var/next_wound_pain = 0
 
@@ -1324,7 +1414,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/wound_desc = pick("shrapnel wound", "old arrow wound", "deep scar", "poorly healed fracture")
 	to_chat(H, span_warning("You feel the familiar ache of your old [wound_desc]."))
 	H.adjustBruteLoss(rand(3, 8))
-	H.adjust_triumphs(3)
+	H.adjust_triumphs(1)
 	next_wound_pain = world.time + rand(2 MINUTES, 25 MINUTES)
 
 /datum/charflaw/old_war_wound/flaw_on_life(mob/user)
@@ -1392,7 +1482,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 // ============ BIG EARS ============
 
 /datum/charflaw/big_ears
-	name = "Big Ears (+1 TRI)"
+	name = "Big Ears"
 	desc = "I'm extremely sensitive to loud noises. Yelling and shouts near me cause stress. However, I have enhanced hearing and can hear better than most. +1 TRI"
 
 /datum/charflaw/big_ears/on_mob_creation(mob/user)
@@ -1401,7 +1491,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	var/mob/living/carbon/human/H = user
 	ADD_TRAIT(H, TRAIT_BIG_EARS, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_KEENEARS, TRAIT_GENERIC)
-	H.adjust_triumphs(1)
+
 
 /datum/charflaw/big_ears/on_removal(mob/user)
 	if(!ishuman(user))

@@ -83,9 +83,13 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/virtue/virtue = new /datum/virtue/none // LETHALSTONE EDIT: the virtue we get for not picking a statpack
 	var/datum/virtue/virtuetwo = new /datum/virtue/none
 	// New category-based virtue system
-	var/datum/virtue/origin_virtue = null  // Single origin selection
+	var/datum/virtue/origin_virtue = null  // Single origin selection (DEPRECATED - replaced by custom_origin_skills)
 	var/list/origin_items = list()  // Up to 2 origin heirloom items
 	var/list/feats = list()  // Variable number based on vice count
+	// Custom origin system - point-buy skill selection
+	var/list/custom_origin_skills = list()  // List of skill paths selected (e.g., /datum/skill/craft/cooking)
+	var/list/custom_origin_levels = list()  // List of skill levels (1=Novice, 2=Apprentice)
+	var/custom_origin_points_spent = 0  // Running total of points spent (max 10)
 	var/selected_title = "None"
 	var/age = AGE_ADULT						//age of character
 	var/origin = "Default"
@@ -238,6 +242,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/charflaw/vice7
 	var/datum/charflaw/vice8
 
+	// Faction selections for Averse and Paranoid vices
+	var/averse_chosen_faction
+	var/paranoid_chosen_faction
 
 	var/setspouse = ""
 	var/gender_choice = ANY_GENDER
@@ -3214,10 +3221,12 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 	if(!character || !character.mind)
 		return
 
-	// Apply origin virtue (new virtue system)
-	if(origin_virtue && origin_virtue.type != /datum/virtue/none)
-		var/datum/virtue/origin = new origin_virtue.type()
-		apply_virtue(character, origin)
+	// Apply custom origin skills (new point-buy system)
+	if(LAZYLEN(custom_origin_skills))
+		for(var/i = 1 to length(custom_origin_skills))
+			var/skill_path = custom_origin_skills[i]
+			var/skill_level = custom_origin_levels[i]
+			character.adjust_skillrank(skill_path, skill_level, TRUE)
 
 	// Apply origin items (heirlooms)
 	if(LAZYLEN(origin_items))
@@ -3234,6 +3243,20 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 				continue
 			var/datum/virtue/char_feat = new feat.type()
 			apply_virtue(character, char_feat)
+	
+	// Apply Virtuous statpack bonus virtue (virtuetwo)
+	if(statpack && statpack.name == "Virtuous")
+		if(virtuetwo && virtuetwo.type != /datum/virtue/none)
+			// Check for heretic patron conflict
+			var/heretic = FALSE
+			if(istype(selected_patron, /datum/patron/inhumen))
+				heretic = TRUE
+			
+			if(istype(virtuetwo, /datum/virtue/heretic) && !heretic)
+				to_chat(character, "Incorrect Second Virtue parameters! (Heretic virtue on a non-heretic) It will not be applied.")
+			else
+				var/datum/virtue/bonus_virtue = new virtuetwo.type()
+				apply_virtue(character, bonus_virtue)
 
 /datum/preferences/proc/get_default_name(name_id)
 	switch(name_id)

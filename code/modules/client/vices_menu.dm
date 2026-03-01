@@ -463,6 +463,11 @@
 	origin_items = null
 	feats = null
 	
+	// Clear custom origin system
+	custom_origin_skills = null
+	custom_origin_levels = null
+	custom_origin_points_spent = 0
+	
 	// Reset legacy virtues
 	virtue = GLOB.virtues[/datum/virtue/none]
 	virtuetwo = GLOB.virtues[/datum/virtue/none]
@@ -709,6 +714,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		"origin_virtue" = origin_virtue,
 		"origin_items" = origin_items ? origin_items.Copy() : null,
 		"feats" = feats ? feats.Copy() : null,
+		"custom_origin_skills" = custom_origin_skills ? custom_origin_skills.Copy() : null,
+		"custom_origin_levels" = custom_origin_levels ? custom_origin_levels.Copy() : null,
+		"custom_origin_points_spent" = custom_origin_points_spent,
 		"vice1" = vice1,
 		"vice2" = vice2,
 		"vice3" = vice3,
@@ -791,6 +799,17 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		feats = stored_feats.Copy()
 	else
 		feats = null
+	var/list/stored_custom_skills = snapshot["custom_origin_skills"]
+	if(stored_custom_skills)
+		custom_origin_skills = stored_custom_skills.Copy()
+	else
+		custom_origin_skills = null
+	var/list/stored_custom_levels = snapshot["custom_origin_levels"]
+	if(stored_custom_levels)
+		custom_origin_levels = stored_custom_levels.Copy()
+	else
+		custom_origin_levels = null
+	custom_origin_points_spent = snapshot["custom_origin_points_spent"]
 	vice1 = snapshot["vice1"]
 	vice2 = snapshot["vice2"]
 	vice3 = snapshot["vice3"]
@@ -873,6 +892,9 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		"origin_virtue" = origin_virtue?.type,
 		"origin_items" = preset_origin_items,
 		"feats" = preset_feats,
+		"custom_origin_skills" = custom_origin_skills ? custom_origin_skills.Copy() : null,
+		"custom_origin_levels" = custom_origin_levels ? custom_origin_levels.Copy() : null,
+		"custom_origin_points_spent" = custom_origin_points_spent,
 		"vice1" = vice1?.type,
 		"vice2" = vice2?.type,
 		"vice3" = vice3?.type,
@@ -999,6 +1021,19 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		feats.Cut(get_max_feats() + 1)
 	if(!LAZYLEN(feats))
 		feats = null
+	
+	// Restore custom origin skills
+	var/list/preset_custom_skills = preset["custom_origin_skills"]
+	if(islist(preset_custom_skills))
+		custom_origin_skills = preset_custom_skills.Copy()
+	else
+		custom_origin_skills = null
+	var/list/preset_custom_levels = preset["custom_origin_levels"]
+	if(islist(preset_custom_levels))
+		custom_origin_levels = preset_custom_levels.Copy()
+	else
+		custom_origin_levels = null
+	custom_origin_points_spent = preset["custom_origin_points_spent"] || 0
 	
 	var/vice1_type = string_to_typepath(preset["vice1"])
 	if(vice1_type && ispath(vice1_type, /datum/charflaw))
@@ -1553,35 +1588,69 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		</div>
 	</div>
 		<div class="statpack-section">
-			<h2>Upbringing: Origins</h2>
-			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select ONE origin background. This represents your early training and experience. If you select a origin you will be unable to choose any feats that allows you to have more skills.	</p>
-			<div class="statpack-current">"}
+			<h2>Build Your Own Destiny</h2>
+			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select skills to represent your early training and experience. Choose up to 10 points worth of skills. Novice costs 1 point, Apprentice costs 3 points total.</p>"}
 	
-	// Display origin virtue
-	if(origin_virtue)
-		html += generate_virtue_display_html(origin_virtue)
+	// Calculate custom origin points
+	var/origin_points_spent = 0
+	var/origin_points_max = 10
+	if(LAZYLEN(custom_origin_skills))
+		for(var/i = 1 to length(custom_origin_skills))
+			var/level = custom_origin_levels[i]
+			if(level == 1)  // Novice
+				origin_points_spent += 1
+			else if(level == 2)  // Apprentice
+				origin_points_spent += 3
+	var/origin_points_remaining = origin_points_max - origin_points_spent
+	
+	// Point tracker
+	html += "<p style='font-size: 0.85em; margin: 6px 0; padding: 6px; background: rgba(0,0,0,0.2); border-left: 3px solid [origin_points_remaining > 0 ? theme["accent"] : (origin_points_remaining == 0 ? "#28a745" : "#dc3545")]; color: [origin_points_remaining >= 0 ? theme["text"] : "#dc3545"];'>"
+	html += "<strong>Origin Points:</strong> [origin_points_spent]/[origin_points_max] spent | <strong>[origin_points_remaining]</strong> remaining"
+	html += "<br><span style='font-size: 0.9em;'>Novice = 1 point | Apprentice = 3 points total</span></p>"
+	
+	// Display selected skills
+	html += "<div class='statpack-current'>"
+	if(LAZYLEN(custom_origin_skills))
+		for(var/i = 1 to length(custom_origin_skills))
+			var/skill_path = custom_origin_skills[i]
+			var/level = custom_origin_levels[i]
+			var/datum/skill/S = skill_path  // This will be the path type
+			var/skill_name = initial(S.name)
+			var/skill_desc = initial(S.desc)
+			var/level_name = (level == 1) ? "Novice" : "Apprentice"
+			var/point_cost = (level == 1) ? 1 : 3
+			
+			html += "<div style='margin-bottom: 8px; padding: 6px; background: rgba(0,0,0,0.15); border-left: 2px solid [theme["accent"]];'>"
+			html += "<div style='font-weight: bold; color: [theme["text"]];'>[skill_name] ([level_name] - [point_cost] pt\s)</div>"
+			html += "<div style='font-size: 0.8em; color: [theme["label"]]; margin-top: 2px;'>[skill_desc]</div>"
+			html += "<div class='actions' style='margin-top: 4px;'>"
+			html += "<a class='btn btn-clear' style='font-size: 0.8em; padding: 3px 8px;' href='byond://?src=\ref[src];custom_origin_action=remove_skill;index=[i]'>Remove</a>"
+			html += "</div>"
+			html += "</div>"
 	else
-		html += "<div class='vice-name'>No Origin Selected</div>"
-		html += "<div class='vice-desc' style='font-style: italic;'>Choose a origin background to gain skills and traits.</div>"
+		html += "<div class='vice-name'>No Skills Selected</div>"
+		html += "<div class='vice-desc' style='font-style: italic;'>Add skills to build your custom origin background.</div>"
+	html += "</div>"
 	
-	html += {"</div>
-			<div class="actions">
-				<a class='btn btn-select' href='byond://?src=\ref[src];virtue_action=select_origin'>"}
+	html += {"
+			<div class="actions">"}
 	
-	if(origin_virtue)
-		html += "Change Origin"
+	if(origin_points_remaining > 0)
+		html += "<a class='btn btn-select' href='byond://?src=\ref[src];custom_origin_action=add_skill'>+ Add Skill ([origin_points_remaining] points remaining)</a>"
 	else
-		html += "Select Origin"
+		html += "<a class='btn btn-select' style='opacity: 0.5; cursor: not-allowed;' title='No points remaining'>+ Add Skill (0 points remaining)</a>"
 	
-	html += "</a>"
-	
-	if(origin_virtue)
-		html += "<a class='btn btn-clear' href='byond://?src=\ref[src];virtue_action=clear_origin'>Clear</a>"
+	if(LAZYLEN(custom_origin_skills))
+		html += "<a class='btn btn-clear' href='byond://?src=\ref[src];custom_origin_action=clear_all'>Clear All</a>"
 	
 	html += {"
 			</div>
-		</div>
-		
+		</div>"}
+	
+	/* HIDDEN: Origin Heirloom section - code preserved but not displayed in UI
+	   Uncomment this block to re-enable origin items in the UI
+	
+	html += {"
 		<div class="statpack-section">
 			<h2>Upbringing: Origin Heirloom</h2>
 			<p style='font-size: 0.75em; margin: 4px 0; color: [theme["label"]];'>Select ONE origin heirloom. This is an item from your past.</p>"}
@@ -1608,8 +1677,10 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		html += "</div>"
 	
 	html += {"
-		</div>
-		
+		</div>"}
+	*/ // End of hidden origin items section
+	
+	html += {"
 		<div class="statpack-section">
 			<h2>Upbringing: Feats</h2>"}
 	
@@ -1704,10 +1775,37 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 			html += "<div class='vice-info'>"
 			html += "<div class='vice-name'>[current_vice.name]</div>"
 			html += "<div class='vice-desc'>[current_vice.desc]</div>"
+			
+			// Show faction info for Averse and Paranoid vices
+			if(istype(current_vice, /datum/charflaw/averse))
+				var/faction_name = "None"
+				if(averse_chosen_faction)
+					for(var/fname in GLOB.averse_factions)
+						if(GLOB.averse_factions[fname] == averse_chosen_faction)
+							faction_name = fname
+							break
+				html += "<div style='margin-top: 5px; padding: 3px; background: rgba(200,50,50,0.3); border-left: 2px solid #c83232; font-size: 0.85em;'>"
+				html += "<b>Loathed Faction:</b> [faction_name]</div>"
+			else if(istype(current_vice, /datum/charflaw/addiction/paranoid))
+				var/faction_name = "None"
+				if(paranoid_chosen_faction)
+					for(var/fname in GLOB.averse_factions)
+						if(GLOB.averse_factions[fname] == paranoid_chosen_faction)
+							faction_name = fname
+							break
+				html += "<div style='margin-top: 5px; padding: 3px; background: rgba(50,100,200,0.3); border-left: 2px solid #5090ff; font-size: 0.85em;'>"
+				html += "<b>Trusted Faction:</b> [faction_name]</div>"
+			
 			html += "</div>"
 			html += "</div>"
 			
 			html += "<div class='actions'>"
+			// Add faction selection button for Averse and Paranoid
+			if(istype(current_vice, /datum/charflaw/averse))
+				html += "<a class='btn' style='background: #c83232;' href='byond://?src=\ref[src];vice_action=select_faction;slot=[i];faction_type=averse'>Choose Faction</a>"
+			else if(istype(current_vice, /datum/charflaw/addiction/paranoid))
+				html += "<a class='btn' style='background: #5090ff;' href='byond://?src=\ref[src];vice_action=select_faction;slot=[i];faction_type=paranoid'>Choose Faction</a>"
+			
 			html += "<a class='btn btn-select' href='byond://?src=\ref[src];vice_action=change;slot=[i]'>Change Vice</a>"
 			if(!is_required)
 				html += "<a class='btn btn-clear' href='byond://?src=\ref[src];vice_action=clear;slot=[i]'>Clear</a>"
@@ -2069,6 +2167,154 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				to_chat(usr, span_warning("No more changes to undo!"))
 		return
 	
+	// Handle custom origin actions
+	if(href_list["custom_origin_action"])
+		var/action = href_list["custom_origin_action"]
+		
+		if(action == "add_skill")
+			save_to_history()
+			
+			// Get available skills (non-combat, non-magic)
+			var/list/available_skills = list()
+			
+			// Add craft skills
+			available_skills["Crafting"] = /datum/skill/craft/crafting
+			available_skills["Weaponsmithing"] = /datum/skill/craft/weaponsmithing
+			available_skills["Armorsmithing"] = /datum/skill/craft/armorsmithing
+			available_skills["Blacksmithing"] = /datum/skill/craft/blacksmithing
+			available_skills["Smelting"] = /datum/skill/craft/smelting
+			available_skills["Carpentry"] = /datum/skill/craft/carpentry
+			available_skills["Masonry"] = /datum/skill/craft/masonry
+			available_skills["Trapmaking"] = /datum/skill/craft/traps
+			available_skills["Engineering"] = /datum/skill/craft/engineering
+			available_skills["Cooking"] = /datum/skill/craft/cooking
+			available_skills["Sewing"] = /datum/skill/craft/sewing
+			available_skills["Skincrafting"] = /datum/skill/craft/tanning
+			available_skills["Pottery"] = /datum/skill/craft/ceramics
+			available_skills["Alchemy"] = /datum/skill/craft/alchemy
+			
+			// Add labor skills
+			available_skills["Farming"] = /datum/skill/labor/farming
+			available_skills["Mining"] = /datum/skill/labor/mining
+			available_skills["Fishing"] = /datum/skill/labor/fishing
+			available_skills["Butchering"] = /datum/skill/labor/butchering
+			available_skills["Lumberjacking"] = /datum/skill/labor/lumberjacking
+			
+			// Add misc skills
+			available_skills["Athletics"] = /datum/skill/misc/athletics
+			available_skills["Climbing"] = /datum/skill/misc/climbing
+			available_skills["Literacy"] = /datum/skill/misc/reading
+			available_skills["Swimming"] = /datum/skill/misc/swimming
+			available_skills["Pickpocketing"] = /datum/skill/misc/stealing
+			available_skills["Sneaking"] = /datum/skill/misc/sneaking
+			available_skills["Lockpicking"] = /datum/skill/misc/lockpicking
+			available_skills["Riding"] = /datum/skill/misc/riding
+			available_skills["Music"] = /datum/skill/misc/music
+			available_skills["Medicine"] = /datum/skill/misc/medicine
+			available_skills["Tracking"] = /datum/skill/misc/tracking
+			
+			// Remove already selected skills
+			if(LAZYLEN(custom_origin_skills))
+				for(var/skill_path in custom_origin_skills)
+					for(var/display_name in available_skills)
+						if(available_skills[display_name] == skill_path)
+							available_skills -= display_name
+							break
+			
+			available_skills = sort_list(available_skills)
+			
+			var/skill_choice = tgui_input_list(usr, "Select a skill to add:", "Add Skill", available_skills)
+			if(!skill_choice)
+				open_vices_menu(usr)
+				return
+			
+			var/skill_path = available_skills[skill_choice]
+			
+			// Ask for level
+			var/list/level_options = list()
+			var/origin_points_spent = 0
+			if(LAZYLEN(custom_origin_skills))
+				for(var/i = 1 to length(custom_origin_skills))
+					var/level = custom_origin_levels[i]
+					if(level == 1)
+						origin_points_spent += 1
+					else if(level == 2)
+						origin_points_spent += 3
+			var/origin_points_remaining = 10 - origin_points_spent
+			
+			// Always show all options, but indicate which are affordable
+			if(origin_points_remaining >= 1)
+				level_options["Novice (1 point)"] = 1
+			else
+				level_options["Novice (1 point) - TOO EXPENSIVE"] = -1
+			
+			if(origin_points_remaining >= 3)
+				level_options["Apprentice (3 points)"] = 2
+			else
+				level_options["Apprentice (3 points) - TOO EXPENSIVE"] = -2
+			
+			var/level_choice = tgui_input_list(usr, "Select skill level ([origin_points_remaining] points remaining):", "Skill Level", level_options)
+			if(!level_choice)
+				open_vices_menu(usr)
+				return
+			
+			var/level = level_options[level_choice]
+			
+			// Check if they picked an unaffordable option
+			if(level < 0)
+				to_chat(usr, span_warning("You don't have enough points for that skill level!"))
+				open_vices_menu(usr)
+				return
+			
+			var/point_cost = (level == 1) ? 1 : 3
+			
+			// Add skill
+			if(!custom_origin_skills)
+				custom_origin_skills = list()
+			if(!custom_origin_levels)
+				custom_origin_levels = list()
+			
+			custom_origin_skills += skill_path
+			custom_origin_levels += level
+			
+			save_character()
+			to_chat(usr, span_notice("Added [skill_choice] at [level_choice] ([point_cost] point\s spent)."))
+			open_vices_menu(usr)
+			return
+		
+		if(action == "remove_skill")
+			save_to_history()
+			var/index = text2num(href_list["index"])
+			if(!index || index < 1 || index > length(custom_origin_skills))
+				return
+			
+			var/skill_path = custom_origin_skills[index]
+			var/datum/skill/S = skill_path
+			var/skill_name = initial(S.name)
+			
+			custom_origin_skills.Cut(index, index + 1)
+			custom_origin_levels.Cut(index, index + 1)
+			
+			if(!length(custom_origin_skills))
+				custom_origin_skills = null
+				custom_origin_levels = null
+			
+			save_character()
+			to_chat(usr, span_notice("Removed [skill_name] from your custom origin."))
+			open_vices_menu(usr)
+			return
+		
+		if(action == "clear_all")
+			if(tgalert(usr, "This will remove all selected skills. Are you sure?", "Clear All Skills", "Yes", "No") != "Yes")
+				return
+			save_to_history()
+			custom_origin_skills = null
+			custom_origin_levels = null
+			save_character()
+			to_chat(usr, span_notice("Cleared all custom origin skills."))
+			open_vices_menu(usr)
+			return
+	
 	if(href_list["virtue_action"])
 		var/action = href_list["virtue_action"]
 		
@@ -2098,18 +2344,18 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 					continue
 				if(has_stashed_item_conflict(V, null, TRUE, usr))
 					continue
-				// Check if we can afford this virtue
-				if(!can_afford_virtue(V))
-					continue
-				// Display name with cost
+				// Display name with cost - always show, mark if too expensive
 				var/display_name = V.name
+				var/can_afford = can_afford_virtue(V)
 				if(V.virtue_cost)
-					display_name = "[V.name] ([V.virtue_cost] point\s)"
+					if(can_afford)
+						display_name = "[V.name] ([V.virtue_cost] point\s)"
+					else
+						display_name = "[V.name] ([V.virtue_cost] point\s) - TOO EXPENSIVE"
 				origin_available[display_name] = V
-			
+		
 			origin_available = sort_list(origin_available)
-			var/remaining_points = get_remaining_virtue_points()
-			var/choice = tgui_input_list(usr, "Choose your origin background | [remaining_points] virtue points remaining:", "Origin Selection", origin_available)
+			var/choice = tgui_input_list(usr, "Choose your origin:", "Origin Selection", origin_available)
 			
 			if(choice)
 				var/datum/virtue/selected = origin_available[choice]
@@ -2187,18 +2433,21 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check if blocked by origin
 				if(is_blocked_by_origin(V))
 					continue
-				// Check if we can afford this virtue (including refunded points if changing)
-				if(V.virtue_cost && (get_remaining_virtue_points() + refunded_points) < V.virtue_cost)
-					continue
-				// Display name with cost
+				// Display name with cost - always show, mark if too expensive
 				var/display_name = V.name
+				var/can_afford = (!V.virtue_cost || (get_remaining_virtue_points() + refunded_points) >= V.virtue_cost)
 				if(V.virtue_cost)
-					display_name = "[V.name] ([V.virtue_cost] point\s)"
+					if(can_afford)
+						display_name = "[V.name] ([V.virtue_cost] point\s)"
+					else
+						display_name = "[V.name] ([V.virtue_cost] point\s) - TOO EXPENSIVE"
 				items_available[display_name] = V
-			
+		
 			items_available = sort_list(items_available)
-			var/available_points = get_remaining_virtue_points() + refunded_points
-			var/choice = tgui_input_list(usr, "Choose heirloom for slot [slot] | [available_points] virtue points available:", "Origin Heirloom", items_available)
+			var/message = "Choose your origin heirloom:"
+			if(action == "change_item")
+				message = "Choose a new heirloom to replace the current one:"
+			var/choice = tgui_input_list(usr, message, "Origin Item Selection", items_available)
 			
 			if(choice)
 				var/datum/virtue/selected = items_available[choice]
@@ -2274,18 +2523,18 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check conflicts with virtue and vices
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
-				// Check if we can afford this virtue
-				if(!can_afford_virtue(V))
-					continue
-				// Display name with cost
+				// Display name with cost - always show, mark if too expensive
 				var/display_name = V.name
+				var/can_afford = can_afford_virtue(V)
 				if(V.virtue_cost)
-					display_name = "[V.name] ([V.virtue_cost] point\s)"
+					if(can_afford)
+						display_name = "[V.name] ([V.virtue_cost] point\s)"
+					else
+						display_name = "[V.name] ([V.virtue_cost] point\s) - TOO EXPENSIVE"
 				feats_available[display_name] = V
-			
+		
 			feats_available = sort_list(feats_available)
-			var/remaining_points = get_remaining_virtue_points()
-			var/choice = tgui_input_list(usr, "Choose a feat | [remaining_points] virtue points remaining:", "Feat Selection", feats_available)
+			var/choice = tgui_input_list(usr, "Choose a feat:", "Feat Selection", feats_available)
 			
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
@@ -2347,18 +2596,18 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 				// Check conflicts
 				if(check_virtue_vice_conflict(V.type, TRUE, usr))
 					continue
-				// Check if we can afford this virtue (including refunded points from current selection)
-				if(V.virtue_cost && (get_remaining_virtue_points() + refunded_points) < V.virtue_cost)
-					continue
-				// Display name with cost
+				// Display name with cost - always show, mark if too expensive
 				var/display_name = V.name
+				var/can_afford = (!V.virtue_cost || (get_remaining_virtue_points() + refunded_points) >= V.virtue_cost)
 				if(V.virtue_cost)
-					display_name = "[V.name] ([V.virtue_cost] point\s)"
+					if(can_afford)
+						display_name = "[V.name] ([V.virtue_cost] point\s)"
+					else
+						display_name = "[V.name] ([V.virtue_cost] point\s) - TOO EXPENSIVE"
 				feats_available[display_name] = V
-			
+		
 			feats_available = sort_list(feats_available)
-			var/available_points = get_remaining_virtue_points() + refunded_points
-			var/choice = tgui_input_list(usr, "Change feat slot [slot] | [available_points] virtue points available:", "Feat Selection", feats_available)
+			var/choice = tgui_input_list(usr, "Choose a new feat to replace [current_feat.name]:", "Change Feat", feats_available)
 			
 			if(choice)
 				var/datum/virtue/selected = feats_available[choice]
@@ -2536,6 +2785,28 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 		var/slot_var = "vice[slot]"
 		
 		switch(action)
+			if("select_faction")
+				var/faction_type = href_list["faction_type"]
+				if(faction_type)
+					var/list/faction_choices = list()
+					for(var/faction_name in GLOB.averse_factions)
+						faction_choices[faction_name] = GLOB.averse_factions[faction_name]
+					
+					var/faction_prompt = (faction_type == "averse") ? "Which faction do you loathe?" : "Which faction do you trust?"
+					var/faction_choice = tgui_input_list(usr, faction_prompt, "Faction Selection", faction_choices)
+					
+					if(faction_choice)
+						if(faction_type == "averse")
+							averse_chosen_faction = GLOB.averse_factions[faction_choice]
+							to_chat(usr, span_notice("You will now loathe the [faction_choice] faction."))
+						else
+							paranoid_chosen_faction = GLOB.averse_factions[faction_choice]
+							to_chat(usr, span_notice("You will now trust the [faction_choice] faction."))
+						
+						save_character()
+				open_vices_menu(usr)
+				return
+			
 			if("select", "change")
 				// Save state before change
 				save_to_history()
@@ -2584,6 +2855,12 @@ GLOBAL_LIST_EMPTY(cached_loadout_icons)
 
 					// Save to disk so it persists across character slots
 					save_character()
+
+					// Prompt to choose faction if this is Averse or Paranoid vice
+					if(istype(new_vice, /datum/charflaw/averse))
+						to_chat(usr, span_notice("Vice selected. Click 'Choose Faction' to select which faction you loathe."))
+					else if(istype(new_vice, /datum/charflaw/addiction/paranoid))
+						to_chat(usr, span_notice("Vice selected. Click 'Choose Faction' to select which faction you trust."))
 
 					// Vices are intentionally not hot-applied to a living in-round character.
 					// They are saved to preferences and applied on the next spawn.
