@@ -399,7 +399,7 @@
 
 /datum/virtue/utility/woodwalker
 	name = "Woodwalker"
-	desc = "After years of training in the wilds, I've learned to traverse the woods confidently, without breaking any twigs. I can even step lightly on leaves without falling, and I can gather twice as many things from bushes."
+	desc = "After years of training in the wilds, I've learned to traverse the woods confidently, without breaking any twigs. I can even step lightly on leaves without falling, and I can gather twice as many things from bushes. (Also affects Nude Sleeper vice.)"
 	category = "feats"
 	virtue_cost = 10
 	added_traits = list(TRAIT_WOODWALKER, TRAIT_OUTDOORSMAN)
