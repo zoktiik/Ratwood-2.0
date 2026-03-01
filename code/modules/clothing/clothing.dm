@@ -59,7 +59,6 @@
 
 	var/cansnout = FALSE //for masks - can we MMB this to change it into a snouty sprite?
 	var/snouting = FALSE //do we have the snout-snug sprite toggled?
-	var/nudist_safe = FALSE //if TRUE, nudists won't try to remove this item (for items like natural armor, wrappings, sandals)
 
 /obj/item
 	var/blocking_behavior

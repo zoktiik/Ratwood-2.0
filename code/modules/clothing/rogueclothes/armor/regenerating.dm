@@ -77,7 +77,7 @@
 	blocksound = SOFTUNDERHIT
 	blade_dulling = DULLING_BASHCHOP
 	armor = ARMOR_PADDED
-	nudist_safe = TRUE //This is natural armor, not real clothing
+	nudist_approved = TRUE //This is natural armor, not real clothing
 
 	repairmsg_begin = "My skin begins to slowly mend its abuse.."
 	repairmsg_continue = "My skin mends some of its abuse.."
@@ -134,6 +134,7 @@
 	resistance_flags = FIRE_PROOF
 	surgery_cover = FALSE
 	flags_inv = null
+	nudist_approved = TRUE
 	
 	/// Regeneration variables
 	var/repair_time = 60 SECONDS // Longer regen time to balance non-shirt slot

@@ -425,7 +425,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/nudist
 	name = "Nudist"
-	desc = "I refuse to wear clothes. I'm compelled to remain unclothed and will automatically remove clothing. Others can dress me, but I'll try to remove it and suffer stress while clothed."
+	desc = "I refuse to wear clothes. I'm compelled to remain unclothed and will automatically remove clothing. Others can dress me, but I'll try to remove it and suffer stress while clothed. I can tolerate certain accessories."
 	needs_life_tick = TRUE
 	var/next_removal_attempt = 0
 
@@ -444,13 +444,13 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(H.stat != CONSCIOUS)
 		return
 	
-	// Check if wearing restricted clothing (ignore nudist-safe items)
+	// Check if wearing restricted clothing (ignore nudist-approved items)
 	var/is_clothed = FALSE
-	if(H.wear_armor && (!istype(H.wear_armor, /obj/item/clothing) || !H.wear_armor.nudist_safe))
+	if(H.wear_armor && (!istype(H.wear_armor, /obj/item/clothing) || !H.wear_armor.nudist_approved))
 		is_clothed = TRUE
-	if(H.wear_shirt && (!istype(H.wear_shirt, /obj/item/clothing) || !H.wear_shirt.nudist_safe))
+	if(H.wear_shirt && (!istype(H.wear_shirt, /obj/item/clothing) || !H.wear_shirt.nudist_approved))
 		is_clothed = TRUE
-	if(H.wear_pants && (!istype(H.wear_pants, /obj/item/clothing) || !H.wear_pants.nudist_safe))
+	if(H.wear_pants && (!istype(H.wear_pants, /obj/item/clothing) || !H.wear_pants.nudist_approved))
 		is_clothed = TRUE
 	
 	if(is_clothed)
@@ -460,20 +460,20 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	
 	// Try to remove clothing periodically
 	if(is_clothed && world.time >= next_removal_attempt)
-		// Remove armor first, then shirt, then pants (skip nudist-safe items)
+		// Remove armor first, then shirt, then pants (skip nudist-approved items)
 		var/obj/item/removed = null
 		if(H.wear_armor)
-			if(!istype(H.wear_armor, /obj/item/clothing) || !H.wear_armor.nudist_safe)
+			if(!istype(H.wear_armor, /obj/item/clothing) || !H.wear_armor.nudist_approved)
 				removed = H.wear_armor
 				if(H.dropItemToGround(removed))
 					to_chat(H, span_warning("I can't stand wearing [removed]! I need to be free!"))
 		else if(H.wear_shirt)
-			if(!istype(H.wear_shirt, /obj/item/clothing) || !H.wear_shirt.nudist_safe)
+			if(!istype(H.wear_shirt, /obj/item/clothing) || !H.wear_shirt.nudist_approved)
 				removed = H.wear_shirt
 				if(H.dropItemToGround(removed))
 					to_chat(H, span_warning("This [removed] is suffocating me! Off it goes!"))
 		else if(H.wear_pants)
-			if(!istype(H.wear_pants, /obj/item/clothing) || !H.wear_pants.nudist_safe)
+			if(!istype(H.wear_pants, /obj/item/clothing) || !H.wear_pants.nudist_approved)
 				removed = H.wear_pants
 				if(H.dropItemToGround(removed))
 					to_chat(H, span_warning("These [removed] are unbearable! Freedom!"))
@@ -588,7 +588,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 
 /datum/charflaw/nude_sleeper
 	name = "Nude Sleeper"
-	desc = "I can only fall asleep if I'm completely nude and in a bed. I cannot sleep while clothed."
+	desc = "I can only fall asleep if I'm completely nude and in a bed. I cannot sleep while wearing equipment. (Unremovable clothing and certain accessories are allowed.)"
 
 /datum/charflaw/nude_sleeper/on_mob_creation(mob/user)
 	..()

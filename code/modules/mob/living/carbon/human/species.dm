@@ -700,10 +700,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_armor)
 				return FALSE
 			if(is_nudist_self)
-				if(!istype(I, /obj/item/clothing))
-					return FALSE
-				var/obj/item/clothing/C = I
-				if(!C.nudist_safe)
+				if(!I.nudist_approved)
 					return FALSE
 			if(I.blocking_behavior & BULKYBLOCKS)
 				if(H.cloak)
@@ -725,10 +722,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.gloves)
 				return FALSE
 			if(is_nudist_self)
-				if(!istype(I, /obj/item/clothing))
-					return FALSE
-				var/obj/item/clothing/C = I
-				if(!C.nudist_safe)
+				if(!I.nudist_approved)
 					return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_GLOVES) )
 				return FALSE
@@ -739,10 +733,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.shoes)
 				return FALSE
 			if(is_nudist_self)
-				if(!istype(I, /obj/item/clothing))
-					return FALSE
-				var/obj/item/clothing/C = I
-				if(!C.nudist_safe)
+				if(!I.nudist_approved)
 					return FALSE
 			if(is_inhumen || is_lamia || is_harpy)
 				return FALSE
@@ -791,10 +782,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_pants)
 				return FALSE
 			if(is_nudist_self)
-				if(!istype(I, /obj/item/clothing))
-					return FALSE
-				var/obj/item/clothing/C = I
-				if(!C.nudist_safe)
+				if(!I.nudist_approved)
 					return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_PANTS) )
 				return FALSE
@@ -803,10 +791,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_shirt)
 				return FALSE
 			if(is_nudist_self)
-				if(!istype(I, /obj/item/clothing))
-					return FALSE
-				var/obj/item/clothing/C = I
-				if(!C.nudist_safe)
+				if(!I.nudist_approved)
 					return FALSE
 			if(I.blocking_behavior & BULKYBLOCKS)
 				if(H.cloak)
@@ -852,10 +837,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			if(H.wear_wrists)
 				return FALSE
 			if(is_nudist)
-				if(!istype(I, /obj/item/clothing))
-					return FALSE
-				var/obj/item/clothing/C = I
-				if(!C.nudist_safe)
+				if(!I.nudist_approved)
 					return FALSE
 			if( !(I.slot_flags & ITEM_SLOT_WRISTS) )
 				return FALSE
