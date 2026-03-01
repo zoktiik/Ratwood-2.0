@@ -21,15 +21,9 @@
 	user.sexcon.show_progress = 0
 
 /datum/sex_action/grind_body/on_perform(mob/living/carbon/human/user, mob/living/carbon/human/target)
-	var/do_subtle
+	var/do_subtle = user.sexcon.get_random_chance_for_stealth_action()
 	var/pleasure_target
 	var/zone_text
-	if(user.sexcon.force < SEX_FORCE_MID && user.sexcon.speed < SEX_SPEED_MID) // always subtle
-		do_subtle = 1
-	else if(user.sexcon.force < SEX_FORCE_EXTREME && user.sexcon.speed < SEX_SPEED_EXTREME)
-		do_subtle = !prob(user.sexcon.force > SEX_FORCE_MID ? 5 : 2) // roll the dice, diceman
-	else
-		do_subtle = 0 // we go loud
 	switch(user.zone_selected)
 		if(BODY_ZONE_PRECISE_GROIN)
 			zone_text = user.dir == target.dir ? "ass" : "crotch"
@@ -42,7 +36,8 @@
 			pleasure_target = 0
 	user.sexcon.show_progress = !do_subtle
 	user.sexcon.suppress_moan = target.sexcon.suppress_moan = do_subtle
-	user.visible_message(user.sexcon.spanify_force("[user] [do_subtle ? pick("subtly","sneakily","covertly","stealthily","quietly") : user.sexcon.get_generic_force_adjective()] grinds over [target]'s [zone_text]..."), vision_distance = (do_subtle ? 1 : DEFAULT_MESSAGE_RANGE))
+
+	user.visible_message(user.sexcon.spanify_force("[user] [user.sexcon.get_generic_force_adjective(is_stealth = do_subtle)] grinds over [target]'s [zone_text]..."), vision_distance = (do_subtle ? 1 : DEFAULT_MESSAGE_RANGE))
 	if(!do_subtle)
 		if(user.sexcon.force > SEX_FORCE_HIGH)
 			user.sexcon.outercourse_noise(target)
@@ -56,6 +51,7 @@
 	if(pleasure_target)
 		user.sexcon.perform_sex_action(target, 1, 0.5, TRUE)
 	target.sexcon.handle_passive_ejaculation()
+
 	user.sexcon.suppress_moan = target.sexcon.suppress_moan = FALSE
 
 /datum/sex_action/grind_body/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)

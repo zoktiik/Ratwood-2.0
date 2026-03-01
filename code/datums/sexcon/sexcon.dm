@@ -1115,6 +1115,13 @@
 		if(SEX_SPEED_EXTREME)
 			return 1.4
 
+/datum/sex_controller/proc/get_random_chance_for_stealth_action()
+	if(force < SEX_FORCE_MID && speed < SEX_SPEED_MID) // always subtle
+		return TRUE
+	if(force < SEX_FORCE_EXTREME && speed < SEX_SPEED_EXTREME)
+		return !prob(force > SEX_FORCE_MID ? 5 : 2) // roll the dice, diceman
+	return FALSE // we go loud
+
 /datum/sex_controller/proc/get_force_string()
 	switch(force)
 		if(SEX_FORCE_LOW)
@@ -1147,7 +1154,10 @@
 			return "<font color='#f05ee1'>PARTIALLY ERECT</font>"
 		if(SEX_MANUAL_AROUSAL_FULL)
 			return "<font color='#d146f5'>FULLY ERECT</font>"
-/datum/sex_controller/proc/get_generic_force_adjective()
+
+/datum/sex_controller/proc/get_generic_force_adjective(is_stealth = FALSE)
+	if(is_stealth)
+		return pick(list("subtly","sneakily","covertly","stealthily","quietly"))
 	switch(force)
 		if(SEX_FORCE_LOW)
 			return pick(list("gently", "carefully", "tenderly", "gingerly", "delicately", "lazily"))
