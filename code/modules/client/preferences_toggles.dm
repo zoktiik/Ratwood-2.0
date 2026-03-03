@@ -111,9 +111,9 @@
 		prefs.skillcap_notifs = !prefs.skillcap_notifs
 		prefs.save_preferences()
 		if(prefs.skillcap_notifs)
-			to_chat(src, "You will receive notifications when hitting your character's level cap in a skill.")
+			to_chat(src, "You will receive notifications when hitting your character's experience cap in a skill.")
 		else
-			to_chat(src, "You will no longer be notified in chat when hitting your character's level cap in a skill.")
+			to_chat(src, "You will no longer be notified in chat when hitting your character's experience cap in a skill.")
 
 /client/verb/toggle_examine_blocks()
 	set category = "Options"
