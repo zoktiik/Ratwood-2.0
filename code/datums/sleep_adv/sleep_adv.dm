@@ -105,11 +105,11 @@
 			var/skillname = skillref.name ? skillref.name : "ERROR"
 			var/captimer = LAZYACCESS(L.mob_timers, "skillcap_[skillname]")
 
-			if(!captimer || world.time < (captimer + SKILLCAP_NOTIF_COOLDOWN))
+			if(!captimer || world.time > (captimer + SKILLCAP_NOTIF_COOLDOWN))
 				L.mob_timers["skillcap_[skillname]"] = world.time
 				to_chat(L, span_warning("I can't learn anything more about [skillname]."))
 				if(show_xp)
-					L.balloon_alert(L, "<font color = '#a8665a'>Skill cap!</font>")
+					L.balloon_alert(L, "<font color = '#bb2b2b'>Skill cap!</font>")
 
 	var/capped_pre = enough_sleep_xp_to_advance(skill, 2)
 	var/can_advance_pre = enough_sleep_xp_to_advance(skill, 1)
