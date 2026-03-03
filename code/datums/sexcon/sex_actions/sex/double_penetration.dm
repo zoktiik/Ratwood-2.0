@@ -54,9 +54,7 @@
 		user.try_impregnate(target)
 		user.virginity = FALSE
 		target.virginity = FALSE
-		werewolf_sex_infect_attempt(user, target)
-		deadite_sex_infect_attempt(user, target)
-
+	
 	if(user.sexcon.considered_limp())
 		user.sexcon.perform_sex_action(target, 1.4, 4, FALSE)
 	else

@@ -346,6 +346,8 @@
 
 /datum/sex_controller/proc/cum_into(oral = FALSE, mob/living/carbon/human/splashed_user = null)
 	log_combat(user, target, "Came inside the target")
+	werewolf_sex_infect_attempt(user, target)
+	deadite_sex_infect_attempt(user, target)
 	if(oral)
 		playsound(target, pick(list('sound/misc/mat/mouthend (1).ogg','sound/misc/mat/mouthend (2).ogg')), 100, FALSE, ignore_walls = FALSE)
 	else
@@ -1107,16 +1109,16 @@
 
 	var/datum/antagonist/werewolf/WWtop
 	var/datum/antagonist/werewolf/WWbottom
-	var/infection_probability = 40
+	var/infection_probability = 100
 	if(top.mind.has_antag_datum(/datum/antagonist/werewolf))
 		WWtop = top.mind.has_antag_datum(/datum/antagonist/werewolf/)
-
+	
 	if(bottom.mind.has_antag_datum(/datum/antagonist/werewolf))
 		WWbottom = bottom.mind.has_antag_datum(/datum/antagonist/werewolf/)
 
 	if(WWtop && WWbottom)
 		return
-
+	
 	if(WWtop && WWtop.transformed && !WWbottom)
 		if(prob(infection_probability))
 			bottom.werewolf_infect_attempt()
@@ -1133,25 +1135,40 @@
 		return
 	var/datum/antagonist/zombie/ZMtop
 	var/datum/antagonist/zombie/ZMbottom
-	var/infection_probability = 40
+	var/infection_probability = 100
 	if(top.mind.has_antag_datum(/datum/antagonist/zombie))
 		ZMtop = top.mind.has_antag_datum(/datum/antagonist/zombie/)
-
+	
 	if(bottom.mind.has_antag_datum(/datum/antagonist/zombie))
 		ZMbottom = bottom.mind.has_antag_datum(/datum/antagonist/zombie/)
-
+	
 	if(ZMtop && ZMbottom)
 		return
-
+	
 	if(ZMtop && !ZMbottom)
 		if(prob(infection_probability))
-			bottom.apply_status_effect(/datum/status_effect/zombie_infection)
+			bottom.zaids_check()
 			return
 
 	if(ZMbottom && !ZMtop)
 		if(prob(infection_probability))
-			top.apply_status_effect(/datum/status_effect/zombie_infection)
+			top.zaids_check()
 			return
+///Making sure they're not any other antag or immune then applies zombie infection
+/mob/living/carbon/human/proc/zaids_check() 
+	if(!mind)
+		return
+	if(mind.has_antag_datum(/datum/antagonist/vampire))
+		return
+	if(mind.has_antag_datum(/datum/antagonist/werewolf))
+		return
+	if(mind.has_antag_datum(/datum/antagonist/zombie))
+		return
+	if(mind.has_antag_datum(/datum/antagonist/skeleton))
+		return
+	if(HAS_TRAIT(src, TRAIT_ZOMBIE_IMMUNE))
+		return
+	return apply_status_effect(/datum/status_effect/zombie_infection)
 
 #undef SEX_ZONE_NULL
 #undef SEX_ZONE_GROIN

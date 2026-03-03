@@ -52,8 +52,6 @@
 		user.visible_message(span_love("[user] cums into [target]'s throat!"))
 		user.sexcon.cum_into(oral = TRUE, splashed_user = target) // give facial status effect for the target, considering this was rough throat sex
 		user.virginity = FALSE
-		werewolf_sex_infect_attempt(user, target)
-		deadite_sex_infect_attempt(user, target)
 
 	if(user.sexcon.considered_limp())
 		user.sexcon.perform_sex_action(target, 0, 2, FALSE)

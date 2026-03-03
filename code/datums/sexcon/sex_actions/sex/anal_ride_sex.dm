@@ -43,8 +43,6 @@
 		target.virginity = FALSE
 		if(HAS_TRAIT(user, TRAIT_BAOTHA_FERTILITY_BOON) && !user.getorganslot(ORGAN_SLOT_VAGINA))
 			target.try_impregnate(user)
-		werewolf_sex_infect_attempt(user, target)
-		deadite_sex_infect_attempt(user, target)
 
 	if(target.sexcon.considered_limp())
 		target.sexcon.perform_sex_action(user, 1.2, 4, FALSE)

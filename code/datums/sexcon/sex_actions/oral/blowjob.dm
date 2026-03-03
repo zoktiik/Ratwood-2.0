@@ -37,8 +37,6 @@
 	if(target.sexcon.check_active_ejaculation())
 		target.visible_message(span_love("[target] cums into [user]'s mouth!"))
 		target.sexcon.cum_into(oral = TRUE)
-		werewolf_sex_infect_attempt(user, target)
-		deadite_sex_infect_attempt(user, target)
 
 /datum/sex_action/blowjob/on_finish(mob/living/carbon/human/user, mob/living/carbon/human/target)
 	user.visible_message(span_warning("[user] stops sucking [target]'s cock ..."))
