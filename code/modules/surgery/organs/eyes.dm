@@ -92,6 +92,15 @@
 	M.set_blurriness(0)
 	M.update_sight()
 
+// abductor-specific eye organ.
+/obj/item/organ/abductor_eyes
+	parent_type = /obj/item/organ/eyes
+	name = "abductor eyes"
+	desc = ""
+	icon_state = "abductor_1"
+	visible_organ = FALSE      // don't render at all on the body
+	// nothing else needs changing; it behaves exactly like normal eyes
+
 /obj/item/organ/eyes/on_life()
 	..()
 	var/mob/living/carbon/C = owner

@@ -2168,6 +2168,7 @@
 #include "code\modules\mob\living\carbon\human\species_types\furry\vulpkanin.dm"
 #include "code\modules\mob\living\carbon\human\species_types\roguetown\roguetown_species.dm"
 #include "code\modules\mob\living\carbon\human\species_types\roguetown\construct\_construct.dm"
+#include "code\modules\mob\living\carbon\human\species_types\roguetown\abductor\abductor.dm"
 #include "code\modules\mob\living\carbon\human\species_types\roguetown\construct\constructm.dm"
 #include "code\modules\mob\living\carbon\human\species_types\roguetown\construct\doll.dm"
 #include "code\modules\mob\living\carbon\human\species_types\roguetown\dullahan\dullahan.dm"

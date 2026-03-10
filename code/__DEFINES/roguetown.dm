@@ -59,7 +59,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/dullahan,\
 	/datum/species/lamia,\
 	/datum/species/dwarf/gnome,\
-	/datum/species/harpy\
+	/datum/species/harpy,\
+	/datum/species/abductor\
 )
 
 #define RACES_RESPECTED \
@@ -161,7 +162,8 @@ Balloon Alert / Floating Text defines
 	/datum/species/construct/metal/porcelain,\
 	/datum/species/dullahan,\
 	/datum/species/lamia,\
-	/datum/species/dwarf/gnome\
+	/datum/species/dwarf/gnome,\
+	/datum/species/abductor\
 )
 // Non-dwarf non-kobold non-goblin mostly
 #define NON_DWARVEN_RACE_TYPES list(\
