@@ -12,13 +12,21 @@
 	skin_tone_wording = "Skin Tone"
 	default_color = "A0FFB0"
 
-	species_traits = list()
+	species_traits = list(NOBLOOD)
 	default_features = MANDATORY_FEATURE_LIST
 	use_skintones = 1
 	possible_ages = ALL_AGES_LIST
 
 	disliked_food = NONE
 	liked_food = NONE
+	inherent_traits = list(
+		TRAIT_NOHUNGER,
+		TRAIT_BLOODLOSS_IMMUNE,
+		TRAIT_NOBREATH,
+		TRAIT_ZOMBIE_IMMUNE,
+		TRAIT_NOSLEEP,
+		TRAIT_NOMETABOLISM,
+		)
 
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | SLIME_EXTRACT
 
