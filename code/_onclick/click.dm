@@ -863,7 +863,13 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 /atom/proc/rmb_self(mob/user)
 	return
 
+/atom/proc/rmb_in_bag(mob/user)
+	return
+
 /mob/proc/rmb_on(atom/A, params)
+	return
+
+/mob/proc/in_bag_check(obj/item/A)
 	return
 
 /mob/proc/RightClickOn(atom/A, params)
@@ -872,6 +878,8 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 			A.rmb_self(src)
 		else
 			rmb_on(A, params)
+	else if(in_bag_check(A))
+		A.rmb_in_bag(src)
 	else if(used_intent?.rmb_ranged)
 		used_intent.rmb_ranged(A, src) //get the message from the intent
 	changeNext_move(CLICK_CD_RAPID)

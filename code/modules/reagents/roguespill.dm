@@ -9,10 +9,18 @@
 
 /obj/item/storage/proc/check_spill()
 	var/mob/living/L = loc
-	if(istype(L))
+	if(istype(L) && (L.m_intent != MOVE_INTENT_SNEAK))
 		for(var/obj/item/reagent_containers/I in contents)
 			if(I.reagents && I.spillable)
 				I.reagents.remove_all(3)
+				L.warn_spilling()
+
+/mob/living/proc/warn_spilling()
+	if(src.mob_timers["spilling_warning"] && (world.time < (src.mob_timers["spilling_warning"] + 30 SECONDS)))
+		return
+	to_chat(src, span_warning("Open containers in my inventory are spilling their liquids!"))
+	src.mob_timers["spilling_warning"] = world.time
+	return
 
 /obj/item/storage/dropped(mob/user)
 	. = ..()

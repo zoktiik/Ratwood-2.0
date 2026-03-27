@@ -180,3 +180,13 @@
 			most_expensive = atom
 			price = atom.sellprice
 	return most_expensive
+
+/mob/living/carbon/in_bag_check(obj/item/A)
+	if(!istype(A))
+		return FALSE
+	if(!src.active_storage)
+		return FALSE
+	var/obj/item/I = src.active_storage.real_location()
+	if(istype(I) && I.Adjacent(src) && (A in I.contents))
+		return TRUE
+	return FALSE
