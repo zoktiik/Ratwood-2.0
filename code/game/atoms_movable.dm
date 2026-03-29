@@ -722,8 +722,9 @@
 /atom/movable/proc/on_exit_storage(datum/component/storage/concrete/S)
 	return
 
-// called when this atom is added into a storage item, which is passed on as S. The loc variable is already set to the storage item.
-/atom/movable/proc/on_enter_storage(datum/component/storage/concrete/S)
+// called when this atom is added into a storage item, which is passed on as S. The loc variable is already set to the storage item. 
+// if the mob putting the atom in storage is known, it is passed on as M.
+/atom/movable/proc/on_enter_storage(datum/component/storage/concrete/S, mob/M)
 	return
 
 //called when a mob resists while inside a container that is itself inside something.

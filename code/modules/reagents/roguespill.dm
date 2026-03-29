@@ -20,7 +20,7 @@
 /mob/living/proc/warn_spilling()
 	if(mob_timers["spilling_warning"] && (world.time < (mob_timers["spilling_warning"] + 20 SECONDS)))
 		return
-	to_chat(src, span_warning("Open containers in my inventory are spilling their liquids!"))
+	to_chat(src, span_warning("My bags are leaking..."))
 	mob_timers["spilling_warning"] = world.time
 	return
 
@@ -31,11 +31,10 @@
 
 /obj/item/reagent_containers/on_enter_storage(datum/component/storage/concrete/S)
 	..()
-	if(spillable)
-		if(S)
-			var/atom/real_location = S.real_location()
-			if(istype(real_location, /obj/item/storage) && !istype(real_location, /obj/item/storage/bag/tray))
-				var/obj/item/storage/I = real_location
-				if(ismob(I.loc))
-					var/mob/M = I.loc
-					I.RegisterSignal(M, COMSIG_MOVABLE_MOVED, TYPE_PROC_REF(/obj/item/storage, check_spill), override = TRUE)
+	if(spillable && !S.does_not_spill)
+		var/atom/real_location = S.real_location()
+		if(istype(real_location, /obj/item/storage) && !istype(real_location, /obj/item/storage/bag/tray))
+			var/obj/item/storage/I = real_location
+			if(ismob(I.loc))
+				var/mob/M = I.loc
+				I.RegisterSignal(M, COMSIG_MOVABLE_MOVED, TYPE_PROC_REF(/obj/item/storage, check_spill), override = TRUE)
