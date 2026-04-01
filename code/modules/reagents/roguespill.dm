@@ -12,7 +12,7 @@
 	if(!istype(L))
 		return
 	for(var/obj/item/reagent_containers/I in contents)
-		if(I.spillable && I.reagents && I.reagents.total_volume)
+		if(I.spillable && I.reagents?.total_volume)
 			L.warn_spilling()
 			I.reagents.remove_all(3)
 	return
