@@ -868,7 +868,7 @@ GLOBAL_LIST_EMPTY(reach_dummy_pool)
 
 /mob/proc/RightClickOn(atom/A, params)
 	if(A.Adjacent(src))
-		if(A.loc == src && (A == get_active_held_item()))
+		if(A.loc == src && (A == get_active_held_item()) )
 			A.rmb_self(src)
 		else
 			rmb_on(A, params)
