@@ -1,11 +1,11 @@
 /obj/item/storage/equipped(mob/user, slot)
 	. = ..()
-	if(istype(src, /obj/item/storage/bag/tray))
-		return // Trays carry liquids safely - no spill on move
-	for(var/obj/item/reagent_containers/I in contents)
-		if(I.reagents && I.spillable)
-			RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(check_spill), override = TRUE)
-			break
+	var/datum/component/storage/concrete/storage = GetComponent(/datum/component/storage/concrete)
+	if(!storage?.does_not_spill)
+		for(var/obj/item/reagent_containers/I in contents)
+			if(I.reagents && I.spillable)
+				RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(check_spill), override = TRUE)
+				break
 
 /obj/item/storage/proc/check_spill()
 	var/mob/living/L = loc
@@ -33,7 +33,7 @@
 	..()
 	if(spillable && !S.does_not_spill)
 		var/atom/real_location = S.real_location()
-		if(istype(real_location, /obj/item/storage) && !istype(real_location, /obj/item/storage/bag/tray))
+		if(istype(real_location, /obj/item/storage))
 			var/obj/item/storage/I = real_location
 			if(ismob(I.loc))
 				var/mob/M = I.loc
