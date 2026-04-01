@@ -133,9 +133,9 @@ GLOBAL_LIST_INIT(wisdoms, world.file2list("strings/rt/wisdoms.txt"))
 	warn_opened(M, S)
 
 /obj/item/reagent_containers/glass/bottle/proc/warn_opened(mob/user, datum/component/storage/concrete/storage)
-	if(storage.does_not_spill)
-		return
 	if(closed)
+		return
+	if(storage.does_not_spill)
 		return
 	if(!reagents.total_volume)
 		return
