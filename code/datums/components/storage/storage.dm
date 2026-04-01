@@ -74,7 +74,7 @@
 	var/intercept_parent_attack = TRUE
 	var/intercept_parent_mousedrop = TRUE
 
-	var/does_not_spill = FALSE							// Suppresses liquid spilling behavior for reagent containers held within
+	var/does_not_spill = FALSE						// Suppresses liquid spilling behavior for reagent containers held within
 
 /datum/component/storage/Initialize(datum/component/storage/concrete/master)
 	if(!isatom(parent))
@@ -183,7 +183,7 @@
 			hide_from(L)
 	if(!does_not_spill)
 		for(var/obj/item/reagent_containers/I in A.contents)
-			if(I.reagents && I.spillable)
+			if(I.spillable && I.reagents)
 				I.reagents.remove_all(3)
 
 /datum/component/storage/proc/attack_self(datum/source, mob/M)
