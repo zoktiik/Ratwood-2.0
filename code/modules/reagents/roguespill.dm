@@ -20,7 +20,7 @@
 /mob/living/proc/warn_spilling()
 	if(mob_timers["spilling_warning"] && (world.time < (mob_timers["spilling_warning"] + 20 SECONDS)))
 		return
-	to_chat(src, span_warning("My bags are leaking..."))
+	to_chat(src, span_warning("My bags are dripping..."))
 	mob_timers["spilling_warning"] = world.time
 	return
 

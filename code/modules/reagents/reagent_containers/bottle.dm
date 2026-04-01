@@ -68,10 +68,6 @@ GLOBAL_LIST_INIT(wisdoms, world.file2list("strings/rt/wisdoms.txt"))
 	. = ..()
 	toggle_cork(user)
 
-/obj/item/reagent_containers/glass/bottle/rmb_althand(mob/user)
-	. = ..()
-	toggle_cork(user)
-
 /obj/item/reagent_containers/glass/bottle/attack_self(mob/user)
 	. = ..()
 	toggle_cork(user)
