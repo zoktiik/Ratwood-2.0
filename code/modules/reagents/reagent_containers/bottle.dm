@@ -81,9 +81,9 @@ GLOBAL_LIST_INIT(wisdoms, world.file2list("strings/rt/wisdoms.txt"))
 	if(item_flags & IN_STORAGE)
 		/*
 		Currently the bottle underlay and the tetris.dm underlay (from Vanderlin inventory) do *not* play nice 
-		if you try to update the bottle's icon. They'll gladly interfere with each other's underlays if you update one or the other.
+		if you trigger bottle icon updates. They'll gladly interfere with each other's underlays if you update one or the other.
 
-		This is just a half-assed bandage fix, and certainly not perfect, as you can still transfer liquids in stored open bottles,
+		This is just a half-assed bandage fix, and certainly not perfect. You can still transfer liquids in stored open bottles,
 		which deletes the inventory's underlay for that item until you refresh the inventory view.
 		*/
 		to_chat(user, span_warning("I need to take [src] out first!"))
