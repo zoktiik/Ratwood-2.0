@@ -93,7 +93,9 @@
 		GLOB.wildshapes[shape.name] = shape
 
 	// Vices 
-	init_subtypes(/datum/charflaw, GLOB.charflaw_singletons)
+	for (var/path in subtypesof(/datum/charflaw))
+		var/datum/charflaw/charflaw = new path()
+		GLOB.charflaw_singletons[path] = charflaw
 
 
 //creates every subtype of prototype (excluding prototype) and adds it to list L.
