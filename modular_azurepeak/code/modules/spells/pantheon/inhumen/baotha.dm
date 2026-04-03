@@ -174,12 +174,13 @@
 	return TRUE
 
 /// Generate a convincing lie (or half-truth) about the target's vices, both to be displayed, and to be saved for later in our copy of the spell.
+/// Returns a list of charflaw datum typepaths.
 /obj/effect/proc_holder/spell/invoked/baothavice/proc/generate_vice_paths(mob/living/carbon/human/H, mob/living/carbon/human/our_human)
 	RETURN_TYPE(/list)
 	var/list/vice_paths = list()
-	var/vices_to_gen = max(length(H.vices), 1)
-
+	var/vices_to_gen = max(length(H.vices), 1) // We decrement this when we're guaranteeed to know a vice. 
 	var/baothamarked_nympho_check = FALSE
+
 	// First, we'll copy vices that are readily apparent to the caster, so as to make the readout convincing. Thankfully, we will only have to do this once per person.
 	for(var/datum/charflaw/vice_to_get in H.vices)
 		// Special cases first, since they're quick to check. These can't just fit in a list.
@@ -202,7 +203,7 @@
 					vices_to_gen--
 					continue
 			// And Baothans can already tell if someone is Marked by Baotha.
-			// Having it also implies Nymphomaniac, since that vice gets added by Marked.
+			// Having it also implies Nymphomaniac, since that vice gets added by Marked if it doesn't already exist.
 			if(/datum/charflaw/marked_by_baotha)
 				if(HAS_TRAIT(our_human, TRAIT_DEPRAVED)) // Just making sure...
 					vice_paths += vice_to_get.type
@@ -214,6 +215,7 @@
 							nympho_check = TRUE
 							break
 					if(!nympho_check)
+						baothamarked_nympho_check = TRUE
 						vice_paths += /datum/charflaw/addiction/lovefiend
 						vices_to_gen--
 					continue
@@ -222,10 +224,11 @@
 					continue
 		// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
 		if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
-			if(length(our_human.vices) && (vice_to_get in our_human.vices)) // Don't ask me why referencing a different instance of the same type works for this. It just does, okay?!
-				vice_paths += vice_to_get.type
-				vices_to_gen--
-				continue
+			for(var/datum/charflaw/vice in our_human.vices)
+				if(istype(vice, vice_to_get.type))
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					continue
 		// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
 		if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
 			vice_paths += vice_to_get.type
