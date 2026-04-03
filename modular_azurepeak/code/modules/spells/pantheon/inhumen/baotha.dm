@@ -139,58 +139,8 @@
 
 	if(HAS_TRAIT(H, TRAIT_DECEIVING_MEEKNESS) && user.get_skill_level(/datum/skill/magic/holy) <= SKILL_LEVEL_NOVICE)
 		if(!length(fake_vices[H]))
-			// Generate a convincing lie (or half-truth) about their vices, and save that for later in our copy of the spell
-			var/list/vice_paths = list()
-			var/vices_to_gen = max(length(H.vices), 1)
-
-			// First, we'll copy vices that are readily apparent to the caster, so as to make the readout convincing. Thankfully, we will only have to do this once per person.
-
-			for(var/datum/charflaw/vice_to_get in H.vices)
-				// Special cases first, since they're quick to check. These can't just fit in a list.
-				switch(vice_to_get.type)
-					// Sadists and masochists already get messages when they examine each other.
-					if(/datum/charflaw/addiction/sadist)
-						if(our_human.has_flaw(/datum/charflaw/addiction/masochist))
-							vice_paths += vice_to_get.type
-							vices_to_gen--
-							continue
-					if(/datum/charflaw/addiction/masochist)
-						if(our_human.has_flaw(/datum/charflaw/addiction/sadist))
-							vice_paths += vice_to_get.type
-							vices_to_gen--
-							continue
-					// Empaths already get messages when they examine mutes.
-					if(/datum/charflaw/mute)
-						if(HAS_TRAIT(our_human, TRAIT_EMPATH))
-							vice_paths += vice_to_get.type
-							vices_to_gen--
-							continue
-					// And Baothans can already tell if someone is Marked by Baotha.
-					if(/datum/charflaw/marked_by_baotha)
-						if(HAS_TRAIT(our_human, TRAIT_DEPRAVED)) // more than likely the case, but just making sure...
-							vice_paths += vice_to_get.type
-							vices_to_gen--
-							continue
-				// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
-				if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
-					vice_paths += vice_to_get.type
-					vices_to_gen--
-					continue
-				// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
-				if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
-					if(length(our_human.vices) && (vice_to_get in our_human.vices))
-						vice_paths += vice_to_get.type
-						vices_to_gen--
-						continue
-
-			// Now generate the rest, if applicable. However many real vices the target has is our maximum.
-			if(vices_to_gen > 0)
-				for(var/i in 1 to vices_to_gen)
-					for(var/t in 1 to 5) // We'll put up with 5 rejections, and it'll otherwise be ok if we just skip this one.
-						var/vice_roll = pick_assoc(GLOB.character_flaws)
-						if(plausible_vice_filter(vice_roll, vice_paths))
-							vice_paths += vice_roll
-							break
+			
+			var/list/vice_paths = generate_vice_paths(H, our_human)
 
 			// Now convert all the paths to relevant names
 			vice_names = list()
@@ -223,12 +173,86 @@
 	to_chat(user, span_info("[prefix]") + span_warning("[vices_string]."))
 	return TRUE
 
-/// Filter randomly-picked vices that the target could not plausibly have. A false result means the vice will not be picked.
+/// Generate a convincing lie (or half-truth) about the target's vices, both to be displayed, and to be saved for later in our copy of the spell.
+/obj/effect/proc_holder/spell/invoked/baothavice/proc/generate_vice_paths(mob/living/carbon/human/H, mob/living/carbon/human/our_human)
+	RETURN_TYPE(/list)
+	var/list/vice_paths = list()
+	var/vices_to_gen = max(length(H.vices), 1)
+
+	var/baothamarked_nympho_check = FALSE
+	// First, we'll copy vices that are readily apparent to the caster, so as to make the readout convincing. Thankfully, we will only have to do this once per person.
+	for(var/datum/charflaw/vice_to_get in H.vices)
+		// Special cases first, since they're quick to check. These can't just fit in a list.
+		switch(vice_to_get.type)
+			// Sadists and masochists already get messages when they examine *each other*.
+			if(/datum/charflaw/addiction/sadist)
+				if(our_human.has_flaw(/datum/charflaw/addiction/masochist))
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					continue
+			if(/datum/charflaw/addiction/masochist)
+				if(our_human.has_flaw(/datum/charflaw/addiction/sadist))
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					continue
+			// Empaths already get messages when they examine mutes.
+			if(/datum/charflaw/mute)
+				if(HAS_TRAIT(our_human, TRAIT_EMPATH))
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					continue
+			// And Baothans can already tell if someone is Marked by Baotha.
+			// Having it also implies Nymphomaniac, since that vice gets added by Marked.
+			if(/datum/charflaw/marked_by_baotha)
+				if(HAS_TRAIT(our_human, TRAIT_DEPRAVED)) // Just making sure...
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					// Now to add Nympho, regardless of whether the caster has it themselves.
+					var/nympho_check = FALSE
+					for(var/path in vice_paths)
+						if(path == /datum/charflaw/addiction/lovefiend)
+							nympho_check = TRUE
+							break
+					if(!nympho_check)
+						vice_paths += /datum/charflaw/addiction/lovefiend
+						vices_to_gen--
+					continue
+			if(/datum/charflaw/addiction/lovefiend)
+				if(baothamarked_nympho_check) // Since we don't have duplicate checking until later.
+					continue
+				if(length(our_human.vices) && (vice_to_get in our_human.vices))
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					continue
+		// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
+		if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
+			vice_paths += vice_to_get.type
+			vices_to_gen--
+			continue
+		// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
+		if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
+			if(length(our_human.vices) && (vice_to_get in our_human.vices)) // Don't ask me why referencing a different instance of the same type works for this. It just does, okay?!
+				vice_paths += vice_to_get.type
+				vices_to_gen--
+				continue
+
+	// Now generate the rest, if applicable. However many real vices the target has is our maximum.
+	if(vices_to_gen > 0)
+		for(var/i in 1 to vices_to_gen)
+			for(var/t in 1 to 5) // We'll put up with 5 rejections, and it'll otherwise be ok if we just skip this one.
+				var/vice_roll = pick_assoc(GLOB.character_flaws)
+				if(plausible_vice_filter(vice_roll, vice_paths))
+					vice_paths += vice_roll
+					break
+	
+	return vice_paths
+
+/// Filter randomly-picked fake vices that the target could not plausibly have. A false result means the vice will not be picked.
 /obj/effect/proc_holder/spell/invoked/baothavice/proc/plausible_vice_filter(vice_type, list/vice_paths)
 	//No duplicates
 	if(vice_type in vice_paths)
 		return FALSE
-	// Exclude "Random or No Vice" and "No Vice"
+	// Exclude "Random or None" and "No Flaw"
 	if(vice_type in CHARFLAWS_RANDNONE_TYPES)
 		return FALSE
 	// We already grabbed the physical vices the target has.
