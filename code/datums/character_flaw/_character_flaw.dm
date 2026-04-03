@@ -3,7 +3,7 @@
 GLOBAL_LIST_EMPTY(charflaw_singletons)
 
 /// Associative list mapping the "menu name" of each vice in the list to its typepath.
-/// This list is all of the vices you can pick. Used primarily for adding a vice, but there are other usecases.
+/// This list is all of the vices you can pick. Used primarily for adding a vice, but also for randomly picking a vice from the selectable space.
 GLOBAL_LIST_INIT(character_flaws, list(
 	"Alcoholic"=/datum/charflaw/addiction/alcoholic,
 	"Annoying Face"=/datum/charflaw/annoying_face,
