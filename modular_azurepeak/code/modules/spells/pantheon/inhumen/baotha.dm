@@ -100,10 +100,10 @@
 		target.apply_status_effect(/datum/status_effect/buff/vitae)					//+2 Fortune and mood buff
 		return TRUE
 
-//T0 that tells the user the person's vice.
+// T0 that tells the user the person's vices. If they have Deceiving Meekness (and you're a low-level cleric), this spell will lie to you instead.
 /obj/effect/proc_holder/spell/invoked/baothavice
 	name = "Tell Vice"
-	desc = "Tells you the targets Vice."
+	desc = "Attempts to discern the target's vices. Certain targets "
 	overlay_state = "baotha_vice"
 	releasedrain = 10
 	chargedrain = 0
@@ -123,55 +123,108 @@
 	if(!ishuman(targets[1]))
 		revert_cast()
 		return FALSE
-
 	var/mob/living/carbon/human/H = targets[1]
+	
 	if(!length(H.vices))
 		to_chat(user, span_warning("They have no vices."))
 		revert_cast()
 		return FALSE
 
-	var/list/datum/charflaw/vices_found
+	var/mob/living/carbon/human/our_human
+	if(ishuman(user))
+		our_human = user
+
+	var/list/vice_names
+
 	if(HAS_TRAIT(H, TRAIT_DECEIVING_MEEKNESS) && user.get_skill_level(/datum/skill/magic/holy) <= SKILL_LEVEL_NOVICE)
 		if(!length(fake_vices[H]))
-			// Generate a lie about their vices, and save that lie for later in our copy of the spell
-			vices_found = list()
-			
-			// Pick first vice. If we roll one in the blacklist, it will be our only displayed vice.
-			var/fake_noflaw = FALSE
-			var/vice_rolled = pick(GLOB.character_flaws)
-			if(vice_rolled in GLOB.fakevice_blacklist)
-				fake_noflaw = TRUE
-			vices_found.Add(vice_rolled)
+			// Generate a convincing lie (or half-truth) about their vices, and save that for later in our copy of the spell
+			var/list/vice_paths = list()
+			var/vices_to_gen = max(length(H.vices), 1)
 
-			// Now the rest, if applicable. However many real vices the target has is our maximum.
-			var/vices_to_gen = max((length(H.vices) - 1), 0)
-			if(!fake_noflaw && vices_to_gen)
+			// First, we'll copy vices that are readily apparent to the caster, so as to make the readout convincing. Thankfully, we will only have to do this once per person.
+
+			for(var/datum/charflaw/vice_to_get in H.vices)
+				// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
+				if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+				// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
+				else if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
+					if(length(our_human.vices) && (vice_to_get in our_human.vices))
+						vice_paths += vice_to_get.type
+						vices_to_gen--
+				// Sadists and masochists already get messages when they examine each other.
+				else if(istype(vice_to_get, /datum/charflaw/addiction/sadist))
+					if(our_human.has_flaw(/datum/charflaw/addiction/masochist))
+						vice_paths += vice_to_get.type
+						vices_to_gen--
+				else if(istype(vice_to_get, /datum/charflaw/addiction/masochist))
+					if(our_human.has_flaw(/datum/charflaw/addiction/sadist))
+						vice_paths += vice_to_get.type
+						vices_to_gen--
+				// Empaths already get messages when they examine mutes.
+				else if(istype(vice_to_get, /datum/charflaw/mute))
+					if(HAS_TRAIT(our_human, TRAIT_EMPATH))
+						vice_paths += vice_to_get.type
+						vices_to_gen--
+				// And Baothans can already tell if someone is Marked by Baotha.
+				else if(istype(vice_to_get, /datum/charflaw/marked_by_baotha))
+					if(HAS_TRAIT(our_human, TRAIT_DEPRAVED)) // more than likely the case, but just making sure...
+						vice_paths += vice_to_get.type
+						vices_to_gen--
+
+			// Now generate the rest, if applicable. However many real vices the target has is our maximum.
+			if(vices_to_gen > 0)
 				for(var/i = 1 to vices_to_gen)
-					var/vice_roll = pick(GLOB.character_flaws)
-					if(!(vice_roll in vices_found) && !(vice_roll in GLOB.fakevice_blacklist))
-						vices_found.Add(vice_roll)
+					var/vice_roll = pick_assoc(GLOB.character_flaws)
+					if(plausible_vice_filter(vice_roll, vice_paths, H))
+						vice_paths += vice_roll
 
-		// Save/load
-			fake_vices[H] = vices_found.Copy()
+			// Now convert all the paths to relevant names
+			vice_names = list()
+			for(var/vice in vice_paths)
+				vice_names += GLOB.charflaw_singletons[vice]
+			vice_names = shuffle(vice_names) // to try and hide the fact that we copied those traits at the beginning
+		
+			fake_vices[H] = vice_names.Copy()
 		else
-			var/list/datum/charflaw/fakey = fake_vices[H]
-			vices_found = fakey.Copy()
+			var/list/fakey = fake_vices[H]
+			vice_names = fakey.Copy()
 
 		if(prob(50 + ((H.STAPER - 10) * 10)))
 			to_chat(H, span_warning("A pair of prying eyes were laid on me..."))
 
-	if(!vices_found) // if we actually passed the check, show real vices instead
-		vices_found = H.vices.Copy()
+	if(!vice_names) // if the caster actually passed the check, show real vices instead
+		vice_names = list()
+		for(var/datum/charflaw/charflaw in H.vices)
+			vice_names += charflaw.name
 
-	if(!length(vices_found)) // failsafe
+	if(!length(vice_names)) // failsafe
 		to_chat(user, span_warning("They have no vices."))
 		return FALSE
 
-	var/vices_string = english_list(vices_found)
+	var/vices_string = english_list(vice_names)
 	var/prefix = "Their vices are... "
-	if(length(vices_found) == 1)
+	if(length(vice_names) == 1)
 		prefix = "Their vice is... "
 	to_chat(user, span_info("[prefix]") + span_warning("[vices_string]."))
+	return TRUE
+
+/// Filter vices that the target could not plausibly have. A false result means the vice will not be picked.
+/obj/effect/proc_holder/spell/invoked/baothavice/proc/plausible_vice_filter(vice_type, list/vice_paths, mob/living/carbon/human/target)
+	//No duplicates
+	if(vice_type in vice_paths)
+		return FALSE
+	// Exclude "Random or No Vice" and "No Vice"
+	if(vice_type in CHARFLAWS_RANDNONE_TYPES)
+		return FALSE
+	// We already grabbed the physical vices the target has.
+	if(vice_type in CHARFLAWS_PHYSICAL_TYPES)
+		return FALSE
+	if(vice_type == /datum/charflaw/marked_by_baotha)
+		return FALSE
+
 	return TRUE
 
 // T0, orison inspired healing spell that pours a drink called Lover's Ruin. Works like a red for baotha blessed, poisons non-blessed.

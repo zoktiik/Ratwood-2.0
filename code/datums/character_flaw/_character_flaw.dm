@@ -1,4 +1,9 @@
+/// Assoc list mapping /datum/charflaw typepaths to detached instances. Mainly for getting stuff like names from the typepath.
+/// Initialized at runtime. Should remain stable if nobody's calling procs on New().
+GLOBAL_LIST_EMPTY(charflaw_singletons)
 
+/// Associative list mapping the "menu name" of each vice in the list to its typepath.
+/// This list is all of the vices you can pick. Used primarily for adding a vice, but there are other usecases.
 GLOBAL_LIST_INIT(character_flaws, list(
 	"Alcoholic"=/datum/charflaw/addiction/alcoholic,
 	"Annoying Face"=/datum/charflaw/annoying_face,
@@ -40,13 +45,6 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	"Wood Arm (R) (+1 TRI)"=/datum/charflaw/limbloss/arm_r,
 	"Hemophage (+1 TRI)"=/datum/charflaw/hemophage,
 	))
-
-/// Strings in this list will not show up alongside other vices for Baotha T0 miracle "Tell Vice". 
-/// Please keep this up-to-date.
-GLOBAL_LIST_INIT(fakevice_blacklist, list(
-	"Random or No Flaw",
-	"No Flaw (-3 TRI)"
-))
 
 /datum/charflaw
 	var/name
