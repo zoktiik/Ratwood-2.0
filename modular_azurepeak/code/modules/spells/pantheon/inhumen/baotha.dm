@@ -102,7 +102,7 @@
 
 // T0 that tells the user the person's vices. If they have Deceiving Meekness (and you're a low-level cleric), this spell will lie to you instead.
 /obj/effect/proc_holder/spell/invoked/baothavice
-	name = "Tell Vice"
+	name = "Tell Vices"
 	desc = "Attempts to discern the target's vices. Depending on the target and your Miracles skill, some vices could be incorrect."
 	overlay_state = "baotha_vice"
 	releasedrain = 10
