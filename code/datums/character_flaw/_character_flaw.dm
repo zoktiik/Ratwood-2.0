@@ -697,6 +697,10 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		var/mob/living/carbon/human/H = user
 		H.adjust_triumphs(1)
 
+/datum/charflaw/sleepless/on_removal(mob/user)
+	..()
+	REMOVE_TRAIT(user, TRAIT_NOSLEEP, TRAIT_GENERIC)
+
 /datum/charflaw/mute
 	name = "Mute"
 	desc = "I was born without the ability to speak."
@@ -706,6 +710,10 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		H.adjust_triumphs(1)
+
+/datum/charflaw/mute/on_removal(mob/user)
+	..()
+	REMOVE_TRAIT(user, TRAIT_PERMAMUTE, TRAIT_GENERIC)
 
 /datum/charflaw/critweakness
 	name = "Critical Weakness"
@@ -717,12 +725,20 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		var/mob/living/carbon/human/H = user
 		H.adjust_triumphs(1)
 
+/datum/charflaw/critweakness/on_removal(mob/user)
+	..()
+	REMOVE_TRAIT(user, TRAIT_CRITICAL_WEAKNESS, TRAIT_GENERIC)
+
 /datum/charflaw/silverweakness
 	name = "Silver Weakness"
 	desc = "I'm sensitive to silver — it burns and injures me more than it should."
 
 /datum/charflaw/silverweakness/on_mob_creation(mob/user)
 	ADD_TRAIT(user, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
+
+/datum/charflaw/silverweakness/on_removal(mob/user)
+	..()
+	REMOVE_TRAIT(user, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 
 /datum/charflaw/leprosy
 	name = "Leper"
@@ -786,3 +802,8 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	ADD_TRAIT(vamp_wannabe, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
 	ADD_TRAIT(vamp_wannabe, TRAIT_VAMPBITE, TRAIT_GENERIC)
 	vamp_wannabe.adjust_triumphs(1)
+
+/datum/charflaw/silverweakness/on_removal(mob/user)
+	..()
+	REMOVE_TRAIT(user, TRAIT_HEMOPHAGE, TRAIT_GENERIC)
+	REMOVE_TRAIT(user, TRAIT_VAMPBITE, TRAIT_GENERIC)
