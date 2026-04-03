@@ -103,7 +103,7 @@
 // T0 that tells the user the person's vices. If they have Deceiving Meekness (and you're a low-level cleric), this spell will lie to you instead.
 /obj/effect/proc_holder/spell/invoked/baothavice
 	name = "Tell Vice"
-	desc = "Attempts to discern the target's vices. Certain targets "
+	desc = "Attempts to discern the target's vices. Depending on the target and your Miracles skill, some guesses could be incorrect."
 	overlay_state = "baotha_vice"
 	releasedrain = 10
 	chargedrain = 0
@@ -117,7 +117,7 @@
 	recharge_time = 5 SECONDS 
 	miracle = TRUE
 	devotion_cost = 10
-	var/list/fake_vices = list()
+	var/list/fake_vices = list() // assoc list matching human mobs to a list of faked vice names, for consistent presentation
 
 /obj/effect/proc_holder/spell/invoked/baothavice/cast(list/targets, mob/living/user)
 	if(!ishuman(targets[1]))
@@ -149,49 +149,61 @@
 				if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
 					vice_paths += vice_to_get.type
 					vices_to_gen--
+					continue
 				// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
-				else if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
+				if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
 					if(length(our_human.vices) && (vice_to_get in our_human.vices))
 						vice_paths += vice_to_get.type
 						vices_to_gen--
-				// Sadists and masochists already get messages when they examine each other.
-				else if(istype(vice_to_get, /datum/charflaw/addiction/sadist))
-					if(our_human.has_flaw(/datum/charflaw/addiction/masochist))
-						vice_paths += vice_to_get.type
-						vices_to_gen--
-				else if(istype(vice_to_get, /datum/charflaw/addiction/masochist))
-					if(our_human.has_flaw(/datum/charflaw/addiction/sadist))
-						vice_paths += vice_to_get.type
-						vices_to_gen--
-				// Empaths already get messages when they examine mutes.
-				else if(istype(vice_to_get, /datum/charflaw/mute))
-					if(HAS_TRAIT(our_human, TRAIT_EMPATH))
-						vice_paths += vice_to_get.type
-						vices_to_gen--
-				// And Baothans can already tell if someone is Marked by Baotha.
-				else if(istype(vice_to_get, /datum/charflaw/marked_by_baotha))
-					if(HAS_TRAIT(our_human, TRAIT_DEPRAVED)) // more than likely the case, but just making sure...
-						vice_paths += vice_to_get.type
-						vices_to_gen--
+						continue
+				// Now for the special cases.
+				switch(vice_to_get.type)
+					// Sadists and masochists already get messages when they examine each other.
+					if(/datum/charflaw/addiction/sadist)
+						if(our_human.has_flaw(/datum/charflaw/addiction/masochist))
+							vice_paths += vice_to_get.type
+							vices_to_gen--
+							continue
+					if(/datum/charflaw/addiction/masochist)
+						if(our_human.has_flaw(/datum/charflaw/addiction/sadist))
+							vice_paths += vice_to_get.type
+							vices_to_gen--
+							continue
+					// Empaths already get messages when they examine mutes.
+					if(/datum/charflaw/mute)
+						if(HAS_TRAIT(our_human, TRAIT_EMPATH))
+							vice_paths += vice_to_get.type
+							vices_to_gen--
+							continue
+					// And Baothans can already tell if someone is Marked by Baotha.
+					if(/datum/charflaw/marked_by_baotha)
+						if(HAS_TRAIT(our_human, TRAIT_DEPRAVED)) // more than likely the case, but just making sure...
+							vice_paths += vice_to_get.type
+							vices_to_gen--
+							continue
 
 			// Now generate the rest, if applicable. However many real vices the target has is our maximum.
 			if(vices_to_gen > 0)
-				for(var/i = 1 to vices_to_gen)
-					var/vice_roll = pick_assoc(GLOB.character_flaws)
-					if(plausible_vice_filter(vice_roll, vice_paths, H))
-						vice_paths += vice_roll
+				for(vices_to_gen)
+					for(var/i in 1 to 4) // We'll put up with 4 rejections, and it'll otherwise be ok if we just skip this one.
+						var/vice_roll = pick_assoc(GLOB.character_flaws)
+						if(plausible_vice_filter(vice_roll, vice_paths, H))
+							vice_paths += vice_roll
+							break
+						
 
 			// Now convert all the paths to relevant names
 			vice_names = list()
 			for(var/vice in vice_paths)
-				vice_names += GLOB.charflaw_singletons[vice]
+				var/datum/charflaw/vice_ref = GLOB.charflaw_singletons[vice]
+				vice_names += vice_ref.name
 			vice_names = shuffle(vice_names) // to try and hide the fact that we copied those traits at the beginning
-		
+/*		
 			fake_vices[H] = vice_names.Copy()
 		else
 			var/list/fakey = fake_vices[H]
 			vice_names = fakey.Copy()
-
+*/
 		if(prob(50 + ((H.STAPER - 10) * 10)))
 			to_chat(H, span_warning("A pair of prying eyes were laid on me..."))
 
