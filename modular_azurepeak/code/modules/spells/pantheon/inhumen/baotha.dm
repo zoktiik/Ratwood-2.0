@@ -118,7 +118,7 @@
 	miracle = TRUE
 	devotion_cost = 10
 	/// Assoc list matching human mobs to a list of faked vice names, for consistency in presentation.
-	var/list/fake_vices = list()
+	var/list/fake_vices_cache = list()
 
 /obj/effect/proc_holder/spell/invoked/baothavice/cast(list/targets, mob/living/user)
 	if(!ishuman(targets[1]))
@@ -138,7 +138,7 @@
 	var/list/vice_names
 
 	if(HAS_TRAIT(H, TRAIT_DECEIVING_MEEKNESS) && user.get_skill_level(/datum/skill/magic/holy) <= SKILL_LEVEL_NOVICE)
-		if(!length(fake_vices[H]))
+		if(!length(fake_vices_cache[H]))
 			
 			var/list/vice_paths = generate_vice_paths(H, our_human)
 
@@ -147,11 +147,11 @@
 			for(var/vice in vice_paths)
 				var/datum/charflaw/vice_ref = GLOB.charflaw_singletons[vice]
 				vice_names += vice_ref.name
-			vice_names = shuffle(vice_names) // to try and hide the fact that we copied those traits at the beginning
+			vice_names = shuffle(vice_names) // to try and hide the fact that we copied those traits in generate_vice_paths
 
-			fake_vices[H] = vice_names.Copy()
+			fake_vices_cache[H] = vice_names.Copy()
 		else
-			var/list/fakey = fake_vices[H]
+			var/list/fakey = fake_vices_cache[H]
 			vice_names = fakey.Copy()
 
 		if(prob(50 + ((H.STAPER - 10) * 10)))
@@ -220,21 +220,17 @@
 			if(/datum/charflaw/addiction/lovefiend)
 				if(baothamarked_nympho_check) // Since we don't have duplicate checking until later.
 					continue
-				if(length(our_human.vices) && (vice_to_get in our_human.vices))
-					vice_paths += vice_to_get.type
-					vices_to_gen--
-					continue
-		// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
-		if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
-			vice_paths += vice_to_get.type
-			vices_to_gen--
-			continue
 		// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
 		if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
 			if(length(our_human.vices) && (vice_to_get in our_human.vices)) // Don't ask me why referencing a different instance of the same type works for this. It just does, okay?!
 				vice_paths += vice_to_get.type
 				vices_to_gen--
 				continue
+		// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
+		if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
+			vice_paths += vice_to_get.type
+			vices_to_gen--
+			continue
 
 	// Now generate the rest, if applicable. However many real vices the target has is our maximum.
 	if(vices_to_gen > 0)
