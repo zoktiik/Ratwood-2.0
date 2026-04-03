@@ -422,7 +422,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 		REMOVE_TRAIT(H, TRAIT_DISFIGURED, TRAIT_GENERIC)
 
 /datum/charflaw/pacifism
-	name = "Pacifism"
+	name = "Pacifist"
 	desc = "I cannot harm another living being."
 
 /datum/charflaw/pacifism/on_mob_creation(mob/user)
