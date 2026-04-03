@@ -185,7 +185,7 @@
 			// Now generate the rest, if applicable. However many real vices the target has is our maximum.
 			if(vices_to_gen > 0)
 				for(var/i in 1 to vices_to_gen)
-					for(var/i in 1 to 4) // We'll put up with 4 rejections, and it'll otherwise be ok if we just skip this one.
+					for(var/t in 1 to 4) // We'll put up with 4 rejections, and it'll otherwise be ok if we just skip this one.
 						var/vice_roll = pick_assoc(GLOB.character_flaws)
 						if(plausible_vice_filter(vice_roll, vice_paths, H))
 							vice_paths += vice_roll
