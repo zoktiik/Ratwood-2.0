@@ -725,7 +725,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	ADD_TRAIT(user, TRAIT_SILVER_WEAK, TRAIT_GENERIC)
 
 /datum/charflaw/leprosy
-	name = "Leper (+1 TRI)"
+	name = "Leper"
 	desc = "I am cursed with leprosy! Too poor to afford treatment, my skin now lays violated by lesions, my extremities are numb, and my presence disturbs even the most stalwart men."
 
 /datum/charflaw/leprosy/apply_post_equipment(mob/user)
@@ -742,7 +742,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 	H.adjust_triumphs(1)
 
 /datum/charflaw/mind_broken
-	name = "Asundered Mind (+1 TRI)"
+	name = "Asundered Mind"
 	desc = "My mind is asundered, whether it was by my own means or an unfortunate accident. Nothing seems real to me..."
 
 /datum/charflaw/mind_broken/apply_post_equipment(mob/living/carbon/human/insane_fool)
@@ -778,7 +778,7 @@ GLOBAL_LIST_INIT(character_flaws, list(
 			L.on_mob_creation(H)
 
 /datum/charflaw/hemophage
-	name = "Hemophage (+1 TRI)"
+	name = "Hemophage"
 	desc = "Whether by curse or my people, blood is the only thing to keep me alive. Normal sources of nutrition and hydration will make me ill. <br>\
 	<small>Any element of a virtue that modifies eating will be canceled out by Hemophage.</small>"
 
