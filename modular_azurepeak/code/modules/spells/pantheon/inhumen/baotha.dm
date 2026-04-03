@@ -103,7 +103,7 @@
 // T0 that tells the user the person's vices. If they have Deceiving Meekness (and you're a low-level cleric), this spell will lie to you instead.
 /obj/effect/proc_holder/spell/invoked/baothavice
 	name = "Tell Vice"
-	desc = "Attempts to discern the target's vices. Depending on the target and your Miracles skill, some guesses could be incorrect."
+	desc = "Attempts to discern the target's vices. Depending on the target and your Miracles skill, some vices could be incorrect."
 	overlay_state = "baotha_vice"
 	releasedrain = 10
 	chargedrain = 0
@@ -117,7 +117,8 @@
 	recharge_time = 5 SECONDS 
 	miracle = TRUE
 	devotion_cost = 10
-	var/list/fake_vices = list() // assoc list matching human mobs to a list of faked vice names, for consistent presentation
+	/// Assoc list matching human mobs to a list of faked vice names, for consistency in presentation.
+	var/list/fake_vices = list()
 
 /obj/effect/proc_holder/spell/invoked/baothavice/cast(list/targets, mob/living/user)
 	if(!ishuman(targets[1]))
@@ -145,18 +146,7 @@
 			// First, we'll copy vices that are readily apparent to the caster, so as to make the readout convincing. Thankfully, we will only have to do this once per person.
 
 			for(var/datum/charflaw/vice_to_get in H.vices)
-				// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
-				if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
-					vice_paths += vice_to_get.type
-					vices_to_gen--
-					continue
-				// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
-				if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
-					if(length(our_human.vices) && (vice_to_get in our_human.vices))
-						vice_paths += vice_to_get.type
-						vices_to_gen--
-						continue
-				// Now for the special cases.
+				// Special cases first, since they're quick to check. These can't just fit in a list.
 				switch(vice_to_get.type)
 					// Sadists and masochists already get messages when they examine each other.
 					if(/datum/charflaw/addiction/sadist)
@@ -181,16 +171,26 @@
 							vice_paths += vice_to_get.type
 							vices_to_gen--
 							continue
+				// These vices have an obvious physical presence, at least when unmasked. We will try to copy these if they're on the target, and later skip them during random gen.
+				if(vice_to_get.type in CHARFLAWS_PHYSICAL_TYPES)
+					vice_paths += vice_to_get.type
+					vices_to_gen--
+					continue
+				// These vices have direct mutually-shared-vice examine messages. We will copy these if the caster shares them.
+				if(vice_to_get.type in CHARFLAWS_MUTUAL_TYPES)
+					if(length(our_human.vices) && (vice_to_get in our_human.vices))
+						vice_paths += vice_to_get.type
+						vices_to_gen--
+						continue
 
 			// Now generate the rest, if applicable. However many real vices the target has is our maximum.
 			if(vices_to_gen > 0)
 				for(var/i in 1 to vices_to_gen)
-					for(var/t in 1 to 4) // We'll put up with 4 rejections, and it'll otherwise be ok if we just skip this one.
+					for(var/t in 1 to 5) // We'll put up with 5 rejections, and it'll otherwise be ok if we just skip this one.
 						var/vice_roll = pick_assoc(GLOB.character_flaws)
-						if(plausible_vice_filter(vice_roll, vice_paths, H))
+						if(plausible_vice_filter(vice_roll, vice_paths))
 							vice_paths += vice_roll
 							break
-						
 
 			// Now convert all the paths to relevant names
 			vice_names = list()
@@ -198,12 +198,12 @@
 				var/datum/charflaw/vice_ref = GLOB.charflaw_singletons[vice]
 				vice_names += vice_ref.name
 			vice_names = shuffle(vice_names) // to try and hide the fact that we copied those traits at the beginning
-/*		
+
 			fake_vices[H] = vice_names.Copy()
 		else
 			var/list/fakey = fake_vices[H]
 			vice_names = fakey.Copy()
-*/
+
 		if(prob(50 + ((H.STAPER - 10) * 10)))
 			to_chat(H, span_warning("A pair of prying eyes were laid on me..."))
 
@@ -212,7 +212,7 @@
 		for(var/datum/charflaw/charflaw in H.vices)
 			vice_names += charflaw.name
 
-	if(!length(vice_names)) // failsafe
+	if(!length(vice_names)) // very necessary failsafe, especially if faking one vice and the roll fails FIVE TIMES
 		to_chat(user, span_warning("They have no vices."))
 		return FALSE
 
@@ -223,8 +223,8 @@
 	to_chat(user, span_info("[prefix]") + span_warning("[vices_string]."))
 	return TRUE
 
-/// Filter vices that the target could not plausibly have. A false result means the vice will not be picked.
-/obj/effect/proc_holder/spell/invoked/baothavice/proc/plausible_vice_filter(vice_type, list/vice_paths, mob/living/carbon/human/target)
+/// Filter randomly-picked vices that the target could not plausibly have. A false result means the vice will not be picked.
+/obj/effect/proc_holder/spell/invoked/baothavice/proc/plausible_vice_filter(vice_type, list/vice_paths)
 	//No duplicates
 	if(vice_type in vice_paths)
 		return FALSE
@@ -234,6 +234,7 @@
 	// We already grabbed the physical vices the target has.
 	if(vice_type in CHARFLAWS_PHYSICAL_TYPES)
 		return FALSE
+	// We already know if you're marked by Baotha.
 	if(vice_type == /datum/charflaw/marked_by_baotha)
 		return FALSE
 
