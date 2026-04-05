@@ -191,12 +191,12 @@
 
 		to_chat(H, span_boldwarning("Roleplaying expectations still apply to you as a Gnoll. Gnolls are cunning hunters, not mindless beasts. \
 										You remain young and unproven in the eyes of the Darkstar, and there is little glory in slaughtering the meek."))
-		to_chat(H, span_boldnotice("You are not interested in effortless catches; those are beneath you. \
+		to_chat(H, span_boldnotice("You are not as interested in effortless catches, the lowest-hanging fruit; those are <i>beneath you.</i> \
 										Seek out the worthiest among your prey, and ensure a thrilling hunt for those involved."))
 
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_NONE)
-			to_chat(H, span_smallnotice("There are no scheduled gnoll reinforcements this week. I must rely on cunning over numbers."))
+			to_chat(H, span_smallnotice("There are no scheduled gnoll reinforcements this week.") + span_info("I must rely on cunning over numbers."))
 		else if(mode != GNOLL_SCALING_DOUBLE)
 			to_chat(H, span_smallnotice("I can expect to be joined by my pack this week. I should wait for them and group up."))
 		else
