@@ -189,9 +189,9 @@
 		H.AddSpell(F)
 		H.AddSpell(I)
 
-		to_chat(user, span_boldwarning("Roleplaying expectations still apply to you as a Gnoll. Gnolls are cunning hunters, not mindless beasts. \
+		to_chat(H, span_boldwarning("Roleplaying expectations still apply to you as a Gnoll. Gnolls are cunning hunters, not mindless beasts. \
 										You remain young and unproven in the eyes of the Darkstar, and there is little glory in slaughtering the meek."))
-		to_chat(user, span_boldnotice("You are not interested in easy kills; they are beneath you. \
+		to_chat(H, span_boldnotice("You are not interested in easy kills; they are beneath you. \
 										Seek out the worthiest among your prey, and ensure a thrilling hunt for those involved.\
 										\n"))
 
