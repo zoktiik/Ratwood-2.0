@@ -189,6 +189,12 @@
 		H.AddSpell(F)
 		H.AddSpell(I)
 
+		to_chat(user, span_boldwarning("Roleplaying expectations still apply to you as a Gnoll. Gnolls are cunning hunters, not mindless beasts. \
+										You remain young and unproven in the eyes of the Darkstar, and there is little glory in slaughtering the meek."))
+		to_chat(user, span_boldnotice("You are not interested in easy kills; they are beneath you. \
+										Seek out the worthiest among your prey, and ensure a thrilling hunt for those involved.\
+										\n"))
+
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_NONE)
 			to_chat(H, span_bignotice("There are no scheduled gnoll reinforcements this week. I must rely on cunning over numbers."))
@@ -196,7 +202,9 @@
 			to_chat(H, span_bignotice("I can expect to be joined by my pack this week. I should wait for them and group up."))
 		else
 			to_chat(H, span_bignotice("My pack is small this week. I should regroup with the other gnoll and avoid reckless fights until we can hunt together."))
-		to_chat(H, span_bignotice("Graggar is patient, and values good strategy. I mustn't be hasty, especially if my marks prove difficult to isolate.\n Perhaps there is merit in forging alliances, or setting up camp.\n Graggar would look poorly upon me working with those he deems unworthy, such as the Brigand filth of Matthios."))
+		to_chat(H, span_bignotice("Graggar is patient, and values good strategy. I mustn't be hasty, especially if my marks prove difficult to isolate. \n\
+									Perhaps there is merit in forging alliances, or setting up camp. \n\
+									Graggar would look poorly upon me working with those he deems unworthy, such as the Brigand filth of Matthios."))
 
 /mob/living/carbon/human/proc/gnoll_inspect_skin()
 	set name = "Inspect Pelt"
