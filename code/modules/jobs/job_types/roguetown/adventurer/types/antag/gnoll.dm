@@ -193,7 +193,7 @@
 										You remain young and unproven in the eyes of the Darkstar, and there is little glory in slaughtering the meek."))
 		to_chat(H, span_biginfo("You have very little interest in the lowest-hanging fruit, and effortless catches bore your Master. Rushing to take these quarries is <i>beneath you.</i> \n") \
 			+ span_notice("Rather, it is best to seek the worthiest among your prey, and to ensure a thrilling hunt for all involved."))
-		to_chat(H, span_notice("*-----------------*"))
+		to_chat(H, span_biginfo("______________"))
 
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_NONE)
@@ -205,6 +205,7 @@
 		to_chat(H, span_info("Patience and careful planning are the virtues of my craft. If I can't isolate my mark, it would be wise to stalk another. \n\
 									When tracking difficult marks, I should set up camp and make alliances out in the field."))
 		to_chat(H, span_warning("The Bandit filth are unworthy of my assistance."))
+		to_chat(H, span_biginfo("*---*"))
 
 /mob/living/carbon/human/proc/gnoll_inspect_skin()
 	set name = "Inspect Pelt"
