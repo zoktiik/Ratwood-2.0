@@ -197,7 +197,7 @@
 
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_NONE)
-			to_chat(H, span_smallnotice("There will be no gnoll reinforcements this week. ") + span_info("I must rely on cunning over numbers."))
+			to_chat(H, span_smallnotice("There will not be any gnoll reinforcements this week, as far as I can tell. ") + span_info("I must rely on cunning over numbers."))
 		else if(mode != GNOLL_SCALING_DOUBLE)
 			to_chat(H, span_smallnotice("I can expect to be joined by my pack this week. ") + span_info("I should wait for them and group up."))
 		else
