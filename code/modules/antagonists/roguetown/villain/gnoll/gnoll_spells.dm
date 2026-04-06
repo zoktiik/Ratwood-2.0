@@ -89,7 +89,7 @@
 		return
 
 	if(!shown_hunt_disclaimer)
-		to_chat(user, span_notice("You have chosen your first quarry. Go and see if this one is worthy of your attention. \
+		to_chat(user, span_notice("You have chosen your first quarry. ") + span_biginfo("Go and see if this one is worthy of your attention. \
 									If not, you can always seek out another."))
 		shown_hunt_disclaimer = TRUE
 
