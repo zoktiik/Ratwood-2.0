@@ -189,9 +189,9 @@
 		H.AddSpell(F)
 		H.AddSpell(I)
 
-		to_chat(H, span_boldwarning("As a Gnoll, roleplaying expectations still apply to you. Gnolls are cunning hunters, not mindless beasts. \
-										In the eyes of the Dark Star, you are still young; there is not much glory in slaughtering the meek."))
-		to_chat(H, span_biginfo("You have very little interest in the lowest-hanging fruit, and effortless catches bore your Master. Rushing to take these quarries is <i>beneath you.</i> \n") \
+		to_chat(H, span_boldwarning("As a Gnoll, roleplaying expectations still apply. Gnolls are cunning hunters, not mindless beasts. \
+									The Dark Star expects much of you; there is little glory in slaughtering the meek."))
+		to_chat(H, span_biginfo("You are not interested in the lowest-hanging fruit, and effortless catches bore your Master. Rushing to take these quarries is <i>beneath you.</i> \n") \
 			+ span_notice("Rather, it is best to seek the worthiest among your prey, and to ensure a thrilling hunt for all involved."))
 		to_chat(H, span_biginfo("*-------*"))
 
