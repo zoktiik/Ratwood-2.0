@@ -191,8 +191,8 @@
 
 		to_chat(H, span_boldwarning("Roleplaying expectations still apply to you as a Gnoll. Gnolls are cunning hunters, not mindless beasts. \
 										You remain young and unproven in the eyes of the Darkstar, and there is little glory in slaughtering the meek."))
-		to_chat(H, span_boldnotice("You are not as interested in effortless catches, the lowest-hanging fruit; those are <i>beneath you.</i> \
-										Seek out the worthiest among your prey, and ensure a thrilling hunt for those involved."))
+		to_chat(H, span_boldnotice("You have very little interest in the lowest-hanging fruit, and effortless catches bore your Master.\n\
+									Rushing to take these quarries is <i>beneath you.</i> Seek out the worthiest among your prey, and ensure a thrilling hunt for those involved."))
 
 		var/mode = SSgnoll_scaling.get_gnoll_scaling()
 		if(mode == GNOLL_SCALING_NONE)
