@@ -108,7 +108,7 @@
 /obj/effect/proc_holder/spell/invoked/gnoll_sniff/proc/add_target_to_list(mob/living/carbon/human/human, list/target_list, list/name_counts)
 	var/base_name = "[human.real_name]"
 	var/name_count = (name_counts[base_name] || 0) + 1
-	var/class = human.get_class_title()
+	var/class = human.get_pretty_class_title(include_parent = TRUE)
 	name_counts[base_name] = name_count
 	// Names will display in the format "Urist McDwarf (2) - Grudgebearer Soldier"
 	var/entry_name = (name_count > 1) ? "[base_name] ([name_count])[length(class) ? " - [class]" : ""]" : "[base_name][length(class) ? " - [class]" : ""]"
