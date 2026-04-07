@@ -93,7 +93,7 @@
 									If not, you can always seek out another."))
 		shown_hunt_disclaimer = TRUE
 
-	var/mob/living/selected_target = possible_targets[selection]
+	var/mob/living/carbon/human/selected_target = possible_targets[selection]
 	if(!is_valid_hunted(selected_target))
 		to_chat(user, span_warning("That scent slips away before you can lock onto it."))
 		return
@@ -102,7 +102,8 @@
 	tracked_target_ref = WEAKREF(selected_target)
 	sync_antag_tracked_target(user, selected_target)
 	notify_tracked_target(selected_target)
-	to_chat(user, span_notice("You focus your senses on [selected_target.real_name]."))
+	var/classy = selected_target.get_pretty_class_title(ignore_advclass = TRUE)
+	to_chat(user, span_notice("You focus your senses on [selected_target.real_name][classy ? ", the [classy]" : ""]."))
 	give_tracking_directions(user)
 
 /obj/effect/proc_holder/spell/invoked/gnoll_sniff/proc/add_target_to_list(mob/living/carbon/human/human, list/target_list, list/name_counts)

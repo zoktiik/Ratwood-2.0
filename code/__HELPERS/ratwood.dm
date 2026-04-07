@@ -93,7 +93,7 @@
 
 /// Tries to get the mob's displayed class title, and return it as a string.
 /// This should always return a string, even an empty one. CHECK ITS length()!
-/mob/living/proc/get_pretty_class_title(unknown_class_if_fail = FALSE, include_parent = FALSE)
+/mob/living/proc/get_pretty_class_title(unknown_class_if_fail = FALSE, include_parent = FALSE, ignore_advclass = FALSE)
 	if(mind?.cosmetic_class_title)
 		if(include_parent)
 			if(advjob)
@@ -101,10 +101,11 @@
 			else if(job)
 				return "[mind.cosmetic_class_title] ([job])"
 		return mind.cosmetic_class_title
-	if(advjob)
-		if(include_parent && job)
-			return "[advjob] ([job])"
-		return advjob
+	if(!ignore_advclass)
+		if(advjob)
+			if(include_parent && job)
+				return "[advjob] ([job])"
+			return advjob
 	if(job)
 		return job
 	if(unknown_class_if_fail)
