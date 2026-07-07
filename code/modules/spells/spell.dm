@@ -200,6 +200,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/miracle = FALSE
 	var/devotion_cost = 0
 	var/ignore_cockblock = FALSE //whether or not to ignore TRAIT_SPELLCOCKBLOCK
+	var/active_cast = FALSE  // Flags "channeling" spells that use a do_after. If TRUE, the spell will fail to cast if user is currently in a do_after.
 
 	action_icon_state = "spell0"
 	action_icon = 'icons/mob/actions/roguespells.dmi'
@@ -266,7 +267,11 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			testing("cast2")
 			return FALSE
 
-	if(user.stat && !stat_allowed)
+	if(active_cast && user.doing)
+		to_chat(user, span_warning("Not when I'm doing something else."))
+		return FALSE
+
+	if(!stat_allowed && user.stat)
 		to_chat(user, span_warning("Not when I am incapacitated!"))
 		return FALSE
 

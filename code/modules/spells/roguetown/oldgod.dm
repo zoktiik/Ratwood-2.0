@@ -214,6 +214,8 @@
 	recharge_time = 5 SECONDS
 	miracle = TRUE
 	devotion_cost = 0
+	active_cast = TRUE
+	human_req = TRUE
 
 /obj/effect/proc_holder/spell/self/psydonpersist/cast(mob/living/carbon/human/user) // It's a very tame self-heal. Nothing too special.
 	. = ..()
@@ -222,60 +224,24 @@
 		return FALSE
 
 	var/mob/living/carbon/human/H = user
-	var/brute = H.getBruteLoss()
-	var/burn = H.getFireLoss()
-	var/conditional_buff = FALSE
 	var/zcross_trigger = FALSE
-	var/sit_bonus1 = 0
-	var/sit_bonus2 = 0
 	var/psicross_bonus = 0
 
 	for(var/obj/item/clothing/neck/current_item in H.get_equipped_items(TRUE))
-		if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/decrepit, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
-			switch(current_item.type) // Worn Psicross Piety bonus. For fun.
-				if(/obj/item/clothing/neck/roguetown/psicross/wood)
-					psicross_bonus = -2
-				if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
-					psicross_bonus = -4
-				if(/obj/item/clothing/neck/roguetown/psicross)
-					psicross_bonus = -5
-				if(/obj/item/clothing/neck/roguetown/psicross/silver)
-					psicross_bonus = -7
-				if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
-					psicross_bonus = -7
-				if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
-					zcross_trigger = TRUE
-	if(brute > 100)
-		sit_bonus1 = -2
-	if(brute > 150)
-		sit_bonus1 = -4
-	if(brute > 200)
-		sit_bonus1 = -6
-	if(brute > 300)
-		sit_bonus1 = -8
-	if(brute > 350)
-		sit_bonus1 = -10
-	if(brute > 400)
-		sit_bonus1 = -14
-
-	if(burn > 100)
-		sit_bonus2 = -2
-	if(burn > 150)
-		sit_bonus2 = -4
-	if(burn > 200)
-		sit_bonus2 = -6
-	if(burn > 300)
-		sit_bonus2 = -8
-	if(burn > 350)
-		sit_bonus2 = -10
-	if(burn > 400)
-		sit_bonus2 = -14
-
-	if(sit_bonus1 || sit_bonus2)
-		conditional_buff = TRUE
-
-	var/bruthealval = -14 + psicross_bonus + sit_bonus1
-	var/burnhealval = -14 + psicross_bonus + sit_bonus2
+		switch(current_item.type) // Worn Psicross Piety bonus. For fun.
+			if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
+				zcross_trigger = TRUE
+				break
+			if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
+				psicross_bonus = -7
+			if(/obj/item/clothing/neck/roguetown/psicross/silver)
+				psicross_bonus = -7
+			if(/obj/item/clothing/neck/roguetown/psicross)
+				psicross_bonus = (psicross_bonus > -5) ? -5 : psicross_bonus // In other words, don't replace the best bonus we have.
+			if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
+				psicross_bonus = (psicross_bonus > -4) ? -4 : psicross_bonus
+			if(/obj/item/clothing/neck/roguetown/psicross/wood)
+				psicross_bonus = (psicross_bonus > -2) ? -2 : psicross_bonus
 
 	to_chat(H, span_info("I take a moment to collect myself..."))
 	if(zcross_trigger)
@@ -284,22 +250,63 @@
 		user.adjustBruteLoss(25)
 		return FALSE
 
-	if(do_after(H, 50))
+	proc_heal(H, psicross_bonus)
+	return TRUE
+
+/obj/effect/proc_holder/spell/self/psydonpersist/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus)
+	var/brute = H.getBruteLoss()
+	var/burn = H.getFireLoss()
+	var/sit_bonus1 = 0
+	var/sit_bonus2 = 0
+	var/conditional_buff = FALSE
+
+	switch(brute)
+		if(100 to 150)
+			sit_bonus1 = -2
+		if(150 to 200)
+			sit_bonus1 = -4
+		if(200 to 300)
+			sit_bonus1 = -6
+		if(300 to 350)
+			sit_bonus1 = -8
+		if(350 to 400)
+			sit_bonus1 = -10
+		if(400 to INFINITY)
+			sit_bonus1 = -14
+	switch(burn)
+		if(100 to 150)
+			sit_bonus2 = -2
+		if(150 to 200)
+			sit_bonus2 = -4
+		if(200 to 300)
+			sit_bonus2 = -6
+		if(300 to 350)
+			sit_bonus2 = -8
+		if(350 to 400)
+			sit_bonus2 = -10
+		if(400 to INFINITY)
+			sit_bonus2 = -14
+
+	if(sit_bonus1 || sit_bonus2)
+		conditional_buff = TRUE
+
+	var/bruthealval = -14 + psicross_bonus + sit_bonus1
+	var/burnhealval = -14 + psicross_bonus + sit_bonus2
+
+	if(do_after(H, 5 SECONDS))
 		playsound(H, 'sound/magic/psydonrespite.ogg', 100, TRUE)
 		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4")
 		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4")
 		H.adjustBruteLoss(bruthealval)
 		H.adjustFireLoss(burnhealval)
-		if (conditional_buff)
-			to_chat(user, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
-		user.devotion?.update_devotion(-60)
-		to_chat(user, "<font color='purple'>I lose 60 devotion!</font>")
-		cast(user)
-		return TRUE
+		if(conditional_buff)
+			to_chat(H, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
+		H.devotion?.update_devotion(-60)
+		to_chat(H, "<font color='purple'>I lose 60 devotion!</font>")
+		proc_heal(H, psicross_bonus)
 	else
 		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))
-		return FALSE
-
+		return
 
 /obj/effect/proc_holder/spell/invoked/psydonabsolve
 	name = "ABSOLVE"

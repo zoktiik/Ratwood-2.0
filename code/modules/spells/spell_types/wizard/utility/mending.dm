@@ -15,7 +15,7 @@
 	spell_tier = 1 // Utility. For repair
 	glow_color = GLOW_COLOR_ARCANE
 	glow_intensity = GLOW_INTENSITY_LOW
-
+	active_cast = TRUE
 	miracle = FALSE
 
 	invocations = list("Reficio")

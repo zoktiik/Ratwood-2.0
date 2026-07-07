@@ -9,6 +9,7 @@
 	invocation_type = "none"
 	miracle = FALSE
 	devotion_cost = 0
+	active_cast = TRUE
 
 /obj/effect/proc_holder/spell/self/create_abyssoid/cast(mob/living/user)
 	var/obj/item/natural/worms/leech/target

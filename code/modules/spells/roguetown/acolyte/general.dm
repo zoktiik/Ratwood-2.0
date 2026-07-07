@@ -417,6 +417,7 @@
 	recharge_time = 45 SECONDS
 	miracle = TRUE
 	devotion_cost = 50
+	active_cast = TRUE
 	var/blood_price = 5
 	var/blood_vol_restore = 7.5 //30 every 2 seconds.
 	var/vol_per_skill = 1	//54 with legendary
@@ -426,11 +427,6 @@
 	if(ishuman(targets[1]))
 		var/mob/living/carbon/human/target = targets[1]
 		var/mob/living/carbon/human/UH = user
-
-		if(UH.doing)
-			to_chat(UH, span_warning("I can't cast this while doing something else."))
-			revert_cast()
-			return FALSE
 
 		if(NOBLOOD in UH.dna?.species?.species_traits)
 			to_chat(UH, span_warning("I have no blood to provide."))
