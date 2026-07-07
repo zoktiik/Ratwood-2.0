@@ -108,93 +108,101 @@
 	recharge_time = 5 SECONDS
 	miracle = TRUE
 	devotion_cost = 0
+	active_cast = TRUE
+	human_req = TRUE
 
 /obj/effect/proc_holder/spell/self/psydonrespite/cast(mob/living/carbon/human/user) // It's a very tame self-heal. Nothing too special.
 	. = ..()
-	if(!ishuman(user))
-		revert_cast()
-		return FALSE
-
 	var/mob/living/carbon/human/H = user
-	var/brute = H.getBruteLoss()
-	var/burn = H.getFireLoss()
-	var/conditional_buff = FALSE
 	var/zcross_trigger = FALSE
-	var/sit_bonus1 = 0
-	var/sit_bonus2 = 0
 	var/psicross_bonus = 0
 
 	for(var/obj/item/clothing/neck/current_item in H.get_equipped_items(TRUE))
-		if(current_item.type in list(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient, /obj/item/clothing/neck/roguetown/psicross, /obj/item/clothing/neck/roguetown/psicross/wood, /obj/item/clothing/neck/roguetown/psicross/decrepit, /obj/item/clothing/neck/roguetown/psicross/silver, /obj/item/clothing/neck/roguetown/psicross/g))
-			switch(current_item.type) // Worn Psicross Piety bonus. For fun.
-				if(/obj/item/clothing/neck/roguetown/psicross/wood)
-					psicross_bonus = -2
-				if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
-					psicross_bonus = -4
-				if(/obj/item/clothing/neck/roguetown/psicross)
-					psicross_bonus = -5
-				if(/obj/item/clothing/neck/roguetown/psicross/silver)
-					psicross_bonus = -7
-				if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
-					psicross_bonus = -7
-				if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
-					zcross_trigger = TRUE
-	if(brute > 100)
-		sit_bonus1 = -2
-	if(brute > 150)
-		sit_bonus1 = -4
-	if(brute > 200)
-		sit_bonus1 = -6
-	if(brute > 300)
-		sit_bonus1 = -8
-	if(brute > 350)
-		sit_bonus1 = -10
-	if(brute > 400)
-		sit_bonus1 = -14
+		switch(current_item.type) // Worn Psicross Piety bonus. For fun.
+			if(/obj/item/clothing/neck/roguetown/psicross/inhumen/ancient)
+				zcross_trigger = TRUE
+				break
+			if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
+				psicross_bonus = -7
+			if(/obj/item/clothing/neck/roguetown/psicross/silver)
+				psicross_bonus = -7
+			if(/obj/item/clothing/neck/roguetown/psicross)
+				psicross_bonus = (psicross_bonus > -5) ? -5 : psicross_bonus // In other words, don't replace the best bonus we have.
+			if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
+				psicross_bonus = (psicross_bonus > -4) ? -4 : psicross_bonus
+			if(/obj/item/clothing/neck/roguetown/psicross/wood)
+				psicross_bonus = (psicross_bonus > -2) ? -2 : psicross_bonus
 
-	if(burn > 100)
-		sit_bonus2 = -2
-	if(burn > 150)
-		sit_bonus2 = -4
-	if(burn > 200)
-		sit_bonus2 = -6
-	if(burn > 300)
-		sit_bonus2 = -8
-	if(burn > 350)
-		sit_bonus2 = -10
-	if(burn > 400)
-		sit_bonus2 = -14
-
-	if(sit_bonus1 || sit_bonus2)
-		conditional_buff = TRUE
-
-	var/bruthealval = -7 + psicross_bonus + sit_bonus1
-	var/burnhealval = -7 + psicross_bonus + sit_bonus2
-
-	to_chat(H, span_info("I take a moment to collect myself..."))
 	if(zcross_trigger)
 		user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
 		user.playsound_local(user, 'sound/misc/zizo.ogg', 25, FALSE)
 		user.adjustBruteLoss(25)
 		return FALSE
 
-	if(do_after(H, 50))
+	to_chat(H, span_info("I take a moment to collect myself..."))
+	proc_heal(H, psicross_bonus) // Will continually recurse on itself until the user either breaks channeling, or nears stage 3 bloodloss.
+	return TRUE
+
+/obj/effect/proc_holder/spell/self/psydonrespite/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus)
+	if((H.blood_volume - 6) <= BLOOD_VOLUME_BAD)
+		to_chat(H, span_warning("I lack the requisite amount of blood."))
+		return
+
+	var/brute = H.getBruteLoss()
+	var/burn = H.getFireLoss()
+	var/conditional_buff = FALSE
+	var/sit_bonus1 = 0
+	var/sit_bonus2 = 0
+
+	switch(brute)
+		if(100 to 150)
+			sit_bonus1 = -2
+		if(150 to 200)
+			sit_bonus1 = -4
+		if(200 to 300)
+			sit_bonus1 = -6
+		if(300 to 350)
+			sit_bonus1 = -8
+		if(350 to 400)
+			sit_bonus1 = -10
+		if(400 to INFINITY)
+			sit_bonus1 = -14
+	switch(burn)
+		if(100 to 150)
+			sit_bonus2 = -2
+		if(150 to 200)
+			sit_bonus2 = -4
+		if(200 to 300)
+			sit_bonus2 = -6
+		if(300 to 350)
+			sit_bonus2 = -8
+		if(350 to 400)
+			sit_bonus2 = -10
+		if(400 to INFINITY)
+			sit_bonus2 = -14
+
+	if(sit_bonus1 || sit_bonus2)
+		conditional_buff = TRUE
+
+	// Note that the base value of healing is half that of PERSIST's.
+	var/bruthealval = -7 + psicross_bonus + sit_bonus1
+	var/burnhealval = -7 + psicross_bonus + sit_bonus2
+
+	if(do_after(H, 5 SECONDS))
 		playsound(H, 'sound/magic/psydonrespite.ogg', 100, TRUE)
 		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4")
 		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4")
 		H.adjustBruteLoss(bruthealval)
 		H.adjustFireLoss(burnhealval)
-		H.blood_volume = max(H.blood_volume-6, 0)//Don't sit here and heal all day. Thanks.
-		if (conditional_buff)
-			to_chat(user, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
-		user.devotion?.update_devotion(-20)
-		to_chat(user, "<font color='purple'>I lose 20 devotion!</font>")
-		cast(user)
-		return TRUE
+		H.blood_volume = max(H.blood_volume - 6, 0) //Don't sit here and heal all day. Thanks.
+		if(conditional_buff)
+			to_chat(H, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
+		H.devotion?.update_devotion(-20)
+		to_chat(H, "<font color='purple'>I lose 20 devotion!</font>")
+		proc_heal(H, psicross_bonus)
 	else
 		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))
-		return FALSE
-
+	return
 
 /obj/effect/proc_holder/spell/self/psydonpersist
 	name = "PERSIST"
@@ -219,10 +227,6 @@
 
 /obj/effect/proc_holder/spell/self/psydonpersist/cast(mob/living/carbon/human/user) // It's a very tame self-heal. Nothing too special.
 	. = ..()
-	if(!ishuman(user))
-		revert_cast()
-		return FALSE
-
 	var/mob/living/carbon/human/H = user
 	var/zcross_trigger = FALSE
 	var/psicross_bonus = 0
@@ -243,14 +247,14 @@
 			if(/obj/item/clothing/neck/roguetown/psicross/wood)
 				psicross_bonus = (psicross_bonus > -2) ? -2 : psicross_bonus
 
-	to_chat(H, span_info("I take a moment to collect myself..."))
 	if(zcross_trigger)
 		user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
 		user.playsound_local(user, 'sound/misc/zizo.ogg', 25, FALSE)
 		user.adjustBruteLoss(25)
 		return FALSE
 
-	proc_heal(H, psicross_bonus)
+	to_chat(H, span_info("I take a moment to collect myself..."))
+	proc_heal(H, psicross_bonus) // Will continually recurse on itself until the user breaks channeling.
 	return TRUE
 
 /obj/effect/proc_holder/spell/self/psydonpersist/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus)
@@ -306,7 +310,7 @@
 		proc_heal(H, psicross_bonus)
 	else
 		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))
-		return
+	return
 
 /obj/effect/proc_holder/spell/invoked/psydonabsolve
 	name = "ABSOLVE"
