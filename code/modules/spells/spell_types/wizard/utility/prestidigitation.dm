@@ -185,6 +185,9 @@
 		mote.update_light()
 
 	if (mote.loc == src)
+		if (user.doing)
+			to_chat(user, span_warning("Not when I'm doing something else."))
+			return FALSE
 		user.visible_message(span_notice("[user] holds open the palm of [user.p_their()] hand and concentrates..."), span_notice("I hold open the palm of my hand and concentrate on my arcyne power..."))
 		if (do_after(user, src.motespeed, target = user))
 			mote.orbit(user, 1, TRUE, 0, 48, TRUE)
@@ -219,6 +222,10 @@
 
 /obj/item/melee/touch_attack/prestidigitation/proc/clean_thing(atom/target, mob/living/carbon/human/user)
 	// adjusted from /obj/item/soap in clown_items.dm, some duplication unfortunately (needed for flavor)
+
+	if (user.doing)
+		to_chat(user, span_warning("Not when I'm doing something else."))
+		return FALSE
 
 	// let's adjust the clean speed based on our skill level
 	var/skill_level = user.get_skill_level(attached_spell.associated_skill)

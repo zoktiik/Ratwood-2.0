@@ -604,6 +604,7 @@
 	invocations = list("Treefather, consecrate this living tree into your eternal embrace!")
 	miracle = TRUE
 	devotion_cost = 250
+	active_cast = TRUE
 
 /obj/effect/proc_holder/spell/invoked/sanctify_tree/cast(list/targets, mob/living/user)
 	. = ..()

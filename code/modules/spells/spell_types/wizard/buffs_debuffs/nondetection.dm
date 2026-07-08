@@ -54,6 +54,10 @@
 			to_chat(user, span_warning("I require some ash in a free hand."))
 			return
 
+		if(user.doing)
+			to_chat(user, span_warning("Not when I'm doing something else."))
+			return FALSE
+
 		if(!do_after(user, 5 SECONDS, target = spelltarget))
 			return
 

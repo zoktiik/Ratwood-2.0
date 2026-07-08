@@ -24,6 +24,7 @@
 	shifted_speed_increase = 1.25
 	show_true_name = FALSE
 	convert_damage = FALSE
+	active_cast = TRUE
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/gaseousform
 	name = "Mist Form"

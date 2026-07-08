@@ -348,6 +348,10 @@
 			to_chat(user, span_warning("[thing] is full."))
 			return
 		
+		if(user.doing)
+			to_chat(user, span_warning("Not when I'm doing something else."))
+			return
+
 		user.visible_message(span_info("[user] closes [user.p_their()] eyes in prayer and extends a hand over [thing] as a sweet smelling ichor begins to stream from [user.p_their()] fingertips..."), span_notice("I call forth [user.patron.name], to fill [thing] with Her blessings..."))
 
 		var/holy_skill = user.get_skill_level(attached_spell.associated_skill)

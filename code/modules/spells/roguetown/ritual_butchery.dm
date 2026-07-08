@@ -11,6 +11,7 @@
 	miracle = FALSE
 	devotion_cost = 0
 	sound = 'sound/surgery/organ1.ogg'
+	active_cast = TRUE
 	/// Base time, reduced by butchery skill
 	var/extraction_time = 15 SECONDS
 

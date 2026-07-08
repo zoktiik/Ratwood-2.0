@@ -268,6 +268,9 @@
 	if(target.has_status_effect(/datum/status_effect/debuff/devitalised) || (target.has_status_effect(/datum/status_effect/debuff/devitalised/lux_ripped) || target.mob_biotypes & MOB_UNDEAD)) //can't farm your skeletons
 		to_chat(user, span_notice("This one's lux is already disturbed!"))
 		return
+	if(user.doing)
+		to_chat(user, span_warning("Not when I'm doing something else."))
+		return FALSE
 	else
 		to_chat(user, span_alert("I begin reaching my hand towards [target], preparing to tear their lux from their body..."))
 		user.visible_message(span_alert("[user] reaches towards [target]'s chest, inhumen flames wreathing [user.p_their()] hand..."))
@@ -305,6 +308,9 @@
 	if(!target.Adjacent(user))
 		to_chat(user, span_info("I need to get closer."))
 		return
+	if(user.doing)
+		to_chat(user, span_warning("Not when I'm doing something else."))
+		return FALSE
 	to_chat(user, span_alert("I begin molding the [target] in my hands, perversing it with inhumen energies..."))
 	if(!do_after(user, perverse_time, target = target))
 		return

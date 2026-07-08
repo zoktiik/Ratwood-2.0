@@ -36,6 +36,10 @@
 		return TRUE
 
 	// Subsequent casts - begin channeling
+	if(H.doing)
+		to_chat(H, span_warning("Not when I'm doing something else."))
+		return FALSE
+
 	H.visible_message(span_warning("[H] closes [H.p_their()] eyes and begins to focus intently..."))
 	H.apply_status_effect(/datum/status_effect/buff/recalling)
 	if(do_after(H, recall_delay, target = H, progress = TRUE))

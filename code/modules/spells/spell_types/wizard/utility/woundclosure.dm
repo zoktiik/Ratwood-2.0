@@ -23,6 +23,7 @@
 	spell_tier = 3
 	antimagic_allowed = FALSE
 	miracle = FALSE
+	active_cast = TRUE
 	var/delay = 4.5 SECONDS	//Reduced to 1.5 seconds with Legendary
 
 

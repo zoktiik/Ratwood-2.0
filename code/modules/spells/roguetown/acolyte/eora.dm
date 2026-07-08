@@ -260,6 +260,7 @@
 	miracle = TRUE
 	devotion_cost = 75
 	associated_skill = /datum/skill/magic/holy
+	active_cast = TRUE
 
 /obj/effect/proc_holder/spell/invoked/heartweave/cast(list/targets, mob/living/user)
 	var/mob/living/target = targets[1]
@@ -414,6 +415,7 @@
 	chargetime = 1 SECONDS
 	overlay_state = "tree"
 	associated_skill = /datum/skill/magic/holy
+	active_cast = TRUE
 	var/obj/structure/eoran_pomegranate_tree/my_little_tree = null
 
 /obj/effect/proc_holder/spell/invoked/pomegranate/cast(list/targets, mob/living/user)

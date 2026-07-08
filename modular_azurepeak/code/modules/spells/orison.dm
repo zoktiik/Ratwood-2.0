@@ -130,6 +130,10 @@
 		to_chat(user, span_notice("Only living creachers can bear the blessing of [user.patron.name]'s light."))
 		return
 
+	if(user.doing)
+		to_chat(user, span_warning("Not when I'm doing something else."))
+		return
+
 	if(thing != user)
 		user.visible_message(span_notice("[user] reaches gently towards [thing], beads of light glimmering at [user.p_their()] fingertips..."), span_notice("Blessed [user.patron.name], I ask but for a light to guide the way..."))
 	else
@@ -172,6 +176,10 @@
 		user.visible_message(span_notice("[user] lowers [user.p_their()] head solemnly, whispered prayers spilling from [user.p_their()] lips..."), span_notice("O holy [user.patron.name], share unto me a sliver of your power..."))
 		
 		if (!user.has_status_effect(/datum/status_effect/thaumaturgy))
+			if(user.doing)
+				to_chat(user, span_warning("Not when I'm doing something else."))
+				return
+
 			if (do_after(user, cast_time, target = user))
 				user.apply_status_effect(/datum/status_effect/thaumaturgy, holy_skill)
 				user.visible_message(span_notice("[user] throws open [user.p_their()] eyes, suddenly emboldened!"), span_notice("A feeling of power wells up in my throat: speak, and many will hear!"))
@@ -313,7 +321,11 @@
 	if (target.has_status_effect(/datum/status_effect/buff/lay_hands))
 		to_chat(user, span_notice("[target] is already receiving the laying of hands."))
 		return
-	
+
+	if(user.doing)
+		to_chat(user, span_warning("Not when I'm doing something else."))
+		return
+
 	user.visible_message(span_notice("[user] places [user.p_their()] hands upon [target], divine power beginning to gather..."), span_notice("I lay my hands upon [target], channeling [user.patron.name]'s restorative power..."))
 	
 	// Initial channel to establish the connection
@@ -372,7 +384,11 @@
 		if (thing.reagents.holder_full())
 			to_chat(user, span_warning("[thing] is full."))
 			return
-		
+
+		if(user.doing)
+			to_chat(user, span_warning("Not when I'm doing something else."))
+			return
+
 		user.visible_message(span_info("[user] closes [user.p_their()] eyes in prayer and extends a hand over [thing] as water begins to stream from [user.p_their()] fingertips..."), span_notice("I utter forth a plea to [user.patron.name] for succour, and hold my hand out above [thing]..."))
 
 		var/holy_skill = user.get_skill_level(attached_spell.associated_skill)
