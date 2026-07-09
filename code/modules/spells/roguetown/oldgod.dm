@@ -110,10 +110,20 @@
 	devotion_cost = 0
 	active_cast = TRUE
 	human_req = TRUE
+	var/static/blood_spend = 6
+	var/static/devotion_spend = 20
 
 /obj/effect/proc_holder/spell/self/psydonrespite/cast(mob/living/carbon/human/user) // It's a very tame self-heal. Nothing too special.
 	. = ..()
 	var/mob/living/carbon/human/H = user
+	if((H.blood_volume - blood_spend) <= BLOOD_VOLUME_BAD)
+		to_chat(H, span_warning("I lack the requisite amount of blood."))
+		return FALSE
+
+	if(!H.devotion || H.devotion.devotion < devotion_spend)
+		to_chat(H, span_warning("I lack the requisite devotion."))
+		return FALSE
+	
 	var/zcross_trigger = FALSE
 	var/psicross_bonus = 0
 
@@ -123,15 +133,15 @@
 				zcross_trigger = TRUE
 				break
 			if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
-				psicross_bonus = -7
+				psicross_bonus = min(psicross_bonus, -7)
 			if(/obj/item/clothing/neck/roguetown/psicross/silver)
-				psicross_bonus = -7
+				psicross_bonus = min(psicross_bonus, -7)
 			if(/obj/item/clothing/neck/roguetown/psicross)
-				psicross_bonus = (psicross_bonus > -5) ? -5 : psicross_bonus // In other words, don't replace the best bonus we have.
+				psicross_bonus = min(psicross_bonus, -5)
 			if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
-				psicross_bonus = (psicross_bonus > -4) ? -4 : psicross_bonus
+				psicross_bonus = min(psicross_bonus, -4)
 			if(/obj/item/clothing/neck/roguetown/psicross/wood)
-				psicross_bonus = (psicross_bonus > -2) ? -2 : psicross_bonus
+				psicross_bonus = min(psicross_bonus, -2)
 
 	if(zcross_trigger)
 		user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
@@ -140,13 +150,21 @@
 		return FALSE
 
 	to_chat(H, span_info("I take a moment to collect myself..."))
-	proc_heal(H, psicross_bonus) // Will continually recurse on itself until the user either breaks channeling, or nears stage 3 bloodloss.
+	for(var/heal_step in 1 to 15)
+		if(!proc_heal(H, psicross_bonus, heal_step))
+			break
+	to_chat(H, span_info("My thoughts and sense of quiet escape me."))
 	return TRUE
 
-/obj/effect/proc_holder/spell/self/psydonrespite/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus)
-	if((H.blood_volume - 6) <= BLOOD_VOLUME_BAD)
-		to_chat(H, span_warning("I lack the requisite amount of blood."))
-		return
+/obj/effect/proc_holder/spell/self/psydonrespite/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus, heal_step)
+	if(heal_step != 1)
+		if((H.blood_volume - blood_spend) <= BLOOD_VOLUME_BAD)
+			to_chat(H, span_warning("I lack the requisite amount of blood."))
+			return FALSE
+
+		if(H.devotion.devotion < devotion_spend)
+			to_chat(H, span_warning("I lack the requisite devotion."))
+			return FALSE
 
 	var/brute = H.getBruteLoss()
 	var/burn = H.getFireLoss()
@@ -194,15 +212,13 @@
 		new /obj/effect/temp_visual/psyheal_rogue(get_turf(H), "#e4e4e4")
 		H.adjustBruteLoss(bruthealval)
 		H.adjustFireLoss(burnhealval)
-		H.blood_volume = max(H.blood_volume - 6, 0) //Don't sit here and heal all day. Thanks.
+		H.blood_volume = max(H.blood_volume - blood_spend, 0)
 		if(conditional_buff)
 			to_chat(H, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
-		H.devotion?.update_devotion(-20)
-		to_chat(H, "<font color='purple'>I lose 20 devotion!</font>")
-		proc_heal(H, psicross_bonus)
-	else
-		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))
-	return
+		H.devotion.update_devotion(-devotion_spend)
+		to_chat(H, "<font color='purple'>I lose [devotion_spend] devotion!</font>")
+		return TRUE	//keep the loop going
+	return FALSE
 
 /obj/effect/proc_holder/spell/self/psydonpersist
 	name = "PERSIST"
@@ -224,10 +240,16 @@
 	devotion_cost = 0
 	active_cast = TRUE
 	human_req = TRUE
+	var/static/devotion_spend = 60
 
 /obj/effect/proc_holder/spell/self/psydonpersist/cast(mob/living/carbon/human/user) // It's a very tame self-heal. Nothing too special.
 	. = ..()
 	var/mob/living/carbon/human/H = user
+
+	if(!H.devotion || H.devotion.devotion < devotion_spend)
+		to_chat(H, span_warning("I lack the requisite devotion."))
+		return FALSE
+
 	var/zcross_trigger = FALSE
 	var/psicross_bonus = 0
 
@@ -237,15 +259,15 @@
 				zcross_trigger = TRUE
 				break
 			if(/obj/item/clothing/neck/roguetown/psicross/g) // PURITY AFLOAT.
-				psicross_bonus = -7
+				psicross_bonus = min(psicross_bonus, -7)
 			if(/obj/item/clothing/neck/roguetown/psicross/silver)
-				psicross_bonus = -7
+				psicross_bonus = min(psicross_bonus, -7)
 			if(/obj/item/clothing/neck/roguetown/psicross)
-				psicross_bonus = (psicross_bonus > -5) ? -5 : psicross_bonus // In other words, don't replace the best bonus we have.
+				psicross_bonus = min(psicross_bonus, -5)
 			if(/obj/item/clothing/neck/roguetown/psicross/decrepit)
-				psicross_bonus = (psicross_bonus > -4) ? -4 : psicross_bonus
+				psicross_bonus = min(psicross_bonus, -4)
 			if(/obj/item/clothing/neck/roguetown/psicross/wood)
-				psicross_bonus = (psicross_bonus > -2) ? -2 : psicross_bonus
+				psicross_bonus = min(psicross_bonus, -2)
 
 	if(zcross_trigger)
 		user.visible_message(span_warning("[user] shuddered. Something's very wrong."), span_userdanger("Cold shoots through my spine. Something laughs at me for trying."))
@@ -254,10 +276,18 @@
 		return FALSE
 
 	to_chat(H, span_info("I take a moment to collect myself..."))
-	proc_heal(H, psicross_bonus) // Will continually recurse on itself until the user breaks channeling.
+	for(var/heal_step in 1 to 15)
+		if(!proc_heal(H, psicross_bonus, heal_step))
+			break
+	to_chat(H, span_info("My thoughts and sense of quiet escape me."))
 	return TRUE
 
-/obj/effect/proc_holder/spell/self/psydonpersist/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus)
+/obj/effect/proc_holder/spell/self/psydonpersist/proc/proc_heal(mob/living/carbon/human/H, psicross_bonus, heal_step)
+	if(heal_step != 1)
+		if(H.devotion.devotion < devotion_spend)
+			to_chat(H, span_warning("I lack the requisite devotion."))
+			return FALSE
+
 	var/brute = H.getBruteLoss()
 	var/burn = H.getFireLoss()
 	var/sit_bonus1 = 0
@@ -305,12 +335,10 @@
 		H.adjustFireLoss(burnhealval)
 		if(conditional_buff)
 			to_chat(H, span_info("My pain gives way to a sense of furthered clarity before returning again, dulled."))
-		H.devotion?.update_devotion(-60)
-		to_chat(H, "<font color='purple'>I lose 60 devotion!</font>")
-		proc_heal(H, psicross_bonus)
-	else
-		to_chat(H, span_warning("My thoughts and sense of quiet escape me."))
-	return
+		H.devotion.update_devotion(-devotion_spend)
+		to_chat(H, "<font color='purple'>I lose [devotion_spend] devotion!</font>")
+		return TRUE //keep the loop going
+	return FALSE
 
 /obj/effect/proc_holder/spell/invoked/psydonabsolve
 	name = "ABSOLVE"
