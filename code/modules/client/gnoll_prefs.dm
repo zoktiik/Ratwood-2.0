@@ -683,7 +683,7 @@
 
 		if("ooc_preview")
 			var/datum/examine_panel/preview_examine_panel = new(user)
-			preview_examine_panel.pref = src
+			preview_examine_panel.pref = user.client?.prefs
 			preview_examine_panel.holder = user
 			preview_examine_panel.viewing = user
 			preview_examine_panel.previewing = "gnoll"
