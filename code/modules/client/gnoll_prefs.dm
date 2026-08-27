@@ -280,7 +280,7 @@
 	dat += "<h3>Gnoll Flavortext (Optional)</h3>"
 
 	if(headshot_link != null)
-		dat += "<span style="position: fixed;right: 0;"><img src='[headshot_link]' width='100px' height='100px'></span>"
+		dat += "<span style='position: fixed;right: 0;'><img src='[headshot_link]' width='100px' height='100px'></span>"
 
 	dat += "<b>Headshot:</b> "
 	dat += "<a href='?_src_=gnoll_prefs;action=headshot'>Change</a><br>"
