@@ -279,14 +279,11 @@
 
 	dat += "<h3>Gnoll Flavortext (Optional)</h3>"
 
-	if(headshot_link != null)
-		dat += "<span style='position: fixed;right: 0;'><img src='[headshot_link]' width='100px' height='100px'></span>"
-
 	dat += "<b>Headshot:</b> "
-	dat += "<a href='?_src_=gnoll_prefs;action=headshot'>Change</a><br>"
+	dat += "<a href='?_src_=gnoll_prefs;action=headshot'>Change</a>"
 	if(headshot_link != null)
 		dat += "<br><img src='[headshot_link]' width='100px' height='100px'>"
-	dat += ""
+	dat += "<br>"
 
 	dat += "<br><b>Flavortext: </b><a href='?_src_=gnoll_prefs;action=formathelp;task=input'>(?)</a><a href='?_src_=gnoll_prefs;action=flavortext'>Change</a>"
 	dat += "<br><b>NSFW Flavortext: </b><a href='?_src_=gnoll_prefs;action=formathelp;task=input'>(?)</a><a href='?_src_=gnoll_prefs;action=nsfwflavortext'>Change</a>"
