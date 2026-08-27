@@ -277,10 +277,13 @@
 	dat += "<a href='?_src_=gnoll_prefs;action=choose_descriptor;slot=expression'>[expression_label]</a>"
 	dat += "<br>"
 
-	dat += "<h3>Gnoll Flavortext (Optional)</h3><br>"
+	dat += "<h3>Gnoll Flavortext (Optional)</h3>"
+
+	if(headshot_link != null)
+		dat += "<span style="position: fixed;right: 0;"><img src='[headshot_link]' width='100px' height='100px'></span>"
 
 	dat += "<b>Headshot:</b> "
-	dat += "<a href='?_src_=gnoll_prefs;action=headshot'>Change</a>"
+	dat += "<a href='?_src_=gnoll_prefs;action=headshot'>Change</a><br>"
 	if(headshot_link != null)
 		dat += "<br><img src='[headshot_link]' width='100px' height='100px'>"
 	dat += ""
@@ -477,6 +480,7 @@
 					)
 					if(new_type in valid_expression)
 						descriptor_expression = new_type
+			gnoll_show_ui(user)
 		if("headshot")
 			to_chat(user, "<span class='notice'>Please use a relatively SFW image of the head and shoulder area to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
 			to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
@@ -495,6 +499,7 @@
 			headshot_link = new_headshot_link
 			to_chat(user, span_notice("Successfully updated gnoll headshot picture"))
 			log_game("[user] has set their gnoll headshot image to '[headshot_link]'.")
+			gnoll_show_ui(user)
 		if("formathelp")
 			var/list/dat = list()
 			dat +="You can use backslash (\\) to escape special characters.<br>"
@@ -828,7 +833,6 @@
 					info = "a video."
 			to_chat(user, "<span class='notice'>Successfully updated gnoll NSFW OOC Extra Image with [info]</span>")
 			log_game("[user] has set their gnoll NSFW OOC Extra Image to '[link]'.")
-		gnoll_show_ui(user)
 
 		if("close")
 			user << browse(null, "window=gnoll_prefs")
