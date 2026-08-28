@@ -283,7 +283,6 @@
 	dat += "<a href='?_src_=gnoll_prefs;action=headshot'>Change</a>"
 	if(headshot_link != null)
 		dat += "<br><img src='[headshot_link]' width='100px' height='100px'>"
-	dat += "<br>"
 
 	dat += "<br><b>Flavortext: </b><a href='?_src_=gnoll_prefs;action=formathelp;task=input'>(?)</a><a href='?_src_=gnoll_prefs;action=flavortext'>Change</a>"
 	dat += "<br><b>NSFW Flavortext: </b><a href='?_src_=gnoll_prefs;action=formathelp;task=input'>(?)</a><a href='?_src_=gnoll_prefs;action=nsfwflavortext'>Change</a>"
