@@ -70,8 +70,22 @@
 		headshot_link = null
 
 	// Gnolls should not inherit player-authored social metadata from their base slot.
+	headshot_link = null
+	flavortext = null
+	ooc_notes = null
 	rumour = null
 	noble_gossip = null
+	nsfwflavortext = null
+	nsfw_ooc_extra_img = null
+	nsfw_ooc_extra_img_link = null
+	song_artist = null
+	song_title = null
+	erpprefs = null
+	img_gallery = null
+	nsfw_img_gallery = null
+	ooc_extra = null
+	ooc_extra_img = null
+	ooc_extra_img_link = null
 
 	if(status_traits)
 		for(var/trait in status_traits.Copy())
@@ -152,6 +166,25 @@
 	add_mob_descriptor(prefs.descriptor_voice || /datum/mob_descriptor/voice/growly)
 	add_mob_descriptor(prefs.descriptor_muzzle || /datum/mob_descriptor/face/gnoll/long_muzzle)
 	add_mob_descriptor(prefs.descriptor_expression || /datum/mob_descriptor/face_exp/gnoll/alert)
+
+	// Copy gnoll flavortext to gnoll mob
+	headshot_link = prefs.headshot_link
+	flavortext = prefs.flavortext
+	ooc_notes = prefs.ooc_notes
+	rumour = prefs.rumour
+	noble_gossip = prefs.noble_gossip
+	nsfwflavortext = prefs.nsfwflavortext
+	nsfw_ooc_extra_img = prefs.nsfw_ooc_extra_img
+	nsfw_ooc_extra_img_link = prefs.nsfw_ooc_extra_img_link
+	song_artist = prefs.song_artist
+	song_title = prefs.song_artist
+	erpprefs = prefs.erpprefs
+	img_gallery = prefs.img_gallery
+	nsfw_img_gallery = prefs.nsfw_img_gallery
+	ooc_extra = prefs.ooc_extra
+	ooc_extra_img = prefs.ooc_extra_img
+	ooc_extra_img_link = prefs.ooc_extra_img_link
+
 	return TRUE
 
 /mob/living/carbon/human/proc/reset_gnoll_sprite_scale()
