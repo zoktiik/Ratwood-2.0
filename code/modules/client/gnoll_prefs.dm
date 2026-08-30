@@ -226,9 +226,10 @@
 	dat += "<a href='?_src_=gnoll_prefs;action=choose_pronouns'>[pronoun_label]</a>"
 	dat += "<br>"
 
-	dat += "<b>Voice Color:</b> <span style='border: 1px solid #161616; background-color: #[gnoll_voice_color];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=gnoll_prefs;action=voice_color'>Change</a><br>"
+	dat += "<b>Voice Color:</b> <a href='?_src_=gnoll_prefs;action=voice_color'>Change</a><br>"
 
 	dat += "<b>Gnoll Statpack:</b> <a href='?_src_=gnoll_prefs;action=gnoll_statpack'>Change</a><br>"
+	dat += "<span style='color:#b2b2b2;'>" 
 	if(gnoll_statpack)
 		var/stats_string = gnoll_statpack.generate_modifier_string()
 		if(stats_string)
@@ -238,6 +239,7 @@
 		dat += "[gnoll_statpack.desc]<br>"
 	else
 		dat += "None Selected<br>"
+	dat += "</span><br>"
 
 	// Pelt type section
 	var/list/pelt_options = get_pelt_options()
@@ -878,6 +880,7 @@
 				gnoll_statpack = selected
 				to_chat(usr, span_notice("Selected [choice] gnoll statpack."))
 				to_chat(usr, "<span class='info'>[selected.description_string()]</span>")
+			gnoll_show_ui(user)
 
 		if("voice_color")
 			var/new_voice = input(user, "Choose your gnoll's voice color:", "Character Preference","#"+gnoll_voice_color) as color|null
@@ -886,6 +889,7 @@
 					to_chat(user, "<font color='red'>This voice color is too dark for mortals.</font>")
 					return
 				gnoll_voice_color = sanitize_hexcolor(new_voice)
+			gnoll_show_ui(user)
 
 		if("close")
 			user << browse(null, "window=gnoll_prefs")
