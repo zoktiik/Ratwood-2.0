@@ -111,17 +111,17 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
               preserveWhitespace
               buttons={
                 <>
-                  <Button
-                    icon={showHeadshot ? 'chevron-up' : 'chevron-down'}
-                    tooltip={showHeadshot ? 'Hide headshot' : 'Show headshot'}
-                    selected={!showHeadshot}
-                    onClick={() => setShowHeadshot(!showHeadshot)}
-                  />
                   <EmButtons
                     value={oocEm[oocNotesIndex]}
                     onChange={(value) =>
                       setOocEm({ ...oocEm, [oocNotesIndex]: value })
                     }
+                  />
+                  <Button
+                    icon={showHeadshot ? 'chevron-up' : 'chevron-down'}
+                    tooltip={showHeadshot ? 'Hide headshot' : 'Show headshot'}
+                    selected={!showHeadshot}
+                    onClick={() => setShowHeadshot(!showHeadshot)}
                   />
                   <Button
                     selected={oocNotesIndex === 'SFW'}
