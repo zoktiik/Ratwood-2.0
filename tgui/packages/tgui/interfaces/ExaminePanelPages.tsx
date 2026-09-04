@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Image, Section, Stack } from 'tgui-core/components';
 
 import { resolveAsset } from '../assets';
@@ -59,8 +59,17 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
   const [oocNotesIndex, setOocNotesIndex] = useState<'SFW' | 'NSFW'>('SFW');
   const [flavorTextIndex, setFlavorTextIndex] = useState<'SFW' | 'NSFW'>('SFW');
   const [showHeadshot, setShowHeadshot] = useState(true);
+  const [hideLeft, setHideLeft] = useState(false);
   const [oocEm, setOocEm] = useState({ SFW: 1, NSFW: 1 });
   const [flavorEm, setFlavorEm] = useState({ SFW: 1, NSFW: 1 });
+
+  useEffect(() => {
+    if (collapsed) {
+      setHideLeft(false);
+    }
+  }, [collapsed]);
+
+  const showLeft = collapsed || !hideLeft;
 
   const flavorHTML = useMemo(
     () => ({
@@ -92,79 +101,81 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
 
   return (
     <Stack fill>
-      <Stack.Item
-        grow={collapsed}
-        width={collapsed ? undefined : '350px'}
-        minWidth={collapsed ? 0 : undefined}
-      >
-        <Stack fill vertical>
-          {showHeadshot && (
-            <Stack.Item align="center">
-              <img src={resolveAsset(headshot)} width="350px" height="350px" />
+      {showLeft && (
+        <Stack.Item
+          grow={collapsed}
+          width={collapsed ? undefined : '350px'}
+          minWidth={collapsed ? 0 : undefined}
+        >
+          <Stack fill vertical>
+            {showHeadshot && (
+              <Stack.Item align="center">
+                <img src={resolveAsset(headshot)} width="350px" height="350px" />
+              </Stack.Item>
+            )}
+            <Stack.Item grow>
+              <Section
+                scrollable
+                fill
+                title="OOC Notes"
+                preserveWhitespace
+                buttons={
+                  <>
+                    <EmButtons
+                      value={oocEm[oocNotesIndex]}
+                      onChange={(value) =>
+                        setOocEm({ ...oocEm, [oocNotesIndex]: value })
+                      }
+                    />
+                    <Button
+                      icon={showHeadshot ? 'chevron-up' : 'chevron-down'}
+                      tooltip={showHeadshot ? 'Hide headshot' : 'Show headshot'}
+                      selected={!showHeadshot}
+                      onClick={() => setShowHeadshot(!showHeadshot)}
+                    />
+                    <Button
+                      selected={oocNotesIndex === 'SFW'}
+                      bold={oocNotesIndex === 'SFW'}
+                      onClick={() => setOocNotesIndex('SFW')}
+                      textAlign="center"
+                      minWidth="60px"
+                    >
+                      SFW
+                    </Button>
+                    <Button
+                      selected={oocNotesIndex === 'NSFW'}
+                      disabled={!ooc_notes_nsfw}
+                      bold={oocNotesIndex === 'NSFW'}
+                      onClick={() => setOocNotesIndex('NSFW')}
+                      textAlign="center"
+                      minWidth="60px"
+                    >
+                      NSFW
+                    </Button>
+                  </>
+                }
+              >
+                {oocNotesIndex === 'SFW' && (
+                  <Box
+                    style={{ zoom: oocEm.SFW }}
+                    dangerouslySetInnerHTML={{
+                      __html: ooc_notes
+                        ? `<span class='Chat'>${ooc_notes}</span>`
+                        : '<i>No OOC notes provided.</i>',
+                    }}
+                  />
+                )}
+                {oocNotesIndex === 'NSFW' && (
+                  <Box
+                    style={{ zoom: oocEm.NSFW }}
+                    dangerouslySetInnerHTML={oocnsfwHTML}
+                  />
+                )}
+              </Section>
             </Stack.Item>
-          )}
-          <Stack.Item grow>
-            <Section
-              scrollable
-              fill
-              title="OOC Notes"
-              preserveWhitespace
-              buttons={
-                <>
-                  <EmButtons
-                    value={oocEm[oocNotesIndex]}
-                    onChange={(value) =>
-                      setOocEm({ ...oocEm, [oocNotesIndex]: value })
-                    }
-                  />
-                  <Button
-                    icon={showHeadshot ? 'chevron-up' : 'chevron-down'}
-                    tooltip={showHeadshot ? 'Hide headshot' : 'Show headshot'}
-                    selected={!showHeadshot}
-                    onClick={() => setShowHeadshot(!showHeadshot)}
-                  />
-                  <Button
-                    selected={oocNotesIndex === 'SFW'}
-                    bold={oocNotesIndex === 'SFW'}
-                    onClick={() => setOocNotesIndex('SFW')}
-                    textAlign="center"
-                    minWidth="60px"
-                  >
-                    SFW
-                  </Button>
-                  <Button
-                    selected={oocNotesIndex === 'NSFW'}
-                    disabled={!ooc_notes_nsfw}
-                    bold={oocNotesIndex === 'NSFW'}
-                    onClick={() => setOocNotesIndex('NSFW')}
-                    textAlign="center"
-                    minWidth="60px"
-                  >
-                    NSFW
-                  </Button>
-                </>
-              }
-            >
-              {oocNotesIndex === 'SFW' && (
-                <Box
-                  style={{ zoom: oocEm.SFW }}
-                  dangerouslySetInnerHTML={{
-                    __html: ooc_notes
-                      ? `<span class='Chat'>${ooc_notes}</span>`
-                      : '<i>No OOC notes provided.</i>',
-                  }}
-                />
-              )}
-              {oocNotesIndex === 'NSFW' && (
-                <Box
-                  style={{ zoom: oocEm.NSFW }}
-                  dangerouslySetInnerHTML={oocnsfwHTML}
-                />
-              )}
-            </Section>
-          </Stack.Item>
-        </Stack>
-      </Stack.Item>
+          </Stack>
+        </Stack.Item>
+      )}
       {!collapsed && (
         <Stack.Item grow>
           <Section
@@ -179,6 +190,12 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
                   onChange={(value) =>
                     setFlavorEm({ ...flavorEm, [flavorTextIndex]: value })
                   }
+                />
+                <Button
+                  icon={hideLeft ? 'chevron-right' : 'chevron-left'}
+                  tooltip={hideLeft ? 'Show left section' : 'Hide left section'}
+                  selected={hideLeft}
+                  onClick={() => setHideLeft(!hideLeft)}
                 />
                 <Button
                   selected={flavorTextIndex === 'SFW'}
