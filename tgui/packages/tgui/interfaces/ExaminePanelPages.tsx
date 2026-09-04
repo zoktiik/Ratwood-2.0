@@ -10,7 +10,7 @@ type FlavorTextPageProps = {
 };
 
 const FONT_MIN = 0.8;
-const FONT_MAX = 1.4;
+const FONT_MAX = 1.5;
 const FONT_STEP = 0.1;
 
 const bumpEm = (value: number, dir: number) =>
