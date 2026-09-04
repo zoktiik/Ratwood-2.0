@@ -9,6 +9,39 @@ type FlavorTextPageProps = {
   collapsed?: boolean;
 };
 
+const FONT_MIN = 0.8;
+const FONT_MAX = 1.4;
+const FONT_STEP = 0.1;
+
+const bumpEm = (value: number, dir: number) =>
+  Math.min(FONT_MAX, Math.max(FONT_MIN, +(value + dir * FONT_STEP).toFixed(1)));
+
+const EmButtons = (props: {
+  value: number;
+  onChange: (value: number) => void;
+}) => {
+  const atMin = props.value <= FONT_MIN;
+  const atMax = props.value >= FONT_MAX;
+  return (
+    <>
+      <Button
+        color={atMin ? undefined : 'transparent'}
+        compact
+        icon="minus"
+        disabled={atMin}
+        onClick={() => props.onChange(bumpEm(props.value, -1))}
+      />
+      <Button
+        color={atMax ? undefined : 'transparent'}
+        compact
+        icon="plus"
+        disabled={atMax}
+        onClick={() => props.onChange(bumpEm(props.value, 1))}
+      />
+    </>
+  );
+};
+
 export const FlavorTextPage = (props: FlavorTextPageProps) => {
   const { collapsed = false } = props;
   const { data } = useBackend<ExaminePanelData>();
@@ -23,9 +56,11 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
     nsfw_ooc_extra_image,
     nsfw_examine_always,
   } = data;
-  const [oocNotesIndex, setOocNotesIndex] = useState('SFW');
-  const [flavorTextIndex, setFlavorTextIndex] = useState('SFW');
+  const [oocNotesIndex, setOocNotesIndex] = useState<'SFW' | 'NSFW'>('SFW');
+  const [flavorTextIndex, setFlavorTextIndex] = useState<'SFW' | 'NSFW'>('SFW');
   const [showHeadshot, setShowHeadshot] = useState(true);
+  const [oocEm, setOocEm] = useState({ SFW: 1, NSFW: 1 });
+  const [flavorEm, setFlavorEm] = useState({ SFW: 1, NSFW: 1 });
 
   const flavorHTML = useMemo(
     () => ({
@@ -82,6 +117,12 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
                     selected={!showHeadshot}
                     onClick={() => setShowHeadshot(!showHeadshot)}
                   />
+                  <EmButtons
+                    value={oocEm[oocNotesIndex]}
+                    onChange={(value) =>
+                      setOocEm({ ...oocEm, [oocNotesIndex]: value })
+                    }
+                  />
                   <Button
                     selected={oocNotesIndex === 'SFW'}
                     bold={oocNotesIndex === 'SFW'}
@@ -106,6 +147,7 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
             >
               {oocNotesIndex === 'SFW' && (
                 <Box
+                  style={{ zoom: oocEm.SFW }}
                   dangerouslySetInnerHTML={{
                     __html: ooc_notes
                       ? `<span class='Chat'>${ooc_notes}</span>`
@@ -114,7 +156,10 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
                 />
               )}
               {oocNotesIndex === 'NSFW' && (
-                <Box dangerouslySetInnerHTML={oocnsfwHTML} />
+                <Box
+                  style={{ zoom: oocEm.NSFW }}
+                  dangerouslySetInnerHTML={oocnsfwHTML}
+                />
               )}
             </Section>
           </Stack.Item>
@@ -129,6 +174,12 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
             title="Flavor Text"
             buttons={
               <>
+                <EmButtons
+                  value={flavorEm[flavorTextIndex]}
+                  onChange={(value) =>
+                    setFlavorEm({ ...flavorEm, [flavorTextIndex]: value })
+                  }
+                />
                 <Button
                   selected={flavorTextIndex === 'SFW'}
                   bold={flavorTextIndex === 'SFW'}
@@ -156,6 +207,7 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
             {flavorTextIndex === 'SFW' && (
               <>
                 <Box
+                  style={{ zoom: flavorEm.SFW }}
                   dangerouslySetInnerHTML={{
                     __html: flavor_text
                       ? `<span class='Chat'>${flavor_text}</span>`
@@ -174,7 +226,10 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
             )}
             {flavorTextIndex === 'NSFW' && (
               <>
-                <Box dangerouslySetInnerHTML={nsfwHTML} />
+                <Box
+                  style={{ zoom: flavorEm.NSFW }}
+                  dangerouslySetInnerHTML={nsfwHTML}
+                />
                 {nsfw_ooc_extra_image && (
                   <Box
                     mt={1}
