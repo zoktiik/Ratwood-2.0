@@ -46,11 +46,6 @@ const chatHtml = (text: string, empty?: string) => ({
   __html: text ? `<span class="Chat">${text}</span>` : (empty ?? ''),
 });
 
-const emZoom = (em: number) => ({
-  zoom: em,
-  width: `${100 / em}%`,
-});
-
 export const FlavorTextPage = (props: FlavorTextPageProps) => {
   const { collapsed = false } = props;
   const { data } = useBackend<ExaminePanelData>();
@@ -146,7 +141,7 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
               >
                 {oocNotesIndex === 'SFW' && (
                   <Box
-                    style={emZoom(oocEm.SFW)}
+                    style={{ zoom: oocEm.SFW }}
                     dangerouslySetInnerHTML={chatHtml(
                       ooc_notes,
                       '<i>No OOC notes provided.</i>',
@@ -155,7 +150,7 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
                 )}
                 {oocNotesIndex === 'NSFW' && (
                   <Box
-                    style={emZoom(oocEm.NSFW)}
+                    style={{ zoom: oocEm.NSFW }}
                     dangerouslySetInnerHTML={chatHtml(ooc_notes_nsfw)}
                   />
                 )}
@@ -210,7 +205,7 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
             }
           >
             {flavorTextIndex === 'SFW' && (
-              <Box style={emZoom(flavorEm.SFW)}>
+              <Box style={{ zoom: flavorEm.SFW }}>
                 <Box
                   dangerouslySetInnerHTML={chatHtml(
                     flavor_text,
@@ -226,7 +221,7 @@ export const FlavorTextPage = (props: FlavorTextPageProps) => {
               </Box>
             )}
             {flavorTextIndex === 'NSFW' && (
-              <Box style={emZoom(flavorEm.NSFW)}>
+              <Box style={{ zoom: flavorEm.NSFW }}>
                 <Box dangerouslySetInnerHTML={chatHtml(flavor_text_nsfw)} />
                 {nsfw_ooc_extra_image && (
                   <Box
