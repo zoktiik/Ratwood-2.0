@@ -216,6 +216,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/anonymize = TRUE
 	var/masked_examine = FALSE
+	var/top_examine = FALSE
 	var/show_mouseover_role = FALSE
 	var/nsfw_examine_always = FALSE
 	var/mute_animal_emotes = FALSE
@@ -2354,6 +2355,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					preview_examine_panel.pref = src
 					preview_examine_panel.holder = user
 					preview_examine_panel.viewing = user
+					preview_examine_panel.previewing = "character"
 					preview_examine_panel.ui_interact(user)
 
 				if("rumour_preview")
@@ -3162,8 +3164,6 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1, roundstart_checks = TRUE, character_setup = FALSE, antagonist = FALSE, skip_normal_prefs = FALSE)
 	if(skip_normal_prefs)
-		_load_statpack() /// This should load statpack preferences, I'm at my limit here.
-		character.statpack = statpack
 		// For gnolls spawning from a non-gnoll base slot, we must not apply any base-slot state.
 		// Set species to gnoll immediately so advclass check_requirements can read dna.species.type.
 		character.set_species(/datum/species/gnoll, icon_update = FALSE)
