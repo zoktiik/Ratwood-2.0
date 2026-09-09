@@ -281,6 +281,8 @@
 	var/obj/effect/proc_holder/ranged_ability //Any ranged ability the mob has, as a click override
 
 	var/list/mob_timers = list()
+	/// Cache of client.prefs.erp_hearts so sex VFX can skip client/prefs lookups
+	var/erp_hearts = FALSE
 
 	var/music_playing = FALSE
 	/// Tracker for amount of turfs we sprinted over, for things like bumping and charging

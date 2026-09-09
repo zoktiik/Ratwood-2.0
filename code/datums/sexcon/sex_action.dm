@@ -107,9 +107,6 @@
 	var/last_balloon = user.mob_timers["erp_onomatopoeia"]
 	if(last_balloon && last_balloon > (world.time - 2 SECONDS))
 		return
-	var/list/balloon_haters = list()
-	for(var/mob/living/subject in hearers(DEFAULT_MESSAGE_RANGE, user))
-		if(!subject.erp_hearts)
-			balloon_haters += subject
 	user.mob_timers["erp_onomatopoeia"] = world.time
-	user.balloon_alert_to_viewers("Plap!", x_offset = rand(-15, 15), y_offset = rand(0, 25), ignored_mobs = balloon_haters)
+	for(var/mob/viewer in get_erp_heart_audience(user))
+		user.balloon_alert(viewer, "Plap!", rand(-15, 15), rand(0, 25))

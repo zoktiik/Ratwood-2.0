@@ -1737,11 +1737,17 @@
 	desc = "I can barely walk..."
 	icon_state = "quivering"
 
+/// Opted-in viewers of source, including ghosts and nested client mobs.
+/proc/get_erp_heart_audience(atom/source)
+	var/list/audience = list()
+	for(var/mob/viewer in get_hearers_in_view(DEFAULT_MESSAGE_RANGE, source, RECURSIVE_CONTENTS_CLIENT_MOBS))
+		if(!viewer.erp_hearts || is_blind(viewer))
+			continue
+		audience |= viewer
+	return audience
+
 /datum/sex_controller/proc/show_sex_effects(mob/living/carbon/human/user)
-	var/list/seers = list()
-	for(var/mob/living/seer in hearers(DEFAULT_MESSAGE_RANGE, user))
-		if(seer.erp_hearts)
-			seers += seer
+	var/list/seers = get_erp_heart_audience(user)
 	if(!length(seers))
 		return
 	var/heart_path = (!!user.cmode != !!target.cmode) ? /obj/effect/temp_visual/sex_effects/red_heart : /obj/effect/temp_visual/sex_effects

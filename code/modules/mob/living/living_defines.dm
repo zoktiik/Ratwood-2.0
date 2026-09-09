@@ -246,4 +246,3 @@
 
 	// Prefs caching variables that map 1-to-1 with /datum/preferences
 	var/no_redflash = FALSE
-	var/erp_hearts = FALSE

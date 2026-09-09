@@ -4,9 +4,7 @@
 	if(client)
 		client.update_ooc_verb_visibility()
 		if(client.prefs)
-			var/datum/preferences/preffy = client.prefs
-			update_redflash_pref(preffy.no_redflash, update_hud = FALSE)
-			erp_hearts = preffy.erp_hearts
+			update_redflash_pref(client.prefs.no_redflash, update_hud = FALSE)
 	//Mind updates
 	sync_mind()
 	mind.show_memory(src, 0)
