@@ -1738,12 +1738,16 @@
 	icon_state = "quivering"
 
 /datum/sex_controller/proc/show_sex_effects(mob/living/carbon/human/user)
-	if(user.erp_hearts)
-		for(var/i in 1 to rand(1, 3))
-			if(!user.cmode) // Combat mode
-				new /obj/effect/temp_visual/heart/sex_effects(get_turf(user))
-			else
-				new /obj/effect/temp_visual/heart/sex_effects/red_heart(get_turf(user))
+	var/list/seers = list()
+	for(var/mob/living/seer in hearers(DEFAULT_MESSAGE_RANGE, user))
+		if(seer.erp_hearts)
+			seers += seer
+	if(!length(seers))
+		return
+	var/heart_path = (!!user.cmode != !!target.cmode) ? /obj/effect/temp_visual/sex_effects/red_heart : /obj/effect/temp_visual/sex_effects
+	var/turf/heart_turf = get_turf(user)
+	for(var/i in 1 to rand(1, 3))
+		new heart_path(heart_turf, seers)
 
 /datum/proc/werewolf_sex_infect_attempt(mob/living/carbon/human/top, mob/living/carbon/human/bottom)
 

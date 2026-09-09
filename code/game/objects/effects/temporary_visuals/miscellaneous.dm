@@ -415,27 +415,43 @@
 	I.appearance_flags = RESET_ALPHA
 	animate(I, alpha = 0, time = duration)
 
-/obj/effect/temp_visual/heart/sex_effects
+/obj/effect/temp_visual/sex_effects
+	name = "heart"
+	icon = 'icons/mob/animal.dmi'
+	icon_state = null
 	duration = 4 SECONDS
 	plane = GAME_PLANE_UPPER
+	randomdir = FALSE
+	var/display_icon_state = "heart"
 
-/obj/effect/temp_visual/heart/sex_effects/Initialize(mapload)
+/obj/effect/temp_visual/sex_effects/Initialize(mapload, list/seers)
 	. = ..()
+	if(!length(seers))
+		return INITIALIZE_HINT_QDEL
+	pixel_x = rand(-4, 4)
+	pixel_y = rand(-4, 4)
 	var/random_pixel_w = rand(5, 15)
 	var/random_time = rand(2, 7) * 0.1 SECONDS
 	var/random_time2 = random_time + rand(5, 15) * 0.1 SECONDS
 	layer = prob(50) ? ABOVE_MOB_LAYER : BELOW_MOB_LAYER
 
+	animate(src, pixel_y = pixel_y + 32, alpha = 0, time = duration, flags = ANIMATION_PARALLEL)
 	animate(src, time = 5 SECONDS, transform = transform.Scale(0.1), flags = ANIMATION_PARALLEL)
 	animate(src, time = random_time, pixel_w = random_pixel_w, easing = CIRCULAR_EASING, flags = ANIMATION_PARALLEL|ANIMATION_RELATIVE)
 	animate(time = random_time2, pixel_w = -random_pixel_w, easing = CIRCULAR_EASING, flags = ANIMATION_RELATIVE)
 	animate(time = random_time, pixel_w = -random_pixel_w, easing = CIRCULAR_EASING, flags = ANIMATION_RELATIVE)
 	animate(time = random_time2, pixel_w = random_pixel_w, easing = CIRCULAR_EASING, flags = ANIMATION_RELATIVE, loop = -1)
 
-/obj/effect/temp_visual/heart/sex_effects/red_heart
+	var/image/I = image(icon, src, display_icon_state)
+	I.override = TRUE
+	I.plane = plane
+	I.layer = layer
+	add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/People, "sex_heart", I, seers)
+
+/obj/effect/temp_visual/sex_effects/red_heart
 	name = "angry"
 	icon = 'icons/effects/noctravfx.dmi'
-	icon_state = "anger"
+	display_icon_state = "anger"
 
 /obj/effect/temp_visual/bleed
 	name = "bleed"
