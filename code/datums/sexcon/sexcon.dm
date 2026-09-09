@@ -1737,8 +1737,8 @@
 	desc = "I can barely walk..."
 	icon_state = "quivering"
 
-/datum/proc/show_sex_effects(mob/living/carbon/human/user)
-	if(user.client.prefs.erp_hearts)
+/datum/sex_controller/proc/show_sex_effects(mob/living/carbon/human/user)
+	if(user.erp_hearts)
 		for(var/i in 1 to rand(1, 3))
 			if(!user.cmode) // Combat mode
 				new /obj/effect/temp_visual/heart/sex_effects(get_turf(user))

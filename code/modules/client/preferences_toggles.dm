@@ -608,6 +608,9 @@
 			to_chat(src, "ERP Hearts and plaptext enabled in the ERP panel.")
 		else
 			to_chat(src, "ERP Hearts and plaptext disabled in the ERP panel.")
+		if(isliving(mob))
+			var/mob/living/L = mob
+			L.erp_hearts = prefs.erp_hearts
 
 /client/verb/toggle_edging() // Toggles edging content in the ERP panel, for psydonites who clearly can't ENDURE.
 	set category = "Options"

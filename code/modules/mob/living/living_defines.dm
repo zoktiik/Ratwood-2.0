@@ -244,5 +244,6 @@
 	var/construct = 0
 	var/burialrited = FALSE
 
-	/// Cache of client.prefs.no_redflash to reduce accesses (and client/prefs datum checking)
+	// Prefs caching variables that map 1-to-1 with /datum/preferences
 	var/no_redflash = FALSE
+	var/erp_hearts = FALSE
