@@ -33,7 +33,6 @@
 	virtue_restrictions = list(
 		/datum/virtue/utility/riding,
 	)
-	vice_restrictions = list(/datum/charflaw/hunted)
 
 /datum/outfit/job/roguetown/captain
 	head = /obj/item/clothing/head/roguetown/helmet/heavy/captain
