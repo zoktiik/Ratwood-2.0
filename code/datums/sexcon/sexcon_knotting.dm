@@ -183,7 +183,7 @@
 				return
 			addtimer(CALLBACK(mover_sexcon, PROC_REF(knot_movement_btm)), 1)
 		if(KNOTTED_NULL) // this should never hit, but if it does remove callback
-			UnregisterSignal(mover_sexcon.user, COMSIG_MOVABLE_MOVED)
+			UnregisterSignal(mover, COMSIG_MOVABLE_MOVED)
 
 /datum/sex_controller/proc/knot_movement_top()
 	var/mob/living/carbon/human/top = knotted_owner
@@ -414,12 +414,16 @@
 	knot_exit(keep_top_status, keep_btm_status)
 
 /datum/sex_controller/proc/knot_exit(keep_top_status = FALSE, keep_btm_status = FALSE)
+	if(knotted_status == KNOTTED_AS_BTM)
+		var/datum/sex_controller/top_sexcon = knotted_owner?.sexcon
+		if(top_sexcon && top_sexcon != src)
+			return top_sexcon.knot_exit(keep_top_status, keep_btm_status)
 	var/mob/living/carbon/human/top = knotted_owner
 	var/mob/living/carbon/human/btm = knotted_recipient
-	if(istype(top) && top?.sexcon?.knotted_status)
+	if(istype(top) && top.sexcon?.knotted_status)
 		if(!keep_top_status) // only keep the status if we're reapplying the knot
 			top.remove_status_effect(/datum/status_effect/knotted)
-		UnregisterSignal(top.sexcon.user, COMSIG_MOVABLE_MOVED)
+		UnregisterSignal(top, COMSIG_MOVABLE_MOVED)
 		top.sexcon.knotted_owner = null
 		top.sexcon.knotted_recipient = null
 		top.sexcon.knotted_status = KNOTTED_NULL
@@ -427,11 +431,11 @@
 		top.sexcon.knotted_part_partner = SEX_PART_NULL
 		top.sexcon.knotted_forced_by_bottom = FALSE
 		log_combat(top, top, "Stopped knot tugging")
-	if(istype(btm) && btm?.sexcon?.knotted_status)
+	if(istype(btm) && btm.sexcon?.knotted_status)
 		if(!keep_btm_status) // only keep the status if we're reapplying the knot
 			btm.remove_status_effect(/datum/status_effect/knot_tied)
 			btm.reset_pull_offsets(btm, GRAB_AGGRESSIVE)
-		UnregisterSignal(btm.sexcon.user, COMSIG_MOVABLE_MOVED)
+		UnregisterSignal(btm, COMSIG_MOVABLE_MOVED)
 		btm.sexcon.knotted_owner = null
 		btm.sexcon.knotted_recipient = null
 		btm.sexcon.knotted_status = KNOTTED_NULL

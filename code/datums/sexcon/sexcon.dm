@@ -108,6 +108,8 @@
 
 /datum/sex_controller/Destroy()
 	//remove_from_target_receiving()
+	if(knotted_status)
+		knot_exit()
 	user = null
 	target = null
 	bed = null
@@ -115,8 +117,6 @@
 	grassy_knoll = null
 	collar_bell_user = FALSE
 	collar_bell_target = FALSE
-	if(knotted_status)
-		knot_exit()
 	//receiving = list()
 	. = ..()
 
