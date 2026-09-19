@@ -5,6 +5,7 @@
 	var/list/mob/living/buckled_mobs = null //list()
 	var/max_buckled_mobs = 1
 	var/buckle_prevents_pull = FALSE
+	var/buckle_blocks_spells = FALSE //TRUE on restraint structures and traps (maneaters, spike pits etc.)
 	var/buckleverb = "sit"
 	var/sleepy = 0
 

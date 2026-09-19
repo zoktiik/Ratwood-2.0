@@ -428,6 +428,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		to_chat(user, span_warning("[name] cannot be cast unless I am completely manifested in the material plane!"))
 		return FALSE
 
+	if(user.buckled && user.buckled.buckle_blocks_spells)
+		to_chat(user, span_warning("I cannot cast spells while bound to [user.buckled]!"))
+		return FALSE
+
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if((invocation_type == "whisper" || invocation_type == "shout") && ((!H.can_speak_vocal() && !(mute_allowed && HAS_TRAIT(H, TRAIT_PERMAMUTE) && !H.check_mouth_grabbed())) || !H.getorganslot(ORGAN_SLOT_TONGUE)))
@@ -444,10 +448,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			to_chat(user, span_warning("My body is paralyzed!"))
 			return FALSE
 
-		var/last_mount_move_time = H.vars["last_mount_move_time"]
-		if(!isnum(last_mount_move_time))
-			last_mount_move_time = 0
-		if(H.buckled && issimple(H.buckled) && (world.time < last_mount_move_time + 2 SECONDS))
+		if(moving_mount_blocks_cast(H))
 			return FALSE
 
 		if(miracle && !H.devotion?.check_devotion(src))
@@ -886,31 +887,26 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	qdel(dummy)
 	return 1
 
+/obj/effect/proc_holder/spell/proc/moving_mount_blocks_cast(mob/user)
+	if(!ishuman(user) || !user.buckled)
+		return FALSE
+	if(!user.buckled.GetComponent(/datum/component/riding))
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	var/last_mount_move_time = H.vars["last_mount_move_time"]
+	if(!isnum(last_mount_move_time))
+		last_mount_move_time = 0
+	return world.time < last_mount_move_time + 2 SECONDS
+
 /obj/effect/proc_holder/spell/proc/can_cast(mob/user = usr)
 	if(((!user.mind) || !(src in user.mind.spell_list)) && !(src in user.mob_spell_list))
 		return FALSE
 
 	if(user.client && user.buckled)
-		if(!issimple(user.buckled))
+		if(user.buckled.buckle_blocks_spells)
 			return FALSE
-		if(ishuman(user))
-			var/mob/living/carbon/human/H = user
-			var/last_mount_move_time = H.vars["last_mount_move_time"]
-			if(!isnum(last_mount_move_time))
-				last_mount_move_time = 0
-			if(world.time < last_mount_move_time + 2 SECONDS)
-				return FALSE
-
-	if(user.client && user.buckled)
-		if(!issimple(user.buckled))
+		if(moving_mount_blocks_cast(user))
 			return FALSE
-		if(ishuman(user))
-			var/mob/living/carbon/human/H = user
-			var/last_mount_move_time = H.vars["last_mount_move_time"]
-			if(!isnum(last_mount_move_time))
-				last_mount_move_time = 0
-			if(world.time < last_mount_move_time + 2 SECONDS)
-				return FALSE
 
 	if(!charge_check(user, TRUE))
 		return FALSE
