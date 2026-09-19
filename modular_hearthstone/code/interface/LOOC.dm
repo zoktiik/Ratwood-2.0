@@ -136,8 +136,10 @@
 
 			SEND_SOUND(C, sound('sound/misc/subtle_looc.ogg', volume = max(C.prefs.mastervol * 0.5, 0)))
 			seen[C] = TRUE
+			SEND_SOUND(C, sound('sound/misc/subtle_looc.ogg', volume = C.prefs.mastervol * 0.5))
 			var/outgoing_msg = ((C in GLOB.admins) && (C.prefs.admin_chat_toggles & CHAT_ADMINLOOC)) ? msg_adm : msg_reg
 			to_chat(C, outgoing_msg)
+
 	else
 		var/mob/target = recipient_choice
 		if(get_dist(get_turf(target), get_turf(S)) > distance)
@@ -147,12 +149,14 @@
 		if(target_client && (target_client.prefs.chat_toggles & CHAT_OOC))
 			SEND_SOUND(target_client, sound('sound/misc/subtle_looc.ogg', volume = max(target_client.prefs.mastervol * 0.5, 0)))
 			seen[target_client] = TRUE
+			SEND_SOUND(target_client, sound('sound/misc/subtle_looc.ogg', volume = target_client.prefs.mastervol * 0.5))
 			var/target_msg = ((target_client in GLOB.admins) && (target_client.prefs.admin_chat_toggles & CHAT_ADMINLOOC)) ? msg_adm : msg_reg
 			to_chat(target_client, target_msg)
 
 		if((prefs.chat_toggles & CHAT_OOC) && !(src in seen))
 			SEND_SOUND(src, sound('sound/misc/subtle_looc.ogg', volume = max(prefs.mastervol * 0.5, 0)))
 			seen[src] = TRUE
+			SEND_SOUND(src, sound('sound/misc/subtle_looc.ogg', volume = prefs.mastervol * 0.5))
 			var/self_msg = ((src in GLOB.admins) && (prefs.admin_chat_toggles & CHAT_ADMINLOOC)) ? msg_adm : msg_reg
 			to_chat(src, self_msg)
 
