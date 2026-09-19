@@ -78,6 +78,8 @@
 	desc = "A common clay pot used for storing and sometimes fermenting fluids. Favoured over wooden barrels in the desert of Zybantium due to the relative scarcity of wood."
 	icon = 'modular_deserttown/icons/pots.dmi'
 	icon_state = "sandpot1"
+	open_icon_state = "sandpot_open"
+	tapped_icon_state = "sandpot_tapped"
 
 /datum/crafting_recipe/roguetown/structure/sandpot
 	name = "sand pot"
@@ -93,6 +95,8 @@
 	desc = "Decorative and Practical!"
 	icon = 'modular_deserttown/icons/pots.dmi'
 	icon_state = "fancypot1"
+	open_icon_state = "fancypot_open"
+	tapped_icon_state = "fancypot_tapped"
 
 /datum/crafting_recipe/roguetown/structure/fancypot
 	name = "sand pot (fancy)"
@@ -120,42 +124,62 @@
 /obj/structure/fermentation_keg/sandpot/Initialize()
 	. = ..()
 	icon_state = "sandpot[rand(1, 2)]"
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/fancypot/Initialize()
 	. = ..()
 	icon_state = "fancypot[rand(1, 2)]"
+	apply_pot_fermentation_icons()
 
+// sandpot_ready and fancypot_ready are different pots, not brew-ready sprites.
+/obj/structure/fermentation_keg/sandpot/proc/apply_pot_fermentation_icons()
+	tapped_icon_state = icon_state
+	switch(icon_state)
+		if("sandpot1", "sandpot2", "sandpot_tapped")
+			open_icon_state = "sandpot_open"
+		else
+			open_icon_state = icon_state
+
+/obj/structure/fermentation_keg/fancypot/proc/apply_pot_fermentation_icons()
+	tapped_icon_state = icon_state
+	open_icon_state = icon_state
 
 // Subtypes for sandpots
 /obj/structure/fermentation_keg/sandpot/random/water/Initialize()
 	. = ..()
 	icon_state = "sandpot1"
 	reagents.add_reagent(/datum/reagent/water, rand(0,900))
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/sandpot/random/beer/Initialize()
 	. = ..()
 	icon_state = "sandpot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/beer, rand(0,900))
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/sandpot/random/wine/Initialize()
 	. = ..()
 	icon_state = "sandpot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/wine, rand(0,900))
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/sandpot/water/Initialize()
 	. = ..()
 	icon_state = "sandpot1"
 	reagents.add_reagent(/datum/reagent/water,900)
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/sandpot/beer/Initialize()
 	. = ..()
 	icon_state = "sandpot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/beer,900)
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/sandpot/wine/Initialize()
 	. = ..()
 	icon_state = "sandpot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/wine,900)
+	apply_pot_fermentation_icons()
 
 
 // Subtypes for fancypots
@@ -163,31 +187,37 @@
 	. = ..()
 	icon_state = "fancypot2"
 	reagents.add_reagent(/datum/reagent/water, rand(0,900))
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/fancypot/random/beer/Initialize()
 	. = ..()
 	icon_state = "fancypot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/beer, rand(0,900))
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/fancypot/random/wine/Initialize()
 	. = ..()
 	icon_state = "fancypot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/wine, rand(0,900))
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/fancypot/water/Initialize()
 	. = ..()
 	icon_state = "fancypot2"
 	reagents.add_reagent(/datum/reagent/water,900)
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/fancypot/beer/Initialize()
 	. = ..()
 	icon_state = "fancypot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/beer,900)
+	apply_pot_fermentation_icons()
 
 /obj/structure/fermentation_keg/fancypot/wine/Initialize()
 	. = ..()
 	icon_state = "fancypot2"
 	reagents.add_reagent(/datum/reagent/consumable/ethanol/wine,900)
+	apply_pot_fermentation_icons()
 
 ///
 /obj/machinery/light/rogue/campfire/fireplace/desert

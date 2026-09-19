@@ -75,6 +75,8 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 		return
 	if(icon_state != open_icon_state)
 		return
+	if(icon != 'icons/obj/brewing.dmi')
+		return
 	var/mutable_appearance/MA = mutable_appearance(icon, "filling")
 	MA.color = mix_color_from_reagents(reagents)
 	overlays += MA
@@ -339,12 +341,13 @@ GLOBAL_LIST_EMPTY(custom_fermentation_recipes)
 		addtimer(CALLBACK(src, PROC_REF(end_brew)), selected_recipe.brew_time)
 	if(heated && !selected_recipe.heat_required)
 		addtimer(CALLBACK(src, PROC_REF(end_brew)), selected_recipe.brew_time * 0.5)
-	icon_state = initial(icon_state)
+	if(icon == 'icons/obj/brewing.dmi')
+		icon_state = initial(icon_state)
 	start_time = world.time
 	update_overlays()
 
 /obj/structure/fermentation_keg/proc/end_brew()
-	if(!heated)
+	if(!heated && icon == 'icons/obj/brewing.dmi')
 		icon_state = "barrel_tapless_ready"
 	update_overlays()
 	soundloop.stop()
