@@ -565,7 +565,10 @@
 					defender.toggle_rogmove_intent(MOVE_INTENT_WALK, TRUE)
 				defender.Knockdown(35)
 				defender.Stun(15)
-				charger.Immobilize(10)
+				if(charger_mount && (charger.buckled == charger_mount))
+					charger_mount.Immobilize(10, ignore_canstun = TRUE)
+				else
+					charger.Immobilize(10)
 				// Mounted spear/lance charges are much more likely to create severe puncture trauma
 				if(iscarbon(defender))
 					var/mob/living/carbon/C = defender

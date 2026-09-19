@@ -210,6 +210,12 @@
 		Unbuckle(user)
 		return
 
+	// Mount immobilized but you are not, mount should not move
+	if(isliving(AM))
+		var/mob/living/ridden = AM
+		if(ridden.IsImmobilized())
+			return
+
 	if(driver && user != driver) // only the designated driver/first rider can steer
 		return
 
