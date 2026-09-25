@@ -47,7 +47,6 @@
 
 /datum/mob_descriptor/skin/custom
 	name = "Custom Skin"
-	suffix = "skin"
 	custom_index = 11
 
 /datum/mob_descriptor/skin/custom/can_describe(mob/living/described)

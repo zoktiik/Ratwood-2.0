@@ -293,6 +293,7 @@
 
 /datum/mob_descriptor/face_exp/custom
 	name = "Custom Expression"
+	suffix = null
 	custom_index = 10
 
 /datum/mob_descriptor/face_exp/custom/can_describe(mob/living/described)

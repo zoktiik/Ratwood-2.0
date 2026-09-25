@@ -99,6 +99,7 @@
 
 /datum/mob_descriptor/voice/custom
 	name = "Custom Voice"
+	suffix = null
 	custom_index = 12
 
 /datum/mob_descriptor/voice/custom/can_describe(mob/living/described)
