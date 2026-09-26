@@ -288,8 +288,12 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(smoketime < 1)
 		if(iscarbon(loc))
 			var/mob/living/carbon/M = loc
+			var/obj/item/butt = new type_butt(M)
 			M.dropItemToGround(src, silent = TRUE)
-			M.mouth = new type_butt(M)
+			if(M.mouth)
+				butt.forceMove(get_turf(M))
+			else
+				M.equip_to_slot(butt, SLOT_MOUTH)
 		else
 			new type_butt(location)
 		qdel(src)
