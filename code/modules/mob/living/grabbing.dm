@@ -99,6 +99,19 @@
 				D.grabdropped(src)
 		handaction = null
 
+/obj/item/grabbing/proc/adjust_gag(mob/living/user)
+	if(!iscarbon(grabbed))
+		return
+	var/mob/living/carbon/wearer = grabbed
+	if(!get_location_accessible(wearer, BODY_ZONE_PRECISE_MOUTH))
+		to_chat(user, span_warning("I can't reach [wearer]'s mouth."))
+		return
+	var/obj/item/gag = wearer.mouth
+	if(!gag?.is_mouth_gag())
+		to_chat(user, span_warning("[wearer] isn't gagged."))
+		return
+	gag.cycle_gag(user, wearer)
+
 /obj/item/grabbing/proc/update_grabbed_spell_hud()
 	if(sublimb_grabbed != BODY_ZONE_PRECISE_MOUTH)
 		return
@@ -235,6 +248,10 @@
 			user.stamina_add(rand(7,15))
 			if(M.grippedby(user))			//Aggro grip
 				bleed_suppressing = 0.5		//Better bleed suppression
+		if(/datum/intent/grab/adjust)
+			if(sublimb_grabbed != BODY_ZONE_PRECISE_MOUTH)
+				return FALSE
+			adjust_gag(user)
 		if(/datum/intent/grab/choke)
 			if(HAS_TRAIT(user, TRAIT_PACIFISM))
 				to_chat(user, span_warning("I don't want to harm [src]!"))
@@ -716,6 +733,13 @@
 	name = "upgrade grab"
 	desc = ""
 	icon_state = "ingrab"
+
+/datum/intent/grab/adjust
+	name = "adjust"
+	desc = "Adjusts the \"looseness\" of a gag in someone's mouth.\n\
+			Cycles between tight, loose, very loose. Tight forces silence.\n\
+			Loose and very loose allow for muffled speech at whisper and talking ranges respectively."
+	icon_state = "inuse"
 
 /datum/intent/grab/smash
 	name = "smash"

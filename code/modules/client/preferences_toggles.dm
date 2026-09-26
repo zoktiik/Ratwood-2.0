@@ -124,6 +124,7 @@
 		list("id" = "compliance_notifs", "label" = "Compliance Notifications", "enabled" = !!owner.prefs.compliance_notifs, "desc" = "Show chat notices when compliance mode changes."),
 		list("id" = "skillcap_notifs", "label" = "Skillcap Notifications", "enabled" = !!owner.prefs.skillcap_notifs, "desc" = "Notify when a skill reaches its XP cap."),
 		list("id" = "autopunctuation", "label" = "Disable Autopunctuation", "enabled" = !!owner.prefs.no_autopunctuate, "desc" = "Prevent automatic punctuation in your chat messages."),
+		list("id" = "loose_gags", "label" = "Loose Gags", "enabled" = !!owner.prefs.loose_gags, "desc" = "When applying a cloth gag, allows muffled speech at whisper range. Mouthgrabs can adjust this individually."),
 		list("id" = "deadchat", "label" = "Show Deadchat", "enabled" = !!(owner.prefs.chat_toggles & CHAT_DSAY), "desc" = "Receive deadchat messages."),
 		list("id" = "legacy_craft", "label" = "Enable Legacy Craft", "enabled" = !!owner.legacycraft, "desc" = "Use legacy crafting UI/behavior."),
 		list("id" = "roleplay_ads", "label" = "Receive Roleplay Ads", "enabled" = !!(owner.prefs.toggles & ROLEPLAY_ADS), "desc" = "Receive notifications for new roleplay ads."),
@@ -227,6 +228,8 @@
 				owner.toggle_skillcap_notifs()
 			if("autopunctuation")
 				owner.toggle_autopunctuation()
+			if("loose_gags")
+				owner.toggle_loose_gags()
 			if("deadchat")
 				owner.toggle_deadchat()
 			if("legacy_craft")
@@ -721,6 +724,18 @@
 			to_chat(src, "You will show your character's name when wildshaping as a Druid.")
 		else
 			to_chat(src, "You will hide your character's name when wildshaping as a Druid and appear solely as your animal form.")
+
+/client/verb/toggle_loose_gags()
+	set category = "Options"
+	set name = "Toggle Loose Gags"
+	set hidden = 1
+	if(prefs)
+		prefs.loose_gags = !prefs.loose_gags
+		prefs.save_preferences()
+		if(prefs.loose_gags)
+			to_chat(src, "Gags you apply will start somewhat loose, letting them make muffled speech at whisper range.")
+		else
+			to_chat(src, "Gags you apply will start completely silent, preventing all sound from the wearer.")
 
 /client/verb/toggle_autopunctuation()
 	set category = "Options"

@@ -257,6 +257,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["autopicking"]		>> autopicking
 	S["no_examine_blocks"]	>> no_examine_blocks
 	S["no_autopunctuate"]	>> no_autopunctuate
+	S["loose_gags"]			>> loose_gags
 	S["no_language_fonts"]	>> no_language_fonts
 	S["no_language_icon"]	>> no_language_icon
 	S["hide_unavailable_emotes"] >> hide_unavailable_emotes
@@ -442,6 +443,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["autopicking"], autopicking)
 	WRITE_FILE(S["no_examine_blocks"], no_examine_blocks)
 	WRITE_FILE(S["no_autopunctuate"], no_autopunctuate)
+	WRITE_FILE(S["loose_gags"], loose_gags)
 	WRITE_FILE(S["no_language_fonts"], no_language_fonts)
 	WRITE_FILE(S["no_language_icon"], no_language_icon)
 	WRITE_FILE(S["hide_unavailable_emotes"], hide_unavailable_emotes)

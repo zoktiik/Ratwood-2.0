@@ -213,6 +213,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/icon/experimental_onhip = FALSE
 	var/icon/experimental_onback = FALSE
 	var/muteinmouth = TRUE
+	var/gag_mode = GAG_MODE_SILENT
+	var/mob/living/gagged_wearer
+	var/mob/pending_gag_applier
 	///using spit emote spits the item out of our mouth and falls out after some time
 	var/spitoutmouth = TRUE
 
@@ -420,6 +423,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 				update_damaged_state()
 
 /obj/item/Destroy(force=FALSE)
+	clear_mouth_gag()
 	item_flags &= ~DROPDEL	//prevent reqdels
 	if(ismob(loc))
 		var/mob/m = loc
@@ -942,8 +946,69 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 /obj/item/proc/talk_into(mob/M, input, channel, spans, datum/language/language)
 	return ITALICS | REDUCE_RANGE
 
+/obj/item/proc/is_mouth_gag()
+	return muteinmouth && !istype(src, /obj/item/grabbing)
+
+/obj/item/proc/gag_trait_source()
+	return "gag_[REF(src)]"
+
+/obj/item/proc/bind_mouth_gag(mob/living/wearer)
+	if(!wearer)
+		return
+	if(gagged_wearer && gagged_wearer != wearer)
+		clear_mouth_gag()
+	gagged_wearer = wearer
+	ADD_TRAIT(wearer, TRAIT_MUFFLED_GAG, gag_trait_source())
+
+/obj/item/proc/apply_mouth_gag(mob/living/wearer)
+	var/mob/applier = pending_gag_applier
+	pending_gag_applier = null
+	if(!is_mouth_gag() || !wearer)
+		return
+	if(applier?.client?.prefs?.loose_gags)
+		gag_mode = GAG_MODE_WHISPER
+		to_chat(wearer, span_notice("The gag is loosened."))
+	else
+		gag_mode = GAG_MODE_SILENT
+	bind_mouth_gag(wearer)
+
+/obj/item/proc/clear_mouth_gag()
+	gag_mode = GAG_MODE_SILENT
+	if(gagged_wearer && !QDELETED(gagged_wearer))
+		REMOVE_TRAIT(gagged_wearer, TRAIT_MUFFLED_GAG, gag_trait_source())
+	gagged_wearer = null
+
+/obj/item/proc/cycle_gag(mob/living/adjuster, mob/living/wearer)
+	if(!is_mouth_gag())
+		return FALSE
+	switch(gag_mode)
+		if(GAG_MODE_SILENT)
+			gag_mode = GAG_MODE_WHISPER
+		if(GAG_MODE_WHISPER)
+			gag_mode = GAG_MODE_LOOSE
+		else
+			gag_mode = GAG_MODE_SILENT
+	bind_mouth_gag(wearer)
+	var/wearer_msg
+	var/adjuster_msg
+	switch(gag_mode)
+		if(GAG_MODE_WHISPER)
+			wearer_msg = "The gag is loosened."
+			adjuster_msg = "I loosen the gag a little."
+		if(GAG_MODE_LOOSE)
+			wearer_msg = "The gag is made very loose."
+			adjuster_msg = "I leave the gag hanging very loose."
+		else
+			wearer_msg = "The gag is tightened!"
+			adjuster_msg = "I pull the gag tight."
+	to_chat(adjuster, span_smallnotice(adjuster_msg))	
+	if(adjuster != wearer)
+		to_chat(wearer, span_warning(wearer_msg))
+	return TRUE
+
 /obj/item/proc/dropped(mob/user, silent = FALSE)
 	SHOULD_CALL_PARENT(TRUE)
+	clear_mouth_gag()
 	for(var/X in actions)
 		var/datum/action/A = X
 		A.Remove(user)
@@ -1036,6 +1101,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 		living_user.rebuild_obscured_flags() // AZURE EDIT: cache our equipped items `flags_inv` values
 
 	update_transform()
+	if(slot == SLOT_MOUTH && isliving(user))
+		apply_mouth_gag(user)
+	else
+		pending_gag_applier = null
 
 //sometimes we only want to grant the item's action if it's equipped in a specific slot.
 /obj/item/proc/item_action_slot_check(slot, mob/user)

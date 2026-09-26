@@ -891,6 +891,27 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 	message = "[prefix][jointext(rearranged," ")]"
 	. = message
 
+/proc/muffled_gag_speech(message)
+	var/static/list/allowed
+	if(!allowed)
+		allowed = list()
+		for(var/ch in list(
+			"m", "f", "p", "h", "r", "g", "j", "l", "k", "u",
+			"M", "F", "P", "H", "R", "G", "J", "L", "K", "U",
+			".", ",", "?", "!", "-", "'", "\"", ";", ":", "(", ")",
+			"~", "+", "#", "|", "_", "*", "^", "%", "/", " "
+		))
+			allowed[ch] = TRUE
+	var/filtered = ""
+	var/msg_len = length(message)
+	for(var/i in 1 to msg_len)
+		var/ch = copytext(message, i, i + 1)
+		if(allowed[ch])
+			filtered += ch
+	if(!length(trim(filtered)))
+		return "Mmm..."
+	return filtered
+
 /proc/vocal_cord_torn(message)
 	message = uppertext(message)
 	if(prob(20))
