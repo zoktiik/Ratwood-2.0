@@ -1146,6 +1146,7 @@ There are several things that need to be remembered:
 
 	var/obj/item/bodypart/taur/taur = get_taur_tail()
 	var/icon/c_mask = taur?.clip_mask
+	var/armsindex = get_limbloss_index(ARM_RIGHT, ARM_LEFT)
 
 	if(client && hud_used)
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[SLOT_CLOAK]
@@ -1165,12 +1166,12 @@ There are several things that need to be remembered:
 			if(dna.species.custom_clothes)
 				racecustom = dna.species.clothes_id
 			if(gender == FEMALE && !dna.species.use_m)
-				cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
+				cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', sleeveindex = armsindex, female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
 			else
 				if(dna.species.use_f)
-					cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
+					cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', sleeveindex = armsindex, female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
 				else
-					cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = FALSE, customi = racecustom, clip_mask = c_mask)
+					cloak_overlay = cloak.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', sleeveindex = armsindex, female = FALSE, customi = racecustom, clip_mask = c_mask)
 
 			if(gender == MALE)
 				if(OFFSET_CLOAK in dna.species.offset_features)
@@ -1226,12 +1227,12 @@ There are several things that need to be remembered:
 			if(dna.species.custom_clothes)
 				racecustom = dna.species.clothes_id
 			if(gender == FEMALE && !dna.species.use_m)
-				cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
+				cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', sleeveindex = armsindex, female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
 			else
 				if(dna.species.use_f)
-					cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
+					cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', sleeveindex = armsindex, female = TRUE, customi = racecustom, boobed_overlay = has_boobed_overlay(), clip_mask = c_mask)
 				else
-					cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', female = FALSE, customi = racecustom, clip_mask = c_mask)
+					cloak_overlay = backr.build_worn_icon(default_layer = CLOAK_LAYER, default_icon_file = 'icons/mob/clothing/feet.dmi', sleeveindex = armsindex, female = FALSE, customi = racecustom, clip_mask = c_mask)
 
 			if(gender == MALE)
 				if(OFFSET_CLOAK in dna.species.offset_features)
