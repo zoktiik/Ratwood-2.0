@@ -23,6 +23,10 @@
 #define MODE_WHISPER "whisper"
 #define MODE_WHISPER_CRIT "whispercrit"
 
+#define GAG_MODE_SILENT 0
+#define GAG_MODE_WHISPER 1
+#define GAG_MODE_LOOSE 2
+
 #define MODE_SING "%"
 
 #define MODE_DEPARTMENT "department"

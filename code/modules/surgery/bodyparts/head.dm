@@ -93,7 +93,7 @@
 		if(BODY_ZONE_PRECISE_R_EYE)
 			return list(/datum/intent/grab/move, /datum/intent/grab/smash)
 		if(BODY_ZONE_PRECISE_MOUTH)
-			return list(/datum/intent/grab/move, /datum/intent/grab/twist, /datum/intent/grab/smash)
+			return list(/datum/intent/grab/move, /datum/intent/grab/twist, /datum/intent/grab/smash, /datum/intent/grab/adjust)
 		if(BODY_ZONE_PRECISE_NECK)
 			if(istabaxi(owner) || islupian(owner))
 				return list(/datum/intent/grab/move, /datum/intent/grab/choke, /datum/intent/grab/hostage, /datum/intent/grab/scruff)

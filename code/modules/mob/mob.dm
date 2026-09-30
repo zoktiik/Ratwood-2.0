@@ -359,9 +359,12 @@ GLOBAL_VAR_INIT(mobids, 1)
 
 	if(istype(W))
 		testing("clothes1")
+		if(slot == SLOT_MOUTH)
+			W.pending_gag_applier = src
 		if(equip_to_slot_if_possible(W, slot,0,0,0))
 			testing("clothes2")
 			return 1
+		W.pending_gag_applier = null
 
 	if(!W)
 		// Activate the item

@@ -23,6 +23,8 @@
 		SIGNAL_REMOVETRAIT(TRAIT_BAGGED),
 		SIGNAL_ADDTRAIT(TRAIT_GARGLE_SPEECH),
 		SIGNAL_REMOVETRAIT(TRAIT_GARGLE_SPEECH),
+		SIGNAL_ADDTRAIT(TRAIT_MUFFLED_GAG),
+		SIGNAL_REMOVETRAIT(TRAIT_MUFFLED_GAG),
 	), PROC_REF(on_spell_availability_trait_changed))
 
 /mob/living/carbon/proc/on_spell_availability_trait_changed(datum/source, trait)
@@ -1421,15 +1423,24 @@
 	if(HAS_TRAIT(src, TRAIT_DUMB))
 		return TRUE
 
+/mob/living/carbon/proc/mouth_gag()
+	if(!mouth || istype(mouth, /obj/item/grabbing) || !mouth.muteinmouth)
+		return null
+	return mouth
+
+/mob/living/carbon/proc/gag_allows_speech()
+	var/obj/item/gag = mouth_gag()
+	return gag && gag.gag_mode != GAG_MODE_SILENT
+
 /mob/living/carbon/can_speak_vocal()
 	. = ..()
 	if(!.)
 		return
-	if(mouth?.muteinmouth)
-		return FALSE
 	for(var/obj/item/grabbing/grab in grabbedby)
 		if((grab.sublimb_grabbed == BODY_ZONE_PRECISE_MOUTH) && (get_location_accessible(src, BODY_ZONE_PRECISE_MOUTH)))
 			return FALSE
+	if(mouth?.muteinmouth && !gag_allows_speech())
+		return FALSE
 	if(istype(loc, /turf/open/water) && !(mobility_flags & MOBILITY_STAND))
 		return FALSE
 

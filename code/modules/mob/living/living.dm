@@ -504,6 +504,8 @@
 				O.sublimb_grabbed = item_override
 			else
 				O.sublimb_grabbed = used_limb
+			if(O.sublimb_grabbed == BODY_ZONE_PRECISE_MOUTH)
+				O.possible_item_intents = list(/datum/intent/grab/upgrade, /datum/intent/grab/adjust)
 			O.update_grabbed_spell_hud()
 			if(BP)
 				C.update_hud_hand_slot(BP.held_index)
@@ -1549,6 +1551,8 @@
 						if(!who.put_in_hand(what, where_list[2]))
 							what.forceMove(get_turf(who))
 					else
+						if(final_where == SLOT_MOUTH)
+							what.pending_gag_applier = src
 						who.equip_to_slot(what, where, TRUE)
 
 		if(Adjacent(who)) //update inventory window

@@ -150,13 +150,6 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(check_subtler(original_message, forced) || !can_speak_basic(original_message, ignore_spam, forced))
 		return
 	//RATWOOD SUBTLER END
-	if(in_critical && !forced)
-		if(!(crit_allowed_modes[message_mode]))
-			return
-	else if(stat == UNCONSCIOUS && !forced)
-		if(!(unconscious_allowed_modes[message_mode]))
-			return
-
 	// language comma detection.
 	var/datum/language/message_language = get_message_language(message)
 	if(message_language)
@@ -171,6 +164,19 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	if(!language)
 		language = get_default_language()
+
+	if(iscarbon(src))
+		var/mob/living/carbon/gagged_speaker = src
+		var/obj/item/gag = gagged_speaker.mouth_gag()
+		if(gag?.gag_mode == GAG_MODE_WHISPER && !(language && (initial(language.flags) & SIGNLANG)))
+			message_mode = MODE_WHISPER
+
+	if(in_critical && !forced)
+		if(!(crit_allowed_modes[message_mode]))
+			return
+	else if(stat == UNCONSCIOUS && !forced)
+		if(!(unconscious_allowed_modes[message_mode]))
+			return
 
 	// Detection of language needs to be before inherent channels, because
 	// AIs use inherent channels for the holopad. Most inherent channels
@@ -438,10 +444,14 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 
 	if(message_mode != MODE_WHISPER)
 		Zs_too = TRUE
-		if(say_test(message) == "2")	//CIT CHANGE - ditto
+		var/gagged_quiet = FALSE
+		if(iscarbon(src))
+			var/mob/living/carbon/gagged_speaker = src
+			gagged_quiet = gagged_speaker.gag_allows_speech()
+		if(!gagged_quiet && say_test(message) == "2")	//CIT CHANGE - ditto
 			message_range += 10
 			Zs_yell = TRUE
-		if(say_test(message) == "3")	//Big "!!" shout
+		if(!gagged_quiet && say_test(message) == "3")	//Big "!!" shout
 			message_range += 10
 			Zs_all = TRUE
 
@@ -661,9 +671,15 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 				return LD
 	return null
 
-/mob/living/proc/treat_message(message, language)
+/mob/living/proc/treat_message(message, datum/language/language)
 	if(HAS_TRAIT(src, TRAIT_ZOMBIE_SPEECH) && !ispath(language, /datum/language/undead))
 		message = "[repeat_string(rand(1, 3), "U")][repeat_string(rand(1, 6), "H")]..."
+	else if(iscarbon(src))
+		var/mob/living/carbon/gagged_speaker = src
+		if(gagged_speaker.gag_allows_speech() && !(language && (initial(language.flags) & SIGNLANG)))
+			message = muffled_gag_speech(message)
+		else if(HAS_TRAIT(src, TRAIT_GARGLE_SPEECH))
+			message = vocal_cord_torn(message)
 	else if(HAS_TRAIT(src, TRAIT_GARGLE_SPEECH))
 		message = vocal_cord_torn(message)
 
